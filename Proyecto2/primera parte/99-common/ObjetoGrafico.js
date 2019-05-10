@@ -91,6 +91,9 @@ class ObjetoGrafico{
     getRotation(){
         return this.rotQuat;
     }
+    getParsedOBJ(){
+        return this.parsedOBJ;
+    }
 
     sumarAngleX(delta){
         this.angle[0] = this.angle[0]+delta;
@@ -212,79 +215,6 @@ class ObjetoGrafico{
             new VertexAttributeInfo(normales, normLocation, 3)
         ];
         this.vao = VAOHelper.create(indices, vertexAttributeInfoArray);
-    }
-
-    draw(){
-        gl.useProgram(shaderProgram);
-
-        let model_view_matrix = mat4.create();
-        mat4.mul(model_view_matrix,cam.getView(),this.getModelMatrix());
-        gl.uniformMatrix4fv(u_modelViewMatrix, false, model_view_matrix);
-
-        gl.uniformMatrix4fv(u_viewMatrix,false,cam.getView());
-        gl.uniformMatrix4fv(u_projectionMatrix,false,cam.getProj());
-
-        gl.uniformMatrix4fv(u_modelMatrix,false,this.getModelMatrix());
-
-        let normalMatrix = mat4.create();
-        mat4.mul(normalMatrix,cam.getView(),this.getModelMatrix());
-        mat4.invert(normalMatrix,normalMatrix);
-        mat4.transpose(normalMatrix,normalMatrix);
-        gl.uniformMatrix4fv(u_normalMatrix, false, normalMatrix);
-
-        gl.uniform3fv(u_k_ambient, this.material.get_k_ambient());
-        gl.uniform3fv(u_k_diffuse, this.material.get_k_diffuse());
-        gl.uniform3fv(u_k_spec, this.material.get_k_spec());
-        //gl.uniform1f(u_exp_spec, this.material.get_exp_spec());
-        //gl.uniform1f(u_alphaX, 0.1);
-        //gl.uniform1f(u_alphaY, 0.7);
-        gl.uniform1f(u_f0,this.material.getf0());
-        gl.uniform1f(u_m,this.material.getm());
-
-
-        //luces
-        //luz1
-        let light_pos_eye1 = vec4.create();
-        vec4.transformMat4(light_pos_eye1,luz1.get_light_pos(),cam.getView());
-        gl.uniform4fv(u_light_pos1, light_pos_eye1);
-
-        let spot_direction_eye1 = vec4.create();
-        vec4.transformMat4(spot_direction_eye1,luz1.get_spot_direction(),cam.getView());
-        gl.uniform4fv(u_spot_direction1, spot_direction_eye1);
-
-        gl.uniform3fv(u_light_intensity1, luz1.get_light_intensity());
-        gl.uniform1f(u_spot_angle1, luz1.get_spot_angle());
-
-        //luz2
-        let light_pos_eye2 = vec4.create();
-        vec4.transformMat4(light_pos_eye2,luz2.get_light_pos(),cam.getView());
-        gl.uniform4fv(u_light_pos2, light_pos_eye2);
-
-        let spot_direction_eye2 = vec4.create();
-        vec4.transformMat4(spot_direction_eye2,luz2.get_spot_direction(),cam.getView());
-        gl.uniform4fv(u_spot_direction2, spot_direction_eye2);
-
-        gl.uniform3fv(u_light_intensity2, luz2.get_light_intensity());
-        gl.uniform1f(u_spot_angle2, luz2.get_spot_angle());
-
-        //luz3
-        let light_pos_eye3 = vec4.create();
-        vec4.transformMat4(light_pos_eye3,luz3.get_light_pos(),cam.getView());
-        gl.uniform4fv(u_light_pos3, light_pos_eye3);
-
-        let spot_direction_eye3 = vec4.create();
-        vec4.transformMat4(spot_direction_eye3,luz3.get_spot_direction(),cam.getView());
-        gl.uniform4fv(u_spot_direction3, spot_direction_eye3);
-
-        gl.uniform3fv(u_light_intensity3, luz3.get_light_intensity());
-        gl.uniform1f(u_spot_angle3, luz3.get_spot_angle());
-
-        //elijo el vao a usar y llamo a draw elements
-        gl.bindVertexArray(this.vao);
-        gl.drawElements(gl.TRIANGLES, this.parsedOBJ.indices.length, gl.UNSIGNED_INT, 0);
-        //desconecto el vao y el shader
-        gl.bindVertexArray(null);
-        gl.useProgram(null);
     }
 
 }

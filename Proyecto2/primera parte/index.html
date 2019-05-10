@@ -16,8 +16,8 @@
     <script src="99-common/Material.js"></script>
     <script src="99-common/Luz.js"></script>
     <script src="99-common/materiales.js"></script>
-    <!-- <script src="files/shaders/vertex_WardPhong-NT.glsl"></script>
-    <script src="files/shaders/fragment_WardPhong-NT.glsl"></script> -->
+    <script src="files/shaders/vertex_WardPhong-NT.glsl"></script>
+    <script src="files/shaders/fragment_WardPhong-NT.glsl"></script>
     <script src="files/shaders/vertex_CookTorrance.glsl"></script>
     <script src="files/shaders/fragment_CookTorrance.glsl"></script>
     <script src="js/app.js"></script>
@@ -37,7 +37,11 @@
 
 <body onload="primerosEventos();">
     fps: <output id="fps">0.0</output><br>
-    avg: <output id="avg">0.0</output>
+    avg: <output id="avg">0.0</output><br>
+    shader: <select id="renderOption" onChange="changeRender();">
+        <option value="RENDERMODE_COOK_TORRANCE">Cook-Torrance</option>
+        <option value="RENDERMODE_WARD">Ward</option>
+    </select>
 
     <h1>Proyecto 1</h1>
 

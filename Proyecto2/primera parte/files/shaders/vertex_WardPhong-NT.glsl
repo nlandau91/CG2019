@@ -1,4 +1,4 @@
-var vertexShaderSource = `#version 300 es
+var vertexShaderWard = `#version 300 es
 //Modelo de iluminacion de reflectancia de ward
 //Implementado en los fragmentos (sombreado de Phong)
 #define PI 3.14159265

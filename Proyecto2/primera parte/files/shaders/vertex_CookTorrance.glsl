@@ -1,4 +1,4 @@
-var vertexShaderSource = `#version 300 es
+var vertexShaderCookTorrance = `#version 300 es
 //BRDF de Cook-Torrance
 
 uniform mat4 modelMatrix;

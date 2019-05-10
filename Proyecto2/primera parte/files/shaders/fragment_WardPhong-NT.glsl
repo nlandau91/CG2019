@@ -1,4 +1,4 @@
-var fragmentShaderSource = `#version 300 es
+var fragmentShaderWard = `#version 300 es
 //Modelo de reflectancia de ward
 //Implementado en los fragmentos (sombreado de Phong)
 #define PI 3.14159265

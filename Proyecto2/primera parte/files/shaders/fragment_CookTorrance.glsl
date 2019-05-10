@@ -1,4 +1,4 @@
-var fragmentShaderSource = `#version 300 es
+var fragmentShaderCookTorrance = `#version 300 es
 //BRDF de Cook-Torrance
 precision highp float;
 #define PI 3.14159265
