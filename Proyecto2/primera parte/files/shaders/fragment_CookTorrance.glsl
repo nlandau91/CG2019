@@ -33,11 +33,6 @@ float fresnelSchlick(float cosVH){//Aproximacion de schlick
     return fresnel;
 }
 
-vec3 lambertDiffuse(){
-
-    return material.k_diffuse/PI;
-}
-
 float D_beckman( float dotNH){
     float m2 = pow(material.m,2.0);
     float dotNH2 = pow(dotNH,2.0);
@@ -53,7 +48,7 @@ float calcularG( float dotNH,float dotNV,float dotVH,float dotNL){
     return min(1.0,min(Ge,Gs));
 }
 
-vec3 cook_torrance_spec(Light luz){
+vec3 color_cook_torrance(Light luz,vec3 N,vec3 V){
     vec3 vLE = vec3(0.0);
     if(luz.light_pos.w < 0.00001){ //si es luz direccional
         vLE = luz.light_pos.xyz;
@@ -62,9 +57,7 @@ vec3 cook_torrance_spec(Light luz){
     }
 
     vec3 vSD = luz.spot_direction.xyz;
-    vec3 N = normalize(vNE);
     vec3 L = normalize(vLE);
-    vec3 V = normalize(vVE);
     vec3 H = normalize(L+V);
     vec3 S = normalize(vSD);
 
@@ -75,13 +68,13 @@ vec3 cook_torrance_spec(Light luz){
 
     vec3 toReturn = vec3(0.0);
     //if((luz.spot_angle > 0.0 && luz.spot_angle < 1.0 && dot(S, -L) > luz.spot_angle) //si es spot y esta dentro del cono
-     //       ||  (luz.spot_angle < 0.00001 || luz.spot_angle > 0.99999) //o si es puntual
-     //       ||  luz.light_pos.w < 0.00001){ //o si es direccional
+    //        ||  (luz.spot_angle < 0.00001 || luz.spot_angle > 0.99999) //o si es puntual
+    //        ||  luz.light_pos.w < 0.00001){ //o si es direccional
         if(dotLN > 0.0 && dotVN > 0.0){
             float F = fresnelSchlick(dotHN);
             float D = D_beckman(dotHN);
     	    float G = calcularG(dotHN,dotVN,dotVH,dotLN);
-            toReturn =  dotLN*(lambertDiffuse() + material.k_spec * (F*D*G)/(PI*dotVN*dotLN));
+            toReturn =  luz.light_intensity*dotLN*( material.k_diffuse/PI + material.k_spec * (F*D*G)/(PI*dotVN*dotLN));
        
         }
     //}
@@ -90,31 +83,22 @@ vec3 cook_torrance_spec(Light luz){
     return toReturn;
 }
 void main(){
-    // vec3 N = normalize(vNE);
-    // vec3 V = normalize(vVE);
-    // vec3 vLE = (viewMatrix * vec4(light_pos,1.0)).xyz + vVE;
-    // vec3 L = normalize(vLE);
-    // vec3 H = normalize(L+V);
-    
-    // float dotNV = max(dot(N,V),0.0);
-    // float dotNL = max(dot(N,L),0.0);
-    // float dotNH = max(dot(N,H),0.0);
-    // float dotVH = max(dot(V,H),0.0);
 
-    
-    vec3 specular1 = vec3(0.0);
-    vec3 specular2 = vec3(0.0);
-    vec3 specular3 = vec3(0.0);
-    vec3 specular = vec3(0.0);
+    vec3 N = normalize(vNE);
+    vec3 V = normalize(vVE);
+
+    vec3 color1 = vec3(0.0);
+    vec3 color2 = vec3(0.0);
+    vec3 color3 = vec3(0.0);
+    vec3 color = vec3(0.0);
    		
-    specular1 = cook_torrance_spec(luz1);
-    specular2 = cook_torrance_spec(luz2);
-    specular3 = cook_torrance_spec(luz3);
-    specular = specular1+specular2+specular3;
+    color1 = color_cook_torrance(luz1,N,V);
+    color2 = color_cook_torrance(luz2,N,V);
+    color3 = color_cook_torrance(luz3,N,V);
+    color = color1+color2+color3;
 	   
     
-    fragColor = vec4(material.k_ambient*0.3 + ( specular ),1.0); 
-    //fragColor = vec4(1.0,1.0,1.0,1.0);
+    fragColor = vec4(material.k_ambient*0.3 + color,1.0); 
 
 }
 `

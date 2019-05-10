@@ -18,10 +18,8 @@ out float atenuacion;
 void main(){
     gl_Position = modelViewProjMatrix  * vec4(vertexPosition,1);
     
-    vec3 vertex_pos_eye = (modelViewMatrix*vec4(vertexPosition,1.0)).xyz; //posicion del vertice en coordenadas del ojo
-    vVE = -vertex_pos_eye;
-    vec3 vertex_normal_eye = (normalMatrix * vec4(vertexNormal,1.0)).xyz; //normal del vertice en coordenadas del ojo
-    vNE = vertex_normal_eye;
+    vVE = -(modelViewMatrix*vec4(vertexPosition,1.0)).xyz; //posicion del vertice en coordenadas del ojo
+    vNE = (normalMatrix * vec4(vertexNormal,1.0)).xyz; //normal del vertice en coordenadas del ojo
     atenuacion = 1.0;
 }
 `

@@ -37,7 +37,7 @@ material_iron.set_exp_spec(25.6);
 material_iron.set_f0(0.6);
 material_iron.set_m(0.15);
 material_iron.set_alpha_x(0.9);
-material_iron.set_alpha_y(0.1);
+material_iron.set_alpha_y(0.01);
 
 var material_ceramico = new Material();
 material_ceramico.set_k_ambient([0.25,0.148,0.06475]);
