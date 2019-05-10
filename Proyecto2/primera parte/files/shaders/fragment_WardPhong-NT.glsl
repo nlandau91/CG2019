@@ -1,6 +1,7 @@
 var fragmentShaderSource = `#version 300 es
 //Modelo de reflectancia de ward
 //Implementado en los fragmentos (sombreado de Phong)
+#define PI 3.14159265
 precision highp float;
 
 struct Material{
@@ -50,28 +51,19 @@ vec3 calcWardSpec(Light luz){
             ||  (luz.spot_angle < 0.00001 || luz.spot_angle > 0.99999) //o si es puntual
             ||  luz.light_pos.w < 0.00001){ //o si es direccional
         if(dotLN > 0.0 && dotVN > 0.0){
-            float cosH = dotHN;
-            float thetaH = acos(cosH);
-
-            float cosH2 = pow(cosH,2.0);
-            float senH = 1.0-cosH2;
-            float senH2 = pow(senH,2.0);
-
-            float ax2 = pow(material.alphaX,2.0);
-            float ay2 = pow(material.alphaY,2.0);
-            float den2 = 4.0*3.14*material.alphaX*material.alphaY;
-
-            float den1 = sqrt(max(dotLN*dotVN,0.0));
-
-            float primer = cosH2/ax2;
-            float segundo = senH2/ay2;
-            float adentroTangente = thetaH * (primer+segundo);
-            float tangente = tan(adentroTangente);
-            float tangente2 = pow(tangente,2.0);
-            float numerador = exp(-1.0*tangente2);
-
-            float ward = (1.0/den1)*(numerador/den2);
-            toReturn = luz.light_intensity * atenuacion * ward * max(dotLN,0.0) * material.k_spec;
+            float ax = material.alphaX;
+            float ay = material.alphaY;
+            vec3 X = vec3(1.0,0.0,0.0);
+            vec3 Y = vec3(0.0,1.0,0.0);
+            float exponent = -(
+                pow(dot(H,X)/ax,2.0) + //cosphi2/ax2
+                pow(dot(H,Y)/ay,2.0) //sinphi2/ay2
+            ) / pow(dot(H,N),2.0);
+            float ward = 1.0/(4.0 * PI * ax * ay * pow(dot(L,N)*dot(V,N),0.5));
+            ward *= exp(exponent);
+            toReturn = ward*material.k_spec*max(dotLN,0.0)*atenuacion*luz.light_intensity;
+       
+       
         }
     }
     return toReturn;
@@ -97,7 +89,7 @@ vec3 calcDiffuse(Light luz){
         ||  (luz.spot_angle < 0.00001 || luz.spot_angle > 0.99999) //o si es puntual
         ||  luz.light_pos.w < 0.00001){ //o si es direccional
 
-        toReturn = max(dotLN,0.0) * atenuacion * luz1.light_intensity * material.k_diffuse/3.14;
+        toReturn = (material.k_diffuse/PI)*max(dotLN,0.0)*atenuacion*luz.light_intensity;
     }           
     return toReturn;
 }

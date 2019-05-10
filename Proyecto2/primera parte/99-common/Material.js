@@ -4,6 +4,8 @@ class Material{
         this.k_diffuse = [0.0,0.0,0.0];
         this.k_spec = [0.0,0.0,0.0];
         this.exp_spec = 0.0;
+        this.f0 = 0.0;
+        this.m = 0.0;
     }
     set_k_ambient(new_k_ambient){
         this.k_ambient = new_k_ambient;
@@ -17,6 +19,12 @@ class Material{
     set_exp_spec(new_exp_spec){
         this.exp_spec = new_exp_spec;
     }
+    setf0(newf0){
+        this.f0=newf0;
+    }
+    setm(newm){
+        this.m=newm;
+    }
 
     get_k_ambient(){
         return this.k_ambient;
@@ -29,5 +37,11 @@ class Material{
     }
     get_exp_spec(){
         return this.exp_spec;
+    }
+    getf0(){
+        return this.f0;
+    }
+    getm(){
+        return this.m;
     }
 }

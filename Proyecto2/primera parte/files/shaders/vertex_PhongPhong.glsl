@@ -1,6 +1,7 @@
 var vertexShaderSource = `#version 300 es
 //Modelo de iluminacion de Phong
 //Implementado en los fragmentos (sombreado de Phong)
+//No implementa factor de atenuacion ni intencidad de la luz
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projMatrix;

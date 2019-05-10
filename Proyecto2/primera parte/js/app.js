@@ -32,15 +32,19 @@ var gl = null;
 var shaderProgram  = null; //Shader program to use.
 
 //Uniform locations.
+var u_modelMatrix;
+var u_viewMatrix;
 var u_modelViewMatrix;
-var u_modelViewProjMatrix;
 var	u_normalMatrix;
+var	u_projectionMatrix;
 
 var	u_k_ambient;
 var	u_k_diffuse;
 var	u_exp_spec;
 var u_alphaX;
 var u_alphaY;
+var u_f0;
+var u_m;
 
 var	u_light_pos1;
 var	u_light_intensity1;
@@ -152,7 +156,9 @@ function onLoad() {
 	posLocation = gl.getAttribLocation(shaderProgram, 'vertexPosition');
 	normLocation = gl.getAttribLocation(shaderProgram, 'vertexNormal');
 	u_modelViewMatrix = gl.getUniformLocation(shaderProgram, 'modelViewMatrix');
-	u_modelViewProjMatrix = gl.getUniformLocation(shaderProgram, 'modelViewProjMatrix');
+	u_modelMatrix = gl.getUniformLocation(shaderProgram, 'modelMatrix');
+	u_viewMatrix = gl.getUniformLocation(shaderProgram, 'viewMatrix');
+	u_projectionMatrix = gl.getUniformLocation(shaderProgram, 'projectionMatrix');
 	u_normalMatrix = gl.getUniformLocation(shaderProgram, 'normalMatrix');
 	u_k_ambient = gl.getUniformLocation(shaderProgram, 'material.k_ambient');
 	u_k_diffuse = gl.getUniformLocation(shaderProgram, 'material.k_diffuse');
@@ -172,8 +178,10 @@ function onLoad() {
 	u_spot_direction3 = gl.getUniformLocation(shaderProgram, 'luz3.spot_direction');
 	u_spot_angle3 = gl.getUniformLocation(shaderProgram, 'luz3.spot_angle')
 
-	u_alphaX = gl.getUniformLocation(shaderProgram, 'material.alphaX');
-	u_alphaY = gl.getUniformLocation(shaderProgram, 'material.alphaY');
+	//u_alphaX = gl.getUniformLocation(shaderProgram, 'material.alphaX');
+	//u_alphaY = gl.getUniformLocation(shaderProgram, 'material.alphaY');
+	u_f0 = gl.getUniformLocation(shaderProgram, 'material.f0');
+	u_m = gl.getUniformLocation(shaderProgram, 'material.m');
 					
 	plano.loadOBJ(planojs);
 	lampara1.loadOBJ(lamparajs);
@@ -501,10 +509,10 @@ function cargarEsferas(){
 			esferas[i*6+j].setTrans([3*i-4.0,0.0,3*j-6.0]);
 			esferas[i*6+j].setParsedOBJ(esferaParsedOBJ);
 			esferas[i*6+j].setVao(esfera_vao);
-			if(i==0) esferas[i*6+j].setMaterial(material_gold);
-			if(i==1) esferas[i*6+j].setMaterial(material_brass);
-			if(i==2) esferas[i*6+j].setMaterial(material_blackplastic);
-			if(i==3) esferas[i*6+j].setMaterial(material_pearl);
+			if(i==0) esferas[i*6+j].setMaterial(material_ceramico);
+			if(i==1) esferas[i*6+j].setMaterial(material_iron);
+			if(i==2) esferas[i*6+j].setMaterial(material_redplastic);
+			if(i==3) esferas[i*6+j].setMaterial(material_copper);
 		}
 	}
 

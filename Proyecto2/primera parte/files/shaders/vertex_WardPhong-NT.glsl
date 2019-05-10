@@ -1,7 +1,7 @@
 var vertexShaderSource = `#version 300 es
 //Modelo de iluminacion de reflectancia de ward
 //Implementado en los fragmentos (sombreado de Phong)
-
+#define PI 3.14159265
 
 uniform mat4 modelViewMatrix;
 uniform mat4 modelViewProjMatrix;

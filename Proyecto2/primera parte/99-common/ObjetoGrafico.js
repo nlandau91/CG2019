@@ -221,9 +221,10 @@ class ObjetoGrafico{
         mat4.mul(model_view_matrix,cam.getView(),this.getModelMatrix());
         gl.uniformMatrix4fv(u_modelViewMatrix, false, model_view_matrix);
 
-        let model_view_projection_matrix = mat4.create();
-        mat4.mul(model_view_projection_matrix,cam.getProj(),model_view_matrix);
-        gl.uniformMatrix4fv(u_modelViewProjMatrix, false, model_view_projection_matrix);
+        gl.uniformMatrix4fv(u_viewMatrix,false,cam.getView());
+        gl.uniformMatrix4fv(u_projectionMatrix,false,cam.getProj());
+
+        gl.uniformMatrix4fv(u_modelMatrix,false,this.getModelMatrix());
 
         let normalMatrix = mat4.create();
         mat4.mul(normalMatrix,cam.getView(),this.getModelMatrix());
@@ -235,8 +236,11 @@ class ObjetoGrafico{
         gl.uniform3fv(u_k_diffuse, this.material.get_k_diffuse());
         gl.uniform3fv(u_k_spec, this.material.get_k_spec());
         //gl.uniform1f(u_exp_spec, this.material.get_exp_spec());
-        gl.uniform1f(u_alphaX, 0.4);
-        gl.uniform1f(u_alphaY, 0.7);
+        //gl.uniform1f(u_alphaX, 0.1);
+        //gl.uniform1f(u_alphaY, 0.7);
+        gl.uniform1f(u_f0,this.material.getf0());
+        gl.uniform1f(u_m,this.material.getm());
+
 
         //luces
         //luz1
