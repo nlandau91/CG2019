@@ -13,6 +13,8 @@ in vec3 vertexNormal;
 out vec3 vNE; //Normal del vertice en coordenadas del ojo
 out vec3 vVE; //Direccion del ojo al vertice en coordenadas del ojo
 out float atenuacion;
+out vec3 vX;
+out vec3 vY;
 
 
 void main(){
@@ -21,5 +23,7 @@ void main(){
     vVE = -(modelViewMatrix*vec4(vertexPosition,1.0)).xyz; //posicion del vertice en coordenadas del ojo
     vNE = (normalMatrix * vec4(vertexNormal,1.0)).xyz; //normal del vertice en coordenadas del ojo
     atenuacion = 1.0;
+    vX = (modelViewProjMatrix * vec4(1.0,0.0,0.0,0.0)).xyz;
+    vY = (modelViewProjMatrix * vec4(0.0,1.0,0.0,0.0)).xyz;
 }
 `

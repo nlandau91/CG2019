@@ -24,6 +24,8 @@ uniform Light luz1,luz2,luz3;
 in vec3 vNE; //Normal del vertice en coordenadas del ojo
 in vec3 vVE; //Direccion del ojo al vertice en coordenadas del ojo
 in float atenuacion;
+in vec3 vX;
+in vec3 vY;
 
 out vec4 fragColor;
 
@@ -51,8 +53,10 @@ vec3 color_ward(Light luz,vec3 N,vec3 V){
         if(dotLN > 0.0 && dotVN > 0.0){
             float ax = material.alphaX;
             float ay = material.alphaY;
-            vec3 X = vec3(1.0,0.0,0.0);
-            vec3 Y = vec3(0.0,1.0,0.0);
+            //vec3 X = vec3(1.0,0.0,0.0);
+            vec3 X = normalize(vX);
+            //vec3 Y = vec3(0.0,1.0,0.0);
+            vec3 Y = normalize(vY);
             float exponent = -(
                 pow(dot(H,X)/ax,2.0) + //cosphi2/ax2
                 pow(dot(H,Y)/ay,2.0) //sinphi2/ay2
