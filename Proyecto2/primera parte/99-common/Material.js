@@ -8,6 +8,7 @@ class Material{
         this.m = 0.0; //roughness
         this.alpha_x = 0.0; //alphax en el modelo de ward
         this.alpha_y = 0.0; //alphay en el modelo de ward
+        this.sigma = 0.0; //sigma del modelo de Oren-Nayar
     }
     set_k_ambient(new_k_ambient){
         this.k_ambient = new_k_ambient;
@@ -33,6 +34,9 @@ class Material{
     set_alpha_y(new_alpha_y){
         this.alpha_y = new_alpha_y;
     }
+    set_sigma(new_sigma){
+        this.sigma = new_sigma;
+    }
 
     get_k_ambient(){
         return this.k_ambient;
@@ -57,5 +61,8 @@ class Material{
     }
     get_alpha_y(){
         return this.alpha_y;
+    }
+    get_sigma(){
+        return this.sigma;
     }
 }
