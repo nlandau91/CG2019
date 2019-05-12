@@ -12,10 +12,12 @@ struct Material{
     float alphaY;
 };
 struct Light{
-    vec4 light_pos; //si w = 0 es vector de luz direccional, si w = 1 es posicion
-    vec3 light_intensity; //[r,g,b]
+    vec4 pos; //si w = 0 es vector de luz direccional, si w = 1 es posicion
+    vec3 intensity; //[r,g,b]
     float spot_angle; // coseno, si es 0 o 1 no es spot
     vec4 spot_direction; 
+    float attenuation_a;
+    float attenuation_b;
 };
 
 uniform Material material;
@@ -23,7 +25,6 @@ uniform Light luz1,luz2,luz3;
 
 in vec3 vNE; //Normal del vertice en coordenadas del ojo
 in vec3 vVE; //Direccion del ojo al vertice en coordenadas del ojo
-in float atenuacion;
 in vec3 vX;
 in vec3 vY;
 
@@ -31,11 +32,14 @@ out vec4 fragColor;
 
 vec3 color_ward(Light luz,vec3 N,vec3 V){
     vec3 vLE = vec3(0.0);
-    if(luz.light_pos.w < 0.00001){ //si es luz direccional
-        vLE = luz.light_pos.xyz;
+    float dist = 0.0;
+    if(luz.pos.w < 0.00001){ //si es luz direccional
+        vLE = luz.pos.xyz;
     }else{ //no es luz direccional
-        vLE = luz.light_pos.xyz + vVE;
+        vLE = luz.pos.xyz + vVE;
+        dist = length(vLE);
     }
+
 
     vec3 vSD = luz.spot_direction.xyz;
     vec3 L = normalize(vLE);
@@ -49,7 +53,7 @@ vec3 color_ward(Light luz,vec3 N,vec3 V){
     
    // if((luz.spot_angle > 0.0 && luz.spot_angle < 1.0 && dot(S, -L) > luz.spot_angle) //si es spot y esta dentro del cono
     //       ||  (luz.spot_angle < 0.00001 || luz.spot_angle > 0.99999) //o si es puntual
-     //       ||  luz.light_pos.w < 0.00001){ //o si es direccional
+     //       ||  luz.pos.w < 0.00001){ //o si es direccional
         if(dotLN > 0.0 && dotVN > 0.0){
             float ax = material.alphaX;
             float ay = material.alphaY;
@@ -63,7 +67,8 @@ vec3 color_ward(Light luz,vec3 N,vec3 V){
             ) / pow(dot(H,N),2.0);
             float ward = 1.0/(4.0 * PI * ax * ay * pow(dot(L,N)*dot(V,N),0.5));
             ward *= exp(exponent);
-            toReturn = (material.k_diffuse/PI + ward*material.k_spec)*max(dotLN,0.0)*atenuacion*luz.light_intensity;
+            float attenuation = 1.0/(1.0+luz.attenuation_a*dist+luz.attenuation_b*dist*dist);
+            toReturn = (material.k_diffuse/PI + ward*material.k_spec)*max(dotLN,0.0)*attenuation*luz.intensity;
        
        
         }

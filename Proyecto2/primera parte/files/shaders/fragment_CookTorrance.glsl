@@ -11,10 +11,12 @@ struct Material{
     float f0;
 };
 struct Light{
-    vec4 light_pos; //si w = 0 es vector de luz direccional, si w = 1 es posicion
-    vec3 light_intensity; //[r,g,b]
+    vec4 pos; //si w = 0 es vector de luz direccional, si w = 1 es posicion
+    vec3 intensity; //[r,g,b]
     float spot_angle; // coseno, si es 0 o 1 no es spot
-    vec4 spot_direction; 
+    vec4 spot_direction;
+    float attenuation_a;
+    float attenuation_b;
 };
 
 uniform mat4 viewMatrix; //solo para convertir la posicion de la luz
@@ -50,10 +52,12 @@ float calcularG( float dotNH,float dotNV,float dotVH,float dotNL){
 
 vec3 color_cook_torrance(Light luz,vec3 N,vec3 V){
     vec3 vLE = vec3(0.0);
-    if(luz.light_pos.w < 0.00001){ //si es luz direccional
-        vLE = luz.light_pos.xyz;
+    float dist = 0.0;
+    if(luz.pos.w < 0.00001){ //si es luz direccional
+        vLE = luz.pos.xyz;
     }else{ //no es luz direccional
-        vLE = luz.light_pos.xyz + vVE;
+        vLE = luz.pos.xyz + vVE;
+        dist = length(vLE);
     }
 
     vec3 vSD = luz.spot_direction.xyz;
@@ -69,12 +73,14 @@ vec3 color_cook_torrance(Light luz,vec3 N,vec3 V){
     vec3 toReturn = vec3(0.0);
     //if((luz.spot_angle > 0.0 && luz.spot_angle < 1.0 && dot(S, -L) > luz.spot_angle) //si es spot y esta dentro del cono
     //        ||  (luz.spot_angle < 0.00001 || luz.spot_angle > 0.99999) //o si es puntual
-    //        ||  luz.light_pos.w < 0.00001){ //o si es direccional
+    //        ||  luz.pos.w < 0.00001){ //o si es direccional
         if(dotLN > 0.0 && dotVN > 0.0){
             float F = fresnelSchlick(dotHN);
             float D = D_beckman(dotHN);
-    	    float G = calcularG(dotHN,dotVN,dotVH,dotLN);
-            toReturn =  luz.light_intensity*dotLN*( material.k_diffuse/PI + material.k_spec * (F*D*G)/(PI*dotVN*dotLN));
+    	    float G = calcularG(dotHN,dotVN,dotVH,dotLN);       
+            float attenuation = 1.0/(1.0+luz.attenuation_a*dist+luz.attenuation_b*dist*dist);
+
+            toReturn =  attenuation*luz.intensity*dotLN*( material.k_diffuse/PI + material.k_spec * (F*D*G)/(PI*dotVN*dotLN));
        
         }
     //}

@@ -56,16 +56,22 @@ var	u_light_pos1;
 var	u_light_intensity1;
 var u_spot_direction1;
 var u_spot_angle1;
+var u_light_attenuation_a1;
+var u_light_attenuation_b1;
 
 var	u_light_pos2;
 var	u_light_intensity2;
 var u_spot_direction2;
 var u_spot_angle2;
+var u_light_attenuation_a2;
+var u_light_attenuation_b2;
 
 var	u_light_pos3;
 var	u_light_intensity3;
 var u_spot_direction3;
 var u_spot_angle3;
+var u_light_attenuation_a3;
+var u_light_attenuation_b3;
 
 var posLocation;
 var normLocation;
@@ -580,7 +586,9 @@ function drawWithCookTorrance(objeto){//dibujamos el objeto con el shader de coo
         gl.uniform4fv(u_spot_direction1, spot_direction_eye1);
 
         gl.uniform3fv(u_light_intensity1, luz1.get_light_intensity());
-        gl.uniform1f(u_spot_angle1, luz1.get_spot_angle());
+		gl.uniform1f(u_spot_angle1, luz1.get_spot_angle());
+		gl.uniform1f(u_light_attenuation_a1, luz1.get_attenuation_a());
+		gl.uniform1f(u_light_attenuation_b1, luz1.get_attenuation_b());
 
         //luz2
         let light_pos_eye2 = vec4.create();
@@ -592,7 +600,9 @@ function drawWithCookTorrance(objeto){//dibujamos el objeto con el shader de coo
         gl.uniform4fv(u_spot_direction2, spot_direction_eye2);
 
         gl.uniform3fv(u_light_intensity2, luz2.get_light_intensity());
-        gl.uniform1f(u_spot_angle2, luz2.get_spot_angle());
+		gl.uniform1f(u_spot_angle2, luz2.get_spot_angle());
+		gl.uniform1f(u_light_attenuation_a2, luz2.get_attenuation_a());
+		gl.uniform1f(u_light_attenuation_b2, luz2.get_attenuation_b());
 
         //luz3
         let light_pos_eye3 = vec4.create();
@@ -604,7 +614,9 @@ function drawWithCookTorrance(objeto){//dibujamos el objeto con el shader de coo
         gl.uniform4fv(u_spot_direction3, spot_direction_eye3);
 
         gl.uniform3fv(u_light_intensity3, luz3.get_light_intensity());
-        gl.uniform1f(u_spot_angle3, luz3.get_spot_angle());
+		gl.uniform1f(u_spot_angle3, luz3.get_spot_angle());
+		gl.uniform1f(u_light_attenuation_a3, luz3.get_attenuation_a());
+		gl.uniform1f(u_light_attenuation_b3, luz3.get_attenuation_b());
 
         //elijo el vao a usar y llamo a draw elements
         gl.bindVertexArray(objeto.getVao());
@@ -651,6 +663,8 @@ function drawWithWard(objeto){//dibujamos el objeto con el shader de cook torran
 
 	gl.uniform3fv(u_light_intensity1, luz1.get_light_intensity());
 	gl.uniform1f(u_spot_angle1, luz1.get_spot_angle());
+	gl.uniform1f(u_light_attenuation_a1, luz1.get_attenuation_a());
+	gl.uniform1f(u_light_attenuation_b1, luz1.get_attenuation_b());
 
 	//luz2
 	let light_pos_eye2 = vec4.create();
@@ -663,6 +677,8 @@ function drawWithWard(objeto){//dibujamos el objeto con el shader de cook torran
 
 	gl.uniform3fv(u_light_intensity2, luz2.get_light_intensity());
 	gl.uniform1f(u_spot_angle2, luz2.get_spot_angle());
+	gl.uniform1f(u_light_attenuation_a2, luz2.get_attenuation_a());
+	gl.uniform1f(u_light_attenuation_b2, luz2.get_attenuation_b());
 
 	//luz3
 	let light_pos_eye3 = vec4.create();
@@ -675,6 +691,8 @@ function drawWithWard(objeto){//dibujamos el objeto con el shader de cook torran
 
 	gl.uniform3fv(u_light_intensity3, luz3.get_light_intensity());
 	gl.uniform1f(u_spot_angle3, luz3.get_spot_angle());
+	gl.uniform1f(u_light_attenuation_a3, luz3.get_attenuation_a());
+	gl.uniform1f(u_light_attenuation_b3, luz3.get_attenuation_b());
 
 	//elijo el vao a usar y llamo a draw elements
 	gl.bindVertexArray(objeto.getVao());
@@ -702,18 +720,26 @@ function setShaderCookTorrance(){
 	u_f0 = gl.getUniformLocation(shaderProgram, 'material.f0');
 	u_m = gl.getUniformLocation(shaderProgram, 'material.m');
 
-	u_light_pos1 = gl.getUniformLocation(shaderProgram, 'luz1.light_pos');
-	u_light_intensity1 = gl.getUniformLocation(shaderProgram, 'luz1.light_intensity');
+	u_light_pos1 = gl.getUniformLocation(shaderProgram, 'luz1.pos');
+	u_light_intensity1 = gl.getUniformLocation(shaderProgram, 'luz1.intensity');
 	u_spot_direction1 = gl.getUniformLocation(shaderProgram, 'luz1.spot_direction');
 	u_spot_angle1 = gl.getUniformLocation(shaderProgram, 'luz1.spot_angle');
-	u_light_pos2 = gl.getUniformLocation(shaderProgram, 'luz2.light_pos');
-	u_light_intensity2 = gl.getUniformLocation(shaderProgram, 'luz2.light_intensity');
+	u_light_attenuation_a1 = gl.getUniformLocation(shaderProgram, 'luz1.attenuation_a');
+	u_light_attenuation_b1 = gl.getUniformLocation(shaderProgram, 'luz1.attenuation_b');
+
+	u_light_pos2 = gl.getUniformLocation(shaderProgram, 'luz2.pos');
+	u_light_intensity2 = gl.getUniformLocation(shaderProgram, 'luz2.intensity');
 	u_spot_direction2 = gl.getUniformLocation(shaderProgram, 'luz2.spot_direction');
 	u_spot_angle2 = gl.getUniformLocation(shaderProgram, 'luz2.spot_angle')
-	u_light_pos3 = gl.getUniformLocation(shaderProgram, 'luz3.light_pos');
-	u_light_intensity3 = gl.getUniformLocation(shaderProgram, 'luz3.light_intensity');
+	u_light_attenuation_a2 = gl.getUniformLocation(shaderProgram, 'luz2.attenuation_a');
+	u_light_attenuation_b2 = gl.getUniformLocation(shaderProgram, 'luz2.attenuation_b');
+
+	u_light_pos3 = gl.getUniformLocation(shaderProgram, 'luz3.pos');
+	u_light_intensity3 = gl.getUniformLocation(shaderProgram, 'luz3.intensity');
 	u_spot_direction3 = gl.getUniformLocation(shaderProgram, 'luz3.spot_direction');
 	u_spot_angle3 = gl.getUniformLocation(shaderProgram, 'luz3.spot_angle')
+	u_light_attenuation_a3 = gl.getUniformLocation(shaderProgram, 'luz3.attenuation_a');
+	u_light_attenuation_b3 = gl.getUniformLocation(shaderProgram, 'luz3.attenuation_b');
 }
 function setShaderWard(){
 	shaderProgram = shaderProgramWard;
@@ -731,18 +757,26 @@ function setShaderWard(){
 	u_alphaX = gl.getUniformLocation(shaderProgram, 'material.alphaX');
 	u_alphaY = gl.getUniformLocation(shaderProgram, 'material.alphaY');
 
-	u_light_pos1 = gl.getUniformLocation(shaderProgram, 'luz1.light_pos');
-	u_light_intensity1 = gl.getUniformLocation(shaderProgram, 'luz1.light_intensity');
+	u_light_pos1 = gl.getUniformLocation(shaderProgram, 'luz1.pos');
+	u_light_intensity1 = gl.getUniformLocation(shaderProgram, 'luz1.intensity');
 	u_spot_direction1 = gl.getUniformLocation(shaderProgram, 'luz1.spot_direction');
 	u_spot_angle1 = gl.getUniformLocation(shaderProgram, 'luz1.spot_angle');
-	u_light_pos2 = gl.getUniformLocation(shaderProgram, 'luz2.light_pos');
-	u_light_intensity2 = gl.getUniformLocation(shaderProgram, 'luz2.light_intensity');
+	u_light_attenuation_a1 = gl.getUniformLocation(shaderProgram, 'luz1.attenuation_a');
+	u_light_attenuation_b1 = gl.getUniformLocation(shaderProgram, 'luz1.attenuation_b');
+
+	u_light_pos2 = gl.getUniformLocation(shaderProgram, 'luz2.pos');
+	u_light_intensity2 = gl.getUniformLocation(shaderProgram, 'luz2.intensity');
 	u_spot_direction2 = gl.getUniformLocation(shaderProgram, 'luz2.spot_direction');
-	u_spot_angle2 = gl.getUniformLocation(shaderProgram, 'luz2.spot_angle')
-	u_light_pos3 = gl.getUniformLocation(shaderProgram, 'luz3.light_pos');
-	u_light_intensity3 = gl.getUniformLocation(shaderProgram, 'luz3.light_intensity');
+	u_spot_angle2 = gl.getUniformLocation(shaderProgram, 'luz2.spot_angle');
+	u_light_attenuation_a2 = gl.getUniformLocation(shaderProgram, 'luz2.attenuation_a');
+	u_light_attenuation_b2 = gl.getUniformLocation(shaderProgram, 'luz2.attenuation_b');
+
+	u_light_pos3 = gl.getUniformLocation(shaderProgram, 'luz3.pos');
+	u_light_intensity3 = gl.getUniformLocation(shaderProgram, 'luz3.intensity');
 	u_spot_direction3 = gl.getUniformLocation(shaderProgram, 'luz3.spot_direction');
-	u_spot_angle3 = gl.getUniformLocation(shaderProgram, 'luz3.spot_angle')
+	u_spot_angle3 = gl.getUniformLocation(shaderProgram, 'luz3.spot_angle');
+	u_light_attenuation_a3 = gl.getUniformLocation(shaderProgram, 'luz3.attenuation_a');
+	u_light_attenuation_b3 = gl.getUniformLocation(shaderProgram, 'luz3.attenuation_b');
 
 }
 
