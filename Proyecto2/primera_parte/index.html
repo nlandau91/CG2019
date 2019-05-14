@@ -66,12 +66,12 @@
 
     <table align="right" border='2'>
         <tr>
-            <td>Seleccionar objeto </td>
+            <td>Seleccionar luz </td>
             <td>
                 <select disabled id="selectobj0" onChange="evento_cambiarObjSelect();">
-                    <option value="Lampara1">Lampara1</option>
-                    <option value="Lampara2">Lampara2</option>
-                    <option value="Lampara3">Lampara3</option>
+                    <option value="Lampara1">Puntual</option>
+                    <option value="Lampara2">Spot</option>
+                    <option value="Lampara3">Direccional</option>
                 </select>
             </td>
         </tr>
@@ -91,17 +91,6 @@
             <td>Traslacion respecto al origen </td>
             <td>
                 <select disabled id="selectobj3" onChange="rotacionResp([0,0,0]);">
-                    <option value="No">No</option>
-                    <option value="X">X</option>
-                    <option value="Y">Y</option>
-                    <option value="Z">Z</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td>Traslacion respecto al otro objeto </td>
-            <td>
-                <select disabled id="selectobj4" onChange="rotacionResp();">
                     <option value="No">No</option>
                     <option value="X">X</option>
                     <option value="Y">Y</option>
@@ -143,24 +132,13 @@
             </td>
         </tr>
         <tr>
-            <td>Escalar
-                <button disabled id="b7" onmousedown="onClickScale(-0.1);" onmouseup="offClick()">-</button>
-                <button disabled id="b8" onmousedown="onClickScale(0.1);" onmouseup="offClick()">+</button>
-            </td>
-            <td>
-                <input disabled type="range" step="0.01" id="btn4" min="0.1" max="1.9" value="1" step="0.05" oninput="onSliderScale(this);">
-                <output name="amount" id="amount4" for="btn4">1</output>
-
-            </td>
-        </tr>
-        <tr>
             <td>Trasladar en X
                 <button disabled id="b9" onmousedown="onClickTransXNeg();" onmouseup="offClick()">-</button>
                 <button disabled id="b10" onmousedown="onClickTransXPos();" onmouseup="offClick()">+</button>
             </td>
             <td>
-                <input disabled type="range" step="0.01" id="btn5" min="-3" max="3" value="0" step="0.1" oninput="onSliderTranslationX(this);">
-                <output name="amount" id="amount5" for="btn5">0</output>
+                <input disabled type="range" step="0.01" id="btn5" min="-10" max="10" value="3" step="0.1" oninput="onSliderTranslationX(this);">
+                <output name="amount" id="amount5" for="btn5">3</output>
 
             </td>
         </tr>
@@ -170,8 +148,8 @@
                 <button disabled id="b12" onmousedown="onClickTransYPos();" onmouseup="offClick()">+</button>
             </td>
             <td>
-                <input disabled type="range" step="0.01" id="btn6" min="0" max="5" value="0" step="0.1" oninput="onSliderTranslationY(this);">
-                <output name="amount" id="amount6" for="btn6">0</output>
+                <input disabled type="range" step="0.01" id="btn6" min="0" max="10" value="3" step="0.1" oninput="onSliderTranslationY(this);">
+                <output name="amount" id="amount6" for="btn6">3</output>
 
             </td>
         </tr>
@@ -181,8 +159,8 @@
                 <button disabled id="b14" onmousedown="onClickTransZPos();" onmouseup="offClick()">+</button>
             </td>
             <td>
-                <input disabled type="range" step="0.01" id="btn7" min="-5" max="5" value="-1" step="0.1" oninput="onSliderTranslationZ(this);">
-                <output name="amount" id="amount7" for="btn7">-1</output>
+                <input disabled type="range" step="0.01" id="btn7" min="-10" max="10" value="3" step="0.1" oninput="onSliderTranslationZ(this);">
+                <output name="amount" id="amount7" for="btn7">3</output>
 
             </td>
         </tr>

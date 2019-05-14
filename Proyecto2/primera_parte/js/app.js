@@ -251,7 +251,7 @@ function renderWithCookTorrance(){
 	let new_spot_direction3 = vec4.create();
 	vec4.transformQuat(new_spot_direction3,[0.0,-1.0,0.0,0.0],lampara3.getRotation());
 	luz3.set_spot_direction(new_spot_direction3);
-	drawWithCookTorrance(lampara3);
+	//drawWithCookTorrance(lampara3);
 
 	//dibujarEsferas
 	let i = 0;
@@ -462,7 +462,6 @@ function rotacionResp(punto)
 		//si se pasa un punto por parametro, se rota respecto al punto, por lo tanto
 		//se toma el eje seleccionado en el select 3
 		eje = document.getElementById('selectobj3').value;
-		document.getElementById('selectobj4').value="No";
 	}
 		if (eje=="No")
 		{
@@ -523,8 +522,8 @@ function habilitarBotones()
 	document.getElementById('b4').disabled=false;
 	document.getElementById('b5').disabled=false;
 	document.getElementById('b6').disabled=false;
-	document.getElementById('b7').disabled=false;
-	document.getElementById('b8').disabled=false;
+	
+
 	document.getElementById('b9').disabled=false;
 	document.getElementById('b10').disabled=false;
 	document.getElementById('b11').disabled=false;
@@ -537,12 +536,12 @@ function habilitarBotones()
 	document.getElementById('selectobj0').disabled=false;
 	document.getElementById('selectobj1').disabled=false;
 	document.getElementById('selectobj3').disabled=false;
-	document.getElementById('selectobj4').disabled=false;
+
 	
 	document.getElementById('btn1').disabled=false;
 	document.getElementById('btn2').disabled=false;
 	document.getElementById('btn3').disabled=false;
-	document.getElementById('btn4').disabled=false;
+	
 	document.getElementById('btn5').disabled=false;
 	document.getElementById('btn6').disabled=false;
 	document.getElementById('btn7').disabled=false;

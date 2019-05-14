@@ -149,13 +149,20 @@ function reset(){//reseteo los botones y la escena
 	limpiar_timers();
 	document.getElementById('btnOrbitar').disabled = false;
 	cam = new Camera(); 
+	cam.setRadius(20);
 	lampara1 = new ObjetoGrafico(); 
+	lampara1.setTrans([3.0,3.0,3.0]);
+	luz1.set_light_pos(lampara1.getTrans());
+	lampara1.setMaterial(material_silver);
 	lampara2 = new ObjetoGrafico();
-	lampara1.setBox([0.4,0.4,0,0.7,0.4,0.4]);
-	lampara2.setBox([0.5,0.5,0,2.1,0.5,0.5]);
+	lampara2.setTrans([-3.0,3.0,3.0]);
+	luz2.set_light_pos(lampara2.getTrans());
+	lampara2.setMaterial(material_silver);
+	lampara3 = new ObjetoGrafico();
+	lampara3.setTrans([0.0,3.0,-3.0]);
+	luz3.set_light_pos(lampara3.getTrans(),0.0);
+	lampara3.setMaterial(material_silver);
 	sel = lampara1;
-    lampara1.setTransZ(-1);
-	lampara2.setTransZ(1);
 	document.getElementById('btnCamPhi').value = document.getElementById('btnCamPhi').defaultValue;
 	document.getElementById('btnCamTheta').value = document.getElementById('btnCamTheta').defaultValue;
 	document.getElementById('btnCamRadius').value = document.getElementById('btnCamRadius').defaultValue;
@@ -167,8 +174,8 @@ function reset(){//reseteo los botones y la escena
 	document.getElementById('selectobj0').value = "Lampara1";
 	let i;
 	for (i = 1; i <= 7; i++) { 
-		  document.getElementById('btn'+i).value = document.getElementById('btn'+i).defaultValue;
-		  document.getElementById('amount'+i).value = document.getElementById('btn'+i).defaultValue;
+		  if (i!=4){document.getElementById('btn'+i).value = document.getElementById('btn'+i).defaultValue;
+		  document.getElementById('amount'+i).value = document.getElementById('btn'+i).defaultValue;}
 	}
 	renderizar();
 	
@@ -248,7 +255,7 @@ function evento_cambiarObjSelect()
 		}
 	document.getElementById('selectobj1').value="No";
 	document.getElementById('selectobj3').value="No";
-	document.getElementById('selectobj4').value="No";
+
 	actSliders();
 }
 
@@ -277,10 +284,7 @@ function actSliders(){
 				document.getElementById('btn'+i).value = sel.getAngleZ();
 				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
 				break;
-			case 4:
-				document.getElementById('btn'+i).value = sel.getScale();
-				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
-				break;
+
 			case 5:
 				document.getElementById('btn'+i).value = sel.getTransX();
 				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
