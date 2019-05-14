@@ -36,22 +36,31 @@ vec3 orenNayarDiffuse(Light luz, float dotVN, vec3 N, vec3 V){
         vLE = luz.pos.xyz + vVE;
         dist = length(vLE);
     }
+    vec3 vSD = luz.spot_direction.xyz;
+    vec3 S = normalize(vSD);
     vec3 L = normalize(vLE);
     float dotLN = dot(L,N);
     float thetaI = acos(dotLN);
     float thetaR = acos(dotVN);
+    vec3 toReturn = vec3(0.0);
+    if((luz.spot_angle != -1.0 && dot(S, -L) > luz.spot_angle) //si es spot y esta dentro del cono
+            ||  luz.spot_angle == -1.0 //o si es puntual
+            ||  luz.pos.w < 0.00001){ //o si es direccional
+        if(dotLN > 0.0 && dotVN > 0.0){
     
-    float alpha = max(thetaI,thetaR);
-    float beta = min(thetaI,thetaR);
+            float alpha = max(thetaI,thetaR);
+            float beta = min(thetaI,thetaR);
 
-    float sigma2 = pow(material.sigma,2.0);
+            float sigma2 = pow(material.sigma,2.0);
 
-    float A = 1.0 - 0.5*sigma2/(sigma2+0.33);
-    float B = 0.45*sigma2/(sigma2 + 0.09);
+            float A = 1.0 - 0.5*sigma2/(sigma2+0.33);
+            float B = 0.45*sigma2/(sigma2 + 0.09);
 
-    float cosPHI = dot( normalize(V-N*(dotVN)), normalize(L - N*(dotLN)) );
-    float attenuation = 1.0/(1.0+luz.attenuation_a*dist+luz.attenuation_b*dist*dist);
-    vec3 toReturn = attenuation*luz.intensity*(material.k_diffuse/PI)*dotLN*(A+(B*max(0.0,cosPHI))*sin(alpha)*tan(beta));
+            float cosPHI = dot( normalize(V-N*(dotVN)), normalize(L - N*(dotLN)) );
+            float attenuation = 1.0/(1.0+luz.attenuation_a*dist+luz.attenuation_b*dist*dist);
+            toReturn = attenuation*luz.intensity*(material.k_diffuse/PI)*dotLN*(A+(B*max(0.0,cosPHI))*sin(alpha)*tan(beta));
+        }
+    }
 	return toReturn;
 
 }

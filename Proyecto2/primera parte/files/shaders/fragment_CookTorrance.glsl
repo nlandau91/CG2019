@@ -71,8 +71,8 @@ vec3 color_cook_torrance(Light luz,vec3 N,vec3 V){
     float dotVH = max(dot(V,H),0.0);
 
     vec3 toReturn = vec3(0.0);
-    if((luz.spot_angle > 0.0 && luz.spot_angle < 1.0 && dot(S, -L) > luz.spot_angle) //si es spot y esta dentro del cono
-            ||  (luz.spot_angle < 0.00001 || luz.spot_angle > 0.99999) //o si es puntual
+    if((luz.spot_angle != -1.0 && dot(S, -L) > luz.spot_angle) //si es spot y esta dentro del cono
+            ||  luz.spot_angle == -1.0 //o si es puntual
             ||  luz.pos.w < 0.00001){ //o si es direccional
         if(dotLN > 0.0 && dotVN > 0.0){
             float F = fresnelSchlick(dotHN);

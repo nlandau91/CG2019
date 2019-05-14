@@ -1,10 +1,9 @@
 var esferas = [];
 var renderloopid;
 
-var luz1 = new Luz(); //luz direccional
+var luz1 = new Luz(); //luz puntual
 luz1.set_light_intensity([1.0,1.0,1.0]);
-luz1.set_spot_direction([0.0,-1.0,0.0,0.0]);
-luz1.set_spot_angle(Math.cos(glMatrix.toRadian(45)));
+luz1.set_spot_angle(-1.0); //luz puntual
 
 var luz2 = new Luz(); // luz spot
 luz2.set_light_intensity([1.0,1.0,1.0]);
@@ -12,9 +11,8 @@ luz2.set_spot_direction([0.0,-1.0,0.0,0.0]);
 luz2.set_spot_angle(Math.cos(glMatrix.toRadian(50)));
 
 var luz3 = new Luz(); //luz direccional
+luz3.set_light_pos(-1.0,-1.0,-1.0,0.0); //como w=0, es una direccion
 luz3.set_light_intensity([1.0,1.0,1.0]);
-luz3.set_spot_direction([0.0,-1.0,0.0,0.0]);
-luz3.set_spot_angle(Math.cos(glMatrix.toRadian(55)));
 
 var timerRotarSobresuEje;
 var timerRotacionRespecto;
@@ -166,7 +164,7 @@ function onLoad() {
 	luz2.set_light_pos(lampara2.getTrans());
 	lampara2.setMaterial(material_silver);
 	lampara3.setTrans([0.0,3.0,-3.0]);
-	luz3.set_light_pos(lampara3.getTrans());
+	luz3.set_light_pos(lampara3.getTrans(),0.0);
 	lampara3.setMaterial(material_silver);
 	plano.setMaterial(material_plano);	
 	plano.setScale(2);
@@ -249,7 +247,7 @@ function renderWithCookTorrance(){
 	luz2.set_spot_direction(new_spot_direction2);
 	drawWithCookTorrance(lampara2);
 
-	luz3.set_light_pos([lampara3.getTransX(),lampara3.getTransY(),lampara3.getTransZ(),1.0]);
+	luz3.set_light_pos([lampara3.getTransX(),lampara3.getTransY(),lampara3.getTransZ(),0.0]);
 	let new_spot_direction3 = vec4.create();
 	vec4.transformQuat(new_spot_direction3,[0.0,-1.0,0.0,0.0],lampara3.getRotation());
 	luz3.set_spot_direction(new_spot_direction3);
@@ -285,7 +283,7 @@ function renderWithWard(){
 	luz2.set_spot_direction(new_spot_direction2);
 	drawWithWard(lampara2);
 
-	luz3.set_light_pos([lampara3.getTransX(),lampara3.getTransY(),lampara3.getTransZ(),1.0]);
+	luz3.set_light_pos([lampara3.getTransX(),lampara3.getTransY(),lampara3.getTransZ(),0.0]);
 	let new_spot_direction3 = vec4.create();
 	vec4.transformQuat(new_spot_direction3,[0.0,-1.0,0.0,0.0],lampara3.getRotation());
 	luz3.set_spot_direction(new_spot_direction3);
@@ -321,7 +319,7 @@ function renderWithOrenNayar(){
 	luz2.set_spot_direction(new_spot_direction2);
 	drawWithOrenNayar(lampara2);
 
-	luz3.set_light_pos([lampara3.getTransX(),lampara3.getTransY(),lampara3.getTransZ(),1.0]);
+	luz3.set_light_pos([lampara3.getTransX(),lampara3.getTransY(),lampara3.getTransZ(),0.0]);
 	let new_spot_direction3 = vec4.create();
 	vec4.transformQuat(new_spot_direction3,[0.0,-1.0,0.0,0.0],lampara3.getRotation());
 	luz3.set_spot_direction(new_spot_direction3);
@@ -575,7 +573,6 @@ function cargarEsferas(){
 	let j = 0;
 	
 	for(i = 0; i<4; i++){
-		//console.log("cargando..."+i*25+"%");
 		for(j = 0; j<6; j++){
 			esferas[i*6+j] = new ObjetoGrafico();
 			esferas[i*6+j].setTrans([3*i-4.0,0.0,3*j-6.0]);
