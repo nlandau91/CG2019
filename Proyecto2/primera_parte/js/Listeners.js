@@ -1,4 +1,5 @@
 var sel = lampara1; //objeto seleccionado
+var selLight = luz1; //luz seleccionada
 var Orbitando=false;
 
 //funciones que reaccionan a los botones/sliders del panel
@@ -11,86 +12,27 @@ function onSliderRotationZ(slider) {
 }
 
 function onSliderRed(slider) {
-	let luz;
-	if(document.getElementById('selectobj0').value == 'Lampara1'){
-		luz = luz1;
-	}
-	if(document.getElementById('selectobj0').value == 'Lampara2'){
-		luz = luz2;
-	}
-	if(document.getElementById('selectobj0').value == 'Lampara3'){
-		luz = luz3;
-	}
-	luz.set_light_intensity([parseFloat(slider.value),luz.get_light_intensity()[1],luz.get_light_intensity()[2]]);
+	selLight.set_light_intensity([parseFloat(slider.value),selLight.get_light_intensity()[1],selLight.get_light_intensity()[2]]);
 }
 
 function onSliderGreen(slider) {	
-	let luz;
-	if(document.getElementById('selectobj0').value == 'Lampara1'){
-		luz = luz1;
-	}
-	if(document.getElementById('selectobj0').value == 'Lampara2'){
-		luz = luz2;
-	}
-	if(document.getElementById('selectobj0').value == 'Lampara3'){
-		luz = luz3;
-	}
-	luz.set_light_intensity([luz.get_light_intensity()[0],parseFloat(slider.value),luz.get_light_intensity()[2]]);
+	selLight.set_light_intensity([selLight.get_light_intensity()[0],parseFloat(slider.value),selLight.get_light_intensity()[2]]);
 }
 
 function onSliderBlue(slider) {
-	let luz;
-	if(document.getElementById('selectobj0').value == 'Lampara1'){
-		luz = luz1;
-	}
-	if(document.getElementById('selectobj0').value == 'Lampara2'){
-		luz = luz2;
-	}
-	if(document.getElementById('selectobj0').value == 'Lampara3'){
-		luz = luz3;
-	}
-	luz.set_light_intensity([luz.get_light_intensity()[0],luz.get_light_intensity()[1],parseFloat(slider.value)]);
-}
-
-function onSliderScale(slider) {
-	let oldvalue = sel.getScale();
-	sel.setScale(parseFloat(slider.value));
-	if(lampara1.collision(lampara2)){
-		sel.setScale(oldvalue);
-	}
-	document.getElementById('amount4').value=sel.getScale();
-	document.getElementById('btn4').value=sel.getScale();
-		
+	selLight.set_light_intensity([selLight.get_light_intensity()[0],selLight.get_light_intensity()[1],parseFloat(slider.value)]);
 }
 
 function onSliderTranslationX(slider) {
-	let oldvalue = sel.getTransX();
-	sel.setTransX(parseFloat(slider.value));
-	if(lampara1.collision(lampara2)){
-		sel.setTransX(oldvalue);
-	}
-	document.getElementById('amount5').value=sel.getTransX();
-	document.getElementById('btn5').value=sel.getTransX();	
+	sel.setTransX(parseFloat(slider.value));	
 }
 
 function onSliderTranslationY(slider) {	
-	let oldvalue = sel.getTransY();
 	sel.setTransY(parseFloat(slider.value));
-	if(lampara1.collision(lampara2)){
-		sel.setTransY(oldvalue);
-	}
-	document.getElementById('amount6').value=sel.getTransY();
-	document.getElementById('btn6').value=sel.getTransY();	
 }
 
 function onSliderTranslationZ(slider) {	
-	let oldvalue = sel.getTransZ();
-	sel.setTransZ(parseFloat(slider.value));
-	if(lampara1.collision(lampara2)){
-		sel.setTransZ(oldvalue);
-	}
-	document.getElementById('amount7').value=sel.getTransZ();
-	document.getElementById('btn7').value=sel.getTransZ();	
+	sel.setTransZ(parseFloat(slider.value));	
 }
 
 function onSliderCamPhi(slider) {
@@ -224,7 +166,7 @@ function CamFront(){
 	cam.setTheta(90);
 	cam.setPhi(45);
 	cam.setFovy(50);
-	cam.setRadius(15);	
+	cam.setRadius(20);	
 	document.getElementById('btnCamTheta').value = cam.getTheta();
 	document.getElementById('amountTheta').value = cam.getTheta();
 	document.getElementById('btnCamPhi').value = cam.getPhi();
@@ -239,7 +181,7 @@ function CamTrasera(){
 	cam.setTheta(270);
 	cam.setPhi(45);
 	cam.setFovy(50);
-	cam.setRadius(15);
+	cam.setRadius(20);
 	document.getElementById('btnCamTheta').value = cam.getTheta();
 	document.getElementById('amountTheta').value = cam.getTheta();
 	document.getElementById('btnCamPhi').value = cam.getPhi();
@@ -254,7 +196,7 @@ function CamLeft(){
 	cam.setTheta(0);
 	cam.setPhi(45);
 	cam.setFovy(50);
-	cam.setRadius(15);	
+	cam.setRadius(20);	
 	document.getElementById('btnCamTheta').value = cam.getTheta();
 	document.getElementById('amountTheta').value = cam.getTheta();
 	document.getElementById('btnCamPhi').value = cam.getPhi();
@@ -268,7 +210,7 @@ function CamRight(){
 	cam.setTheta(180);
 	cam.setPhi(45);
 	cam.setFovy(50);
-	cam.setRadius(15);
+	cam.setRadius(20);
 	document.getElementById('btnCamTheta').value = cam.getTheta();
 	document.getElementById('amountTheta').value = cam.getTheta();
 	document.getElementById('btnCamPhi').value = cam.getPhi();
@@ -285,46 +227,45 @@ function CamRight(){
 
 function actSliders(){
 	if(document.getElementById('selectobj0').value == 'Lampara1'){
-		sel = lampara1;		
+		sel = lampara1;
+		selLight = luz1;	
 	}
 	if(document.getElementById('selectobj0').value == 'Lampara2'){
 		sel = lampara2;		
+		selLight = luz2;	
 	}
 	if(document.getElementById('selectobj0').value == 'Lampara3'){
 		sel = lampara3;		
+		selLight = luz3;	
 	}
 	let i;
-	// for (i = 1; i <= 7; i++) { 
-	// 	switch (i) {
-	// 		case 1:
-	// 			document.getElementById('btn'+i).value = sel.getAngleX();
-	// 			document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
-	// 			break;
-	// 		case 2:
-	// 			document.getElementById('btn'+i).value =sel.getAngleY();
-	// 			document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
-	// 		  	break;
-	// 		case 3:
-	// 			document.getElementById('btn'+i).value = sel.getAngleZ();
-	// 			document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
-	// 			break;
+	for (i = 1; i <= 7; i++) { 
+		switch (i) {
+			case 1:
+				document.getElementById('btn'+i).value = sel.getAngleX();
+				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
+				break;
+			case 3:
+				document.getElementById('btn'+i).value = sel.getAngleZ();
+				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
+				break;
 
-	// 		case 5:
-	// 			document.getElementById('btn'+i).value = sel.getTransX();
-	// 			document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
-	// 			break;
-	// 		case 6:
-	// 			document.getElementById('btn'+i).value = sel.getTransY();
-	// 			document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
-	// 			break;
-	// 		case 7:
-	// 			document.getElementById('btn'+i).value = sel.getTransZ();
-	// 			document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
-	// 			break;
-	// 		default:
-	// 			break;
-	// 	  }
-	// }
+			case 5:
+				document.getElementById('btn'+i).value = sel.getTransX();
+				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
+				break;
+			case 6:
+				document.getElementById('btn'+i).value = sel.getTransY();
+				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
+				break;
+			case 7:
+				document.getElementById('btn'+i).value = sel.getTransZ();
+				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
+				break;
+			default:
+				break;
+		  }
+	}
 }
 function apuntar(){
 	let punto = [0,0,0];

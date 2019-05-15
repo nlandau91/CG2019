@@ -56,7 +56,7 @@ vec3 color_cook_torrance(Light luz,vec3 N,vec3 V){
         vec3 vLE = vec3(0.0);
         float dist = 0.0;
         if(luz.pos.w < 0.00001){ //si es luz direccional
-            vLE = luz.pos.xyz;
+            vLE = -luz.pos.xyz;
         }else{ //no es luz direccional
             vLE = luz.pos.xyz + vVE;
             dist = length(vLE);

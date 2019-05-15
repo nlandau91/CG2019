@@ -141,9 +141,7 @@ function onLoad() {
 				timerTecla = setInterval(function() {Evento_teclado(e);},20);
 
 			}
-		}
-		else
-			Evento_teclado(e);
+		}		
 		
     }, false);
 
@@ -165,9 +163,8 @@ function onLoad() {
 	lampara2.setTrans([-3.0,3.0,3.0]);
 	luz2.set_light_pos(lampara2.getTrans());
 	lampara2.setMaterial(material_silver);
-	lampara3.setTrans([0.0,3.0,-3.0]);
+	lampara3.setTrans([0.0,-1.0,0.0]);
 	luz3.set_light_pos(lampara3.getTrans(),0.0);
-	lampara3.setMaterial(material_silver);
 	plano.setMaterial(material_plano);	
 	plano.setScale(2);
 	
@@ -277,9 +274,6 @@ function habilitarBotones()
 	document.getElementById('btnCamRadius').disabled=false;
 	document.getElementById('btnFovy').disabled=false;
 
-	document.getElementById('btnFocoTaza').disabled=false;
-	document.getElementById('btnFocoCafetera').disabled=false;
-	document.getElementById('btnFocoCentro').disabled=false;
 }
 function cargarEsferas(){
 	

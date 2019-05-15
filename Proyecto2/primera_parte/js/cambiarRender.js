@@ -6,23 +6,16 @@ function renderWithCookTorrance(){
 	drawWithCookTorrance(plano);
 
 	//dibujo las luces, acomodo sus posiciones y direcciones de acuerdo a las lamparas
-	luz1.set_light_pos([lampara1.getTransX(),lampara1.getTransY(),lampara1.getTransZ(),1.0]); //para controlar la luz
-	let new_spot_direction1 = vec4.create();
-	vec4.transformQuat(new_spot_direction1,[0.0,-1.0,0.0,0.0],lampara1.getRotation());
-	luz1.set_spot_direction(new_spot_direction1);	
+	luz1.set_light_pos([lampara1.getTransX(),lampara1.getTransY(),lampara1.getTransZ(),1.0]); //para controlar la luz	
 	drawWithCookTorrance(lampara1);
 
 	luz2.set_light_pos([lampara2.getTransX(),lampara2.getTransY(),lampara2.getTransZ(),1.0]);
-	let new_spot_direction2 = vec4.create();
-	vec4.transformQuat(new_spot_direction2,[0.0,-1.0,0.0,0.0],lampara2.getRotation());
-	luz2.set_spot_direction(new_spot_direction2);
+	let new_spot_direction1 = vec4.create();
+	vec4.transformQuat(new_spot_direction1,[0.0,-1.0,0.0,0.0],lampara2.getRotation());
+	luz2.set_spot_direction(new_spot_direction1);
 	drawWithCookTorrance(lampara2);
 
 	luz3.set_light_pos([lampara3.getTransX(),lampara3.getTransY(),lampara3.getTransZ(),0.0]);
-	let new_spot_direction3 = vec4.create();
-	vec4.transformQuat(new_spot_direction3,[0.0,-1.0,0.0,0.0],lampara3.getRotation());
-	luz3.set_spot_direction(new_spot_direction3);
-	//drawWithCookTorrance(lampara3);
 
 	//dibujarEsferas
 	let i = 0;
