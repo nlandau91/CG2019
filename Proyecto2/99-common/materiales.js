@@ -26,7 +26,7 @@ material_copper.set_k_spec([0.58,0.22,0.06]);
 material_copper.set_exp_spec(51);
 material_copper.set_f0(0.99);
 material_copper.set_m(0.14);
-material_copper.set_alpha_x(0.1);
+material_copper.set_alpha_x(0.3);
 material_copper.set_alpha_y(0.9);
 
 var material_iron = new Material(); //hierro fundido
@@ -36,8 +36,8 @@ material_iron.set_k_spec([0.9,0.9,0.9]);
 material_iron.set_exp_spec(25.6);
 material_iron.set_f0(0.6);
 material_iron.set_m(0.15);
-material_iron.set_alpha_x(0.1);
-material_iron.set_alpha_y(0.9);
+material_iron.set_alpha_x(0.3);
+material_iron.set_alpha_y(0.6);
 
 var material_ceramico = new Material();
 material_ceramico.set_k_ambient([0.25,0.148,0.06475]);
@@ -76,8 +76,8 @@ material_redplastic.set_k_spec([0.8,0.2,0.2]);
 material_redplastic.set_exp_spec(46.8);
 material_redplastic.set_f0(0.04);
 material_redplastic.set_m(0.05);
-material_redplastic.set_alpha_x(0.01);
-material_redplastic.set_alpha_y(0.01);
+material_redplastic.set_alpha_x(0.1);
+material_redplastic.set_alpha_y(0.5);
 
 var material_silver = new Material();
 material_silver.set_k_ambient([0.19225,0.19225,0.19225]);

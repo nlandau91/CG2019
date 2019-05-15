@@ -30,7 +30,7 @@ in vec3 vY;
 
 out vec4 fragColor;
 
-vec3 color_ward(Light luz,vec3 N,vec3 V){
+vec3 color_ward(Light luz,vec3 N,vec3 V,vec3 T,vec3 B){
     vec3 vLE = vec3(0.0);
     float dist = 0.0;
     if(luz.pos.w < 0.00001){ //si es luz direccional
@@ -57,13 +57,25 @@ vec3 color_ward(Light luz,vec3 N,vec3 V){
             float ax = material.alphaX;
             float ay = material.alphaY;
             //vec3 X = vec3(1.0,0.0,0.0);
-            vec3 X = normalize(vX);
+            //vec3 X = normalize(vX);
+            vec3 X = T;
             //vec3 Y = vec3(0.0,1.0,0.0);
-            vec3 Y = normalize(vY);
-            float exponent = -(
-                pow(dot(H,X)/ax,2.0) + //cosphi2/ax2
-                pow(dot(H,Y)/ay,2.0) //sinphi2/ay2
+            //vec3 Y = normalize(vY);
+            vec3 Y = B;
+
+            // float cosphi = dot(H,X);      
+            // float cosphi2 = cosphi*cosphi;
+            // float sinphi2 = 1.0-cosphi2;
+            // float tan2 = pow(tan(acos(dotHN)),2.0);
+            // float exponent = -tan2 * (
+            //     (cosphi2/(ax*ax)) + (sinphi2/(ay*ay))
+            // );
+
+           float exponent = -(
+               pow(dot(H,X)/ax,2.0) + //cosphi2/ax2
+               pow(dot(H,Y)/ay,2.0) //sinphi2/ay2
             ) / pow(dot(H,N),2.0);
+
             float ward = 1.0/(4.0 * PI * ax * ay * pow(dot(L,N)*dot(V,N),0.5));
             ward *= exp(exponent);
             float attenuation = 1.0/(1.0+luz.attenuation_a*dist+luz.attenuation_b*dist*dist);
@@ -80,16 +92,26 @@ void main()
     vec3 N = normalize(vNE);
     vec3 V = normalize(vVE);
 
+    vec3 t1 = cross(vec3(0.0,0.0,1.0),N);
+    vec3 t2 = cross(vec3(1.0,0.0,0.0),N);
+    vec3 tangent = vec3(0.0);
+    if(length(t1) > length(t2)){
+        tangent = normalize(t1);
+    }else{
+        tangent = normalize(t2);
+    }
+    vec3 bitangent = cross(tangent,N);
+
     vec3 ambientLightning = material.k_ambient*0.3;  
 
-    vec3 color1 = color_ward(luz1,N,V);
-    vec3 color2 = color_ward(luz2,N,V);
-    vec3 color3 = color_ward(luz3,N,V);
+    vec3 color1 = color_ward(luz1,N,V,tangent,bitangent);
+    //vec3 color2 = color_ward(luz2,N,V,tangent,bitangent);
+    //vec3 color3 = color_ward(luz3,N,V,tangent,bitangent);
 
-    vec3 color = color1 + color2 + color3;
+    //vec3 color = color1 + color2 + color3;
   
     fragColor = vec4(
                     ambientLightning + 
-    				color, 1.0);
+    				color1, 1.0);
 }
 `
