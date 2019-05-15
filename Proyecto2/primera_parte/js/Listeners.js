@@ -14,6 +14,26 @@ function onSliderRotationZ(slider) {
 	sel.setAngleZ(parseFloat(slider.value));	
 }
 
+function onSliderRed(slider) {	
+	//sel.setAngleX(parseFloat(slider.value));
+	luz1.set_light_intensity([parseFloat(slider.value),luz1.get_light_intensity()[1],luz1.get_light_intensity()[2]]);
+	if(sel == lampara2)luz2.set_light_intensity(parseFloat(slider.value),luz2.get_light_intensity()[1],luz2.get_light_intensity()[2]);
+	if(sel == lampara3)luz3.set_light_intensity(parseFloat(slider.value),luz3.get_light_intensity()[1],luz3.get_light_intensity()[2]);
+}
+
+function onSliderGreen(slider) {	
+	//sel.setAngleY(parseFloat(slider.value));	
+	if(sel == lampara2)luz2.set_light_intensity(luz2.get_light_intensity()[0],parseFloat(slider.value),luz2.get_light_intensity()[2]);
+	if(sel == lampara3)luz3.set_light_intensity(luz3.get_light_intensity()[0],luz3.get_light_intensity()[1],parseFloat(slider.value));
+
+}
+
+function onSliderRed(slider) {
+	//sel.setAngleZ(parseFloat(slider.value));
+	if(sel == lampara3)luz3.set_light_intensity(luz3.get_light_intensity()[0],luz3.get_light_intensity()[1],parseFloat(slider.value));
+
+}
+
 function onSliderScale(slider) {
 	let oldvalue = sel.getScale();
 	sel.setScale(parseFloat(slider.value));

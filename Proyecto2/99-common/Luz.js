@@ -7,7 +7,6 @@ class Luz{
         this.spot_angle = 0.0; //el valor representa el coseno del angulo, si es 0 o 1 no es spot
         this.attenuation_a = 0.0; //para atenuacion = 1/(1+a*dist+b*dist*dist)
         this.attenuation_b = 0.0; //para atenuacion = 1/(1+a*dist+b*dist*dist)
-        this.on = 1;
     }
 
     set_light_pos(new_light_pos){

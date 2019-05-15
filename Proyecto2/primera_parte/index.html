@@ -26,9 +26,10 @@
     <script src="../modelos/lampara.js"></script>   
     <script src="../modelos/esfera.js"></script>
     <script src="../modelos/plano.js"></script>
-    <script src="../99-common/Listeners.js"></script>
-    <script src="../99-common/eventosTeclado.js"></script>
+    <script src="js/Listeners.js"></script>
+    <script src="js/eventosTeclado.js"></script>
     <script src="../99-common/MovimientosTraslacion.js"></script>
+    <script src="js/cambiarRender.js"></script>
     
     <style>
         h1 {
@@ -76,26 +77,27 @@
             </td>
         </tr>
         <tr>
-            <td>Rotacion sobre sus ejes </td>
             <td>
-                <select disabled id="selectobj1" onChange="rotarObj();">
-                    <option value="No">No</option>
-                    <option value="X">X</option>
-                    <option value="Y">Y</option>
-                    <option value="Z">Z</option>
-                    <option value="XY">XY</option>
-                </select>
+                Intensidad Red
+            </td>
+            <td>
+                <input  type="range" step="0.01" id="btnRed" min="0" max="1" value="1" oninput="onSliderRed(this)"></button>
             </td>
         </tr>
         <tr>
-            <td>Traslacion respecto al origen </td>
             <td>
-                <select disabled id="selectobj3" onChange="rotacionResp([0,0,0]);">
-                    <option value="No">No</option>
-                    <option value="X">X</option>
-                    <option value="Y">Y</option>
-                    <option value="Z">Z</option>
-                </select>
+                Intensidad Green
+            </td>
+            <td>
+                <input disabled type="range" step="0.01" id="btnGreen" min="0" max="1" value="1" oninput="onSliderGreen(this)"></button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Intensidad Blue
+            </td>
+            <td>
+                <input disabled type="range" step="0.01" id="btnBlue" min="0" max="1" value="1" oninput="onSliderBlue(this)"></button>
             </td>
         </tr>
         <tr>
@@ -110,17 +112,7 @@
             </td>
 
         </tr>
-        <tr>
-            <td>Rotar en Y
-                <button disabled id="b3" onmousedown="onClickRotY(-DeltaRot);" onmouseup="offClick()">-</button>
-                <button disabled id="b4" onmousedown="onClickRotY(DeltaRot);" onmouseup="offClick()">+</button>
-            </td>
-            <td>
-                <input disabled type="range" step="0.01" id="btn2" min="-180" max="180" value="0" oninput="onSliderRotationY(this);amount2.value=btn2.value;">
-                <output name="amount" id="amount2" for="btn2">0</output>
 
-            </td>
-        </tr>
         <tr>
             <td>Rotar en Z
                 <button disabled id="b5" onmousedown="onClickRotZ(-DeltaRot);" onmouseup="offClick()">-</button>

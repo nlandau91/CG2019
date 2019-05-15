@@ -31,57 +31,59 @@ in vec3 vY;
 out vec4 fragColor;
 
 vec3 color_ward(Light luz,vec3 N,vec3 V,vec3 T,vec3 B){
-    vec3 vLE = vec3(0.0);
-    float dist = 0.0;
-    if(luz.pos.w < 0.00001){ //si es luz direccional
-        vLE = luz.pos.xyz;
-    }else{ //no es luz direccional
-        vLE = luz.pos.xyz + vVE;
-        dist = length(vLE);
-    }
+    vec3 toReturn = vec3(0.0,0.0,0.0);
+    if(length(luz.intensity) > 0.0){ //checkeo si la luz esta prendida
+        vec3 vLE = vec3(0.0);
+        float dist = 0.0;
+        if(luz.pos.w < 0.00001){ //si es luz direccional
+            vLE = luz.pos.xyz;
+        }else{ //no es luz direccional
+            vLE = luz.pos.xyz + vVE;
+            dist = length(vLE);
+        }
 
-    vec3 vSD = luz.spot_direction.xyz;
-    vec3 L = normalize(vLE);
-    vec3 H = normalize(L+V);
-    vec3 S = normalize(vSD);
+        vec3 vSD = luz.spot_direction.xyz;
+        vec3 L = normalize(vLE);
+        vec3 H = normalize(L+V);
+        vec3 S = normalize(vSD);
 
-    float dotLN = dot(L,N); //cos theta i
-    float dotVN = dot(V,N); //cos theta r
-    float dotHN = dot(H,N); //cos theta h
-    vec3 toReturn = vec3(0.0);
-    
-    if((luz.spot_angle != -1.0 && dot(S, -L) > luz.spot_angle) //si es spot y esta dentro del cono
-            ||  luz.spot_angle == -1.0 //o si es puntual
-            ||  luz.pos.w < 0.00001){ //o si es direccional
-        if(dotLN > 0.0 && dotVN > 0.0){
-            float ax = material.alphaX;
-            float ay = material.alphaY;
-            //vec3 X = vec3(1.0,0.0,0.0);
-            //vec3 X = normalize(vX);
-            vec3 X = T;
-            //vec3 Y = vec3(0.0,1.0,0.0);
-            //vec3 Y = normalize(vY);
-            vec3 Y = B;
+        float dotLN = dot(L,N); //cos theta i
+        float dotVN = dot(V,N); //cos theta r
+        float dotHN = dot(H,N); //cos theta h
+        
+        if((luz.spot_angle != -1.0 && dot(S, -L) > luz.spot_angle) //si es spot y esta dentro del cono
+                ||  luz.spot_angle == -1.0 //o si es puntual
+                ||  luz.pos.w < 0.00001){ //o si es direccional
+            if(dotLN > 0.0 && dotVN > 0.0){
+                float ax = material.alphaX;
+                float ay = material.alphaY;
+                //vec3 X = vec3(1.0,0.0,0.0);
+                //vec3 X = normalize(vX);
+                vec3 X = T;
+                //vec3 Y = vec3(0.0,1.0,0.0);
+                //vec3 Y = normalize(vY);
+                vec3 Y = B;
 
-            // float cosphi = dot(H,X);      
-            // float cosphi2 = cosphi*cosphi;
-            // float sinphi2 = 1.0-cosphi2;
-            // float tan2 = pow(tan(acos(dotHN)),2.0);
-            // float exponent = -tan2 * (
-            //     (cosphi2/(ax*ax)) + (sinphi2/(ay*ay))
-            // );
+                // float cosphi = dot(H,X);      
+                // float cosphi2 = cosphi*cosphi;
+                // float sinphi2 = 1.0-cosphi2;
+                // float tan2 = pow(tan(acos(dotHN)),2.0);
+                // float exponent = -tan2 * (
+                //     (cosphi2/(ax*ax)) + (sinphi2/(ay*ay))
+                // );
 
-           float exponent = -(
-               pow(dot(H,X)/ax,2.0) + //cosphi2/ax2
-               pow(dot(H,Y)/ay,2.0) //sinphi2/ay2
-            ) / pow(dot(H,N),2.0);
+            float exponent = -(
+                pow(dot(H,X)/ax,2.0) + //cosphi2/ax2
+                pow(dot(H,Y)/ay,2.0) //sinphi2/ay2
+                ) / pow(dot(H,N),2.0);
 
-            float ward = 1.0/(4.0 * PI * ax * ay * pow(dot(L,N)*dot(V,N),0.5));
-            ward *= exp(exponent);
-            float attenuation = 1.0/(1.0+luz.attenuation_a*dist+luz.attenuation_b*dist*dist);
-            toReturn = (material.k_diffuse/PI + ward*material.k_spec)*max(dotLN,0.0)*attenuation*luz.intensity;
-       
-       
+                float ward = 1.0/(4.0 * PI * ax * ay * pow(dot(L,N)*dot(V,N),0.5));
+                ward *= exp(exponent);
+                float attenuation = 1.0/(1.0+luz.attenuation_a*dist+luz.attenuation_b*dist*dist);
+                toReturn = (material.k_diffuse/PI + ward*material.k_spec)*max(dotLN,0.0)*attenuation*luz.intensity;
+        
+        
+            }
         }
     }
     return toReturn;

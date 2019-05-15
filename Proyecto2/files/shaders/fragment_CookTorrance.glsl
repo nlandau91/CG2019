@@ -21,7 +21,7 @@ struct Light{
 
 uniform mat4 viewMatrix; //solo para convertir la posicion de la luz
 uniform Material material;
-uniform Light luz1,luz2,luz3;
+uniform Light luz1,luz2,luz3,luz4;
 
 //uniform de luz
 
@@ -51,41 +51,41 @@ float calcularG( float dotNH,float dotNV,float dotVH,float dotNL){
 }
 
 vec3 color_cook_torrance(Light luz,vec3 N,vec3 V){
-    vec3 vLE = vec3(0.0);
-    float dist = 0.0;
-    if(luz.pos.w < 0.00001){ //si es luz direccional
-        vLE = luz.pos.xyz;
-    }else{ //no es luz direccional
-        vLE = luz.pos.xyz + vVE;
-        dist = length(vLE);
-    }
+    vec3 toReturn = vec3(0.0,0.0,0.0);
+    if(length(luz.intensity) > 0.0){ //checkeo si la luz esta prendida
+        vec3 vLE = vec3(0.0);
+        float dist = 0.0;
+        if(luz.pos.w < 0.00001){ //si es luz direccional
+            vLE = luz.pos.xyz;
+        }else{ //no es luz direccional
+            vLE = luz.pos.xyz + vVE;
+            dist = length(vLE);
+        }
 
-    vec3 vSD = luz.spot_direction.xyz;
-    vec3 L = normalize(vLE);
-    vec3 H = normalize(L+V);
-    vec3 S = normalize(vSD);
+        vec3 vSD = luz.spot_direction.xyz;
+        vec3 L = normalize(vLE);
+        vec3 H = normalize(L+V);
+        vec3 S = normalize(vSD);
 
-    float dotLN = max(dot(L,N),0.0); //cos theta i
-    float dotVN = max(dot(V,N),0.0); //cos theta r
-    float dotHN = max(dot(H,N),0.0); //cos theta h
-    float dotVH = max(dot(V,H),0.0);
+        float dotLN = max(dot(L,N),0.0); //cos theta i
+        float dotVN = max(dot(V,N),0.0); //cos theta r
+        float dotHN = max(dot(H,N),0.0); //cos theta h
+        float dotVH = max(dot(V,H),0.0);
 
-    vec3 toReturn = vec3(0.0);
-    if((luz.spot_angle != -1.0 && dot(S, -L) > luz.spot_angle) //si es spot y esta dentro del cono
-            ||  luz.spot_angle == -1.0 //o si es puntual
-            ||  luz.pos.w < 0.00001){ //o si es direccional
-        if(dotLN > 0.0 && dotVN > 0.0){
-            float F = fresnelSchlick(dotHN);
-            float D = D_beckman(dotHN);
-    	    float G = calcularG(dotHN,dotVN,dotVH,dotLN);       
-            float attenuation = 1.0/(1.0+luz.attenuation_a*dist+luz.attenuation_b*dist*dist);
+        if((luz.spot_angle != -1.0 && dot(S, -L) > luz.spot_angle) //si es spot y esta dentro del cono
+                ||  luz.spot_angle == -1.0 //o si es puntual
+                ||  luz.pos.w < 0.00001){ //o si es direccional
+            if(dotLN > 0.0 && dotVN > 0.0){
+                float F = fresnelSchlick(dotHN);
+                float D = D_beckman(dotHN);
+                float G = calcularG(dotHN,dotVN,dotVH,dotLN);       
+                float attenuation = 1.0/(1.0+luz.attenuation_a*dist+luz.attenuation_b*dist*dist);
 
-            toReturn =  attenuation*luz.intensity*dotLN*( material.k_diffuse/PI + material.k_spec * (F*D*G)/(PI*dotVN*dotLN));
-       
+                toReturn =  attenuation*luz.intensity*dotLN*( material.k_diffuse/PI + material.k_spec * (F*D*G)/(PI*dotVN*dotLN));
+        
+            }
         }
     }
-
-
     return toReturn;
 }
 void main(){
@@ -96,12 +96,14 @@ void main(){
     vec3 color1 = vec3(0.0);
     vec3 color2 = vec3(0.0);
     vec3 color3 = vec3(0.0);
+    vec3 color4 = vec3(0.0);
     vec3 color = vec3(0.0);
    		
     color1 = color_cook_torrance(luz1,N,V);
     color2 = color_cook_torrance(luz2,N,V);
     color3 = color_cook_torrance(luz3,N,V);
-    color = color1+color2+color3;
+    color4 = color_cook_torrance(luz4,N,V);
+    color = color1+color2+color3+color4;
 	   
     
     fragColor = vec4(material.k_ambient*0.3 + color,1.0); 

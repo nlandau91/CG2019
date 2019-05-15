@@ -1,20 +1,26 @@
 var esferas = [];
 var renderloopid;
 
-var luz1 = new Luz(); //luz direccional
-luz1.set_light_intensity([1.0,1.0,1.0]);
-luz1.set_spot_direction([0.0,-1.0,0.0,0.0]);
-luz1.set_spot_angle(Math.cos(glMatrix.toRadian(45)));
+var luz1 = new Luz(); //luz roja nave
+luz1.set_light_intensity([1.0,0.0,0.0]);
+luz1.set_spot_direction([0.0,-1.0,1.0,0.0]);
+luz1.set_spot_angle(Math.cos(glMatrix.toRadian(25)));
 
-var luz2 = new Luz(); // luz spot
-luz2.set_light_intensity([1.0,1.0,1.0]);
-luz2.set_spot_direction([0.0,-1.0,0.0,0.0]);
-luz2.set_spot_angle(Math.cos(glMatrix.toRadian(50)));
+var luz2 = new Luz(); // luz verde nave
+luz2.set_light_intensity([0.0,1.0,0.0]);
+luz2.set_spot_direction([-1.0,-1.0,0.0,0.0]);
+luz2.set_spot_angle(Math.cos(glMatrix.toRadian(25)));
 
-var luz3 = new Luz(); //luz direccional
-luz3.set_light_intensity([1.0,1.0,1.0]);
-luz3.set_spot_direction([0.0,-1.0,0.0,0.0]);
-luz3.set_spot_angle(Math.cos(glMatrix.toRadian(55)));
+var luz3 = new Luz(); //luz azul nave
+luz3.set_light_intensity([0.0,0.0,1.0]);
+luz3.set_spot_direction([1.0,-1.0,0.0,0.0]);
+luz3.set_spot_angle(Math.cos(glMatrix.toRadian(25)));
+
+var luz4 = new Luz(); //luz direccional
+luz4.set_light_intensity([1.0,1.0,1.0]);
+//luz4.set_spot_direction([0.0,-1.0,0.0,0.0]);
+//luz4.set_spot_angle(Math.cos(glMatrix.toRadian(45)));
+luz4.set_light_pos([0.0,-1.0,0.0,0.0]);
 
 var timerRotarSobresuEje;
 var timerRotacionRespecto;
@@ -73,16 +79,24 @@ var u_spot_angle3;
 var u_light_attenuation_a3;
 var u_light_attenuation_b3;
 
+var	u_light_pos4;
+var	u_light_intensity4;
+var u_spot_direction4;
+var u_spot_angle4;
+var u_light_attenuation_a4;
+var u_light_attenuation_b4;
+
 var posLocation;
 var normLocation;
 
 var cam = new Camera(); //vamos a controlar la camara desde esta clase
 cam.setRadius(20);
 
-var lampara1 = new ObjetoGrafico(); 
-var lampara2 = new ObjetoGrafico(); 
-var lampara3 = new ObjetoGrafico();
+//var lampara1 = new ObjetoGrafico(); 
+//var lampara2 = new ObjetoGrafico(); 
+//var lampara3 = new ObjetoGrafico();
 var plano = new ObjetoGrafico();
+
 var alien= new ObjetoGrafico();
 var platoVolador= new ObjetoGrafico();
 
@@ -158,25 +172,33 @@ function onLoad() {
 
 
 	//ubico los modelos
-	lampara1.setTrans([3.0,3.0,3.0]);
-	luz1.set_light_pos(lampara1.getTrans());
-	lampara1.setMaterial(material_silver);
-	lampara2.setTrans([-3.0,3.0,3.0]);
-	luz2.set_light_pos(lampara2.getTrans());
-	lampara2.setMaterial(material_silver);
-	lampara3.setTrans([0.0,3.0,-3.0]);
-	luz3.set_light_pos(lampara3.getTrans());
-	lampara3.setMaterial(material_silver);
+	
+	alien.setMaterial(material_redplastic);
+	alien.setScale(0.3);
+	alien.setTrans([0.0,0.0,0.0]);
+
+	platoVolador.setMaterial(material_copper);
+	platoVolador.setScale(2.5);
+	platoVolador.setTrans([0.0,10.0,0.0]);
+
+	//lampara1.setTrans([10.0,30.0,10.0]);
+	//luz4.set_light_pos([-0.5,-1.0,0.0,0.0]);
+	//lampara1.setMaterial(material_silver);
+
+    
+	luz1.set_light_pos(platoVolador.getTrans(),1.0);
+	//lampara1.setMaterial(material_silver);
+	//lampara2.setTrans([-5.0,20.0,5.0]);
+	luz2.set_light_pos(platoVolador.getTrans(),1.0);
+	//lampara2.setMaterial(material_silver);
+	//lampara3.setTrans([0.0,20.0,-5.0]);
+	luz3.set_light_pos(platoVolador.getTrans(),1.0);
+	//lampara3.setMaterial(material_silver);
+	
 	plano.setMaterial(material_plano);	
 	plano.setScale(2);
 	
-	alien.setMaterial(material_copper);
-	alien.setScale(0.3);
-	alien.setTrans([0.0,0.1,0.0]);
-
-	platoVolador.setMaterial(material_pearl);
-	platoVolador.setScale(0.5);
-	platoVolador.setTrans([3.0,3.0,-3.0]);
+	
 
 	
 
@@ -197,12 +219,12 @@ function onLoad() {
 }
 function cargarObjetos(){	
 	plano.loadOBJ(planojs);		
-	lampara1.loadOBJ(lamparajs);	
-	lampara2.loadOBJ(lamparajs);
-	lampara3.loadOBJ(lamparajs);		
+	//lampara1.loadOBJ(lamparajs);	
+	//lampara2.loadOBJ(lamparajs);
+	//lampara3.loadOBJ(lamparajs);		
 	platoVolador.loadOBJ(platoVoladorjs);
 	alien.loadOBJ(alienjs);
-	
+	//lampara1.loadOBJ(lamparajs);
 }
 function renderizar(){
 	if(renderMode == 'RENDERMODE_COOK_TORRANCE')setShaderCookTorrance();
@@ -244,23 +266,31 @@ function renderWithCookTorrance(){
 	drawWithCookTorrance(plano);
 
 	//dibujo las luces, acomodo sus posiciones y direcciones de acuerdo a las lamparas
-	luz1.set_light_pos([lampara1.getTransX(),lampara1.getTransY(),lampara1.getTransZ(),1.0]); //para controlar la luz
+	luz1.set_light_pos([platoVolador.getTransX(),platoVolador.getTransY(),platoVolador.getTransZ(),1.0]); //para controlar la luz
 	let new_spot_direction1 = vec4.create();
-	vec4.transformQuat(new_spot_direction1,[0.0,-1.0,0.0,0.0],lampara1.getRotation());
+	vec4.transformQuat(new_spot_direction1,[-0.1,-1.0,0.0,0.0],platoVolador.getRotation());
 	luz1.set_spot_direction(new_spot_direction1);	
-	drawWithCookTorrance(lampara1);
+	//drawWithCookTorrance(lampara1);
 
-	luz2.set_light_pos([lampara2.getTransX(),lampara2.getTransY(),lampara2.getTransZ(),1.0]);
+	luz2.set_light_pos([platoVolador.getTransX(),platoVolador.getTransY(),platoVolador.getTransZ(),1.0]);
 	let new_spot_direction2 = vec4.create();
-	vec4.transformQuat(new_spot_direction2,[0.0,-1.0,0.0,0.0],lampara2.getRotation());
+	vec4.transformQuat(new_spot_direction2,[0.1,-1.0,0.0,0.0],platoVolador.getRotation());
 	luz2.set_spot_direction(new_spot_direction2);
-	drawWithCookTorrance(lampara2);
+	//drawWithCookTorrance(lampara2);
 
-	luz3.set_light_pos([lampara3.getTransX(),lampara3.getTransY(),lampara3.getTransZ(),1.0]);
+	luz3.set_light_pos([platoVolador.getTransX(),platoVolador.getTransY(),platoVolador.getTransZ(),1.0]);
 	let new_spot_direction3 = vec4.create();
-	vec4.transformQuat(new_spot_direction3,[0.0,-1.0,0.0,0.0],lampara3.getRotation());
+	vec4.transformQuat(new_spot_direction3,[0.0,-1.0,0.1,0.0],platoVolador.getRotation());
 	luz3.set_spot_direction(new_spot_direction3);
-	drawWithCookTorrance(lampara3);
+	//drawWithCookTorrance(lampara3);
+
+	luz4.set_light_pos([0.0,-1.0,0.0,0.0]);
+
+	//let new_spot_direction4 = vec4.create();
+	//vec4.transformQuat(new_spot_direction3,[0.0,-1.0,0.0,0.0],platoVolador.getRotation());
+	//luz3.set_spot_direction(new_spot_direction3);
+	//drawWithCookTorrance(lampara3);
+
 
 	//dibujo alien
 	drawWithCookTorrance(alien);
@@ -287,23 +317,24 @@ function renderWithWard(){
 	drawWithWard(plano);
 
 	//dibujo las luces, acomodo sus posiciones y direcciones de acuerdo a las lamparas
-	luz1.set_light_pos([lampara1.getTransX(),lampara1.getTransY(),lampara1.getTransZ(),1.0]); //para controlar la luz
+	luz1.set_light_pos([platoVolador.getTransX(),platoVolador.getTransY(),platoVolador.getTransZ(),1.0]); //para controlar la luz
 	let new_spot_direction1 = vec4.create();
-	vec4.transformQuat(new_spot_direction1,[0.0,-1.0,0.0,0.0],lampara1.getRotation());
+	vec4.transformQuat(new_spot_direction1,[0.0,-1.0,0.0,0.0],platoVolador.getRotation());
 	luz1.set_spot_direction(new_spot_direction1);	
-	drawWithWard(lampara1);
+	//drawWithWard(lampara1);
 
-	luz2.set_light_pos([lampara2.getTransX(),lampara2.getTransY(),lampara2.getTransZ(),1.0]);
+	luz2.set_light_pos([platoVolador.getTransX(),platoVolador.getTransY(),platoVolador.getTransZ(),1.0]);
 	let new_spot_direction2 = vec4.create();
-	vec4.transformQuat(new_spot_direction2,[0.0,-1.0,0.0,0.0],lampara2.getRotation());
+	vec4.transformQuat(new_spot_direction2,[0.0,-1.0,0.0,0.0],platoVolador.getRotation());
 	luz2.set_spot_direction(new_spot_direction2);
-	drawWithWard(lampara2);
+	//drawWithWard(lampara2);
 
-	luz3.set_light_pos([lampara3.getTransX(),lampara3.getTransY(),lampara3.getTransZ(),1.0]);
+	luz3.set_light_pos([platoVolador.getTransX(),platoVolador.getTransY(),platoVolador.getTransZ(),1.0]);
 	let new_spot_direction3 = vec4.create();
-	vec4.transformQuat(new_spot_direction3,[0.0,-1.0,0.0,0.0],lampara3.getRotation());
+	vec4.transformQuat(new_spot_direction3,[0.0,-1.0,0.0,0.0],platoVolador.getRotation());
 	luz3.set_spot_direction(new_spot_direction3);
-	drawWithWard(lampara3);
+	//drawWithWard(lampara3);
+
 
 	//dibujo alien
 	drawWithWard(alien);
@@ -340,7 +371,7 @@ function reordenarIndices(srcIndices){
 /*
 	rota el objeto 1 sobre su propio eje
 */
-function rotarObj(){
+/**function rotarObj(){
 	if(document.getElementById('selectobj0').value=='Lampara1'){
 
 		let eje = document.getElementById('selectobj1').value;
@@ -381,6 +412,7 @@ function rotarObj(){
 			}, 10);
 		}
 	}
+	
 	if(document.getElementById('selectobj0').value=='Lampara2'){
 		let eje = document.getElementById('selectobj1').value;
 	
@@ -418,6 +450,7 @@ function rotarObj(){
 			}, 10);
 		}
 	}
+	
 }
 
 function rotarAlrededorPunto(objeto,punto,angulo) {		
@@ -482,7 +515,7 @@ function rotacionResp(punto)
 			}, 20);
 		}
 }
-
+*/
 
 function limpiar_timers()
 {
@@ -644,6 +677,19 @@ function drawWithCookTorrance(objeto){//dibujamos el objeto con el shader de coo
 		gl.uniform1f(u_spot_angle3, luz3.get_spot_angle());
 		gl.uniform1f(u_light_attenuation_a3, luz3.get_attenuation_a());
 		gl.uniform1f(u_light_attenuation_b3, luz3.get_attenuation_b());
+		//luz4
+		let light_pos_eye4 = vec4.create();
+        vec4.transformMat4(light_pos_eye4,luz4.get_light_pos(),cam.getView());
+        gl.uniform4fv(u_light_pos4, light_pos_eye4);
+
+        let spot_direction_eye4 = vec4.create();
+        vec4.transformMat4(spot_direction_eye4,luz4.get_spot_direction(),cam.getView());
+        gl.uniform4fv(u_spot_direction4, spot_direction_eye4);
+
+        gl.uniform3fv(u_light_intensity4, luz4.get_light_intensity());
+		gl.uniform1f(u_spot_angle4, luz4.get_spot_angle());
+		gl.uniform1f(u_light_attenuation_a4, luz4.get_attenuation_a());
+		gl.uniform1f(u_light_attenuation_b4, luz4.get_attenuation_b());
 
         //elijo el vao a usar y llamo a draw elements
         gl.bindVertexArray(objeto.getVao());
@@ -721,6 +767,20 @@ function drawWithWard(objeto){//dibujamos el objeto con el shader de cook torran
 	gl.uniform1f(u_light_attenuation_a3, luz3.get_attenuation_a());
 	gl.uniform1f(u_light_attenuation_b3, luz3.get_attenuation_b());
 
+	//luz4
+	let light_pos_eye4 = vec4.create();
+	vec4.transformMat4(light_pos_eye4,luz4.get_light_pos(),cam.getView());
+	gl.uniform4fv(u_light_pos4, light_pos_eye4);
+
+	let spot_direction_eye4 = vec4.create();
+	vec4.transformMat4(spot_direction_eye4,luz4.get_spot_direction(),cam.getView());
+	gl.uniform4fv(u_spot_direction4, spot_direction_eye4);
+
+	gl.uniform3fv(u_light_intensity4, luz4.get_light_intensity());
+	gl.uniform1f(u_spot_angle4, luz4.get_spot_angle());
+	gl.uniform1f(u_light_attenuation_a4, luz4.get_attenuation_a());
+	gl.uniform1f(u_light_attenuation_b4, luz4.get_attenuation_b());
+
 	//elijo el vao a usar y llamo a draw elements
 	gl.bindVertexArray(objeto.getVao());
 	gl.drawElements(gl.TRIANGLES, objeto.getParsedOBJ().indices.length, gl.UNSIGNED_INT, 0);
@@ -767,6 +827,17 @@ function setShaderCookTorrance(){
 	u_spot_angle3 = gl.getUniformLocation(shaderProgram, 'luz3.spot_angle')
 	u_light_attenuation_a3 = gl.getUniformLocation(shaderProgram, 'luz3.attenuation_a');
 	u_light_attenuation_b3 = gl.getUniformLocation(shaderProgram, 'luz3.attenuation_b');
+
+	u_light_pos4 = gl.getUniformLocation(shaderProgram, 'luz4.pos');
+	u_light_intensity4 = gl.getUniformLocation(shaderProgram, 'luz4.intensity');
+	u_spot_direction4 = gl.getUniformLocation(shaderProgram, 'luz4.spot_direction');
+	u_spot_angle4 = gl.getUniformLocation(shaderProgram, 'luz4.spot_angle')
+	u_light_attenuation_a4 = gl.getUniformLocation(shaderProgram, 'luz4.attenuation_4');
+	u_light_attenuation_b4 = gl.getUniformLocation(shaderProgram, 'luz4.attenuation_4');
+
+
+
+
 }
 function setShaderWard(){
 	shaderProgram = shaderProgramWard;
