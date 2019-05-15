@@ -69,7 +69,7 @@
         <tr>
             <td>Seleccionar luz </td>
             <td>
-                <select disabled id="selectobj0" onChange="evento_cambiarObjSelect();">
+                <select disabled id="selectobj0" onChange="actSliders();">
                     <option value="Lampara1">Puntual</option>
                     <option value="Lampara2">Spot</option>
                     <option value="Lampara3">Direccional</option>
@@ -81,7 +81,7 @@
                 Intensidad Red
             </td>
             <td>
-                <input  type="range" step="0.01" id="btnRed" min="0" max="1" value="1" oninput="onSliderRed(this)"></button>
+                <input  type="range" step="0.01" id="btnRed" min="0" max="1" value="1" oninput="onSliderRed(this);"></button>
             </td>
         </tr>
         <tr>
@@ -89,7 +89,7 @@
                 Intensidad Green
             </td>
             <td>
-                <input disabled type="range" step="0.01" id="btnGreen" min="0" max="1" value="1" oninput="onSliderGreen(this)"></button>
+                <input  type="range" step="0.01" id="btnGreen" min="0" max="1" value="1" oninput="onSliderGreen(this)"></button>
             </td>
         </tr>
         <tr>
@@ -97,7 +97,7 @@
                 Intensidad Blue
             </td>
             <td>
-                <input disabled type="range" step="0.01" id="btnBlue" min="0" max="1" value="1" oninput="onSliderBlue(this)"></button>
+                <input  type="range" step="0.01" id="btnBlue" min="0" max="1" value="1" oninput="onSliderBlue(this)"></button>
             </td>
         </tr>
         <tr>

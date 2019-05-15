@@ -6,32 +6,50 @@ function onSliderRotationX(slider) {
 	sel.setAngleX(parseFloat(slider.value));
 }
 
-function onSliderRotationY(slider) {	
-	sel.setAngleY(parseFloat(slider.value));	
-}
-
 function onSliderRotationZ(slider) {
 	sel.setAngleZ(parseFloat(slider.value));	
 }
 
-function onSliderRed(slider) {	
-	//sel.setAngleX(parseFloat(slider.value));
-	luz1.set_light_intensity([parseFloat(slider.value),luz1.get_light_intensity()[1],luz1.get_light_intensity()[2]]);
-	if(sel == lampara2)luz2.set_light_intensity(parseFloat(slider.value),luz2.get_light_intensity()[1],luz2.get_light_intensity()[2]);
-	if(sel == lampara3)luz3.set_light_intensity(parseFloat(slider.value),luz3.get_light_intensity()[1],luz3.get_light_intensity()[2]);
+function onSliderRed(slider) {
+	let luz;
+	if(document.getElementById('selectobj0').value == 'Lampara1'){
+		luz = luz1;
+	}
+	if(document.getElementById('selectobj0').value == 'Lampara2'){
+		luz = luz2;
+	}
+	if(document.getElementById('selectobj0').value == 'Lampara3'){
+		luz = luz3;
+	}
+	luz.set_light_intensity([parseFloat(slider.value),luz.get_light_intensity()[1],luz.get_light_intensity()[2]]);
 }
 
 function onSliderGreen(slider) {	
-	//sel.setAngleY(parseFloat(slider.value));	
-	if(sel == lampara2)luz2.set_light_intensity(luz2.get_light_intensity()[0],parseFloat(slider.value),luz2.get_light_intensity()[2]);
-	if(sel == lampara3)luz3.set_light_intensity(luz3.get_light_intensity()[0],luz3.get_light_intensity()[1],parseFloat(slider.value));
-
+	let luz;
+	if(document.getElementById('selectobj0').value == 'Lampara1'){
+		luz = luz1;
+	}
+	if(document.getElementById('selectobj0').value == 'Lampara2'){
+		luz = luz2;
+	}
+	if(document.getElementById('selectobj0').value == 'Lampara3'){
+		luz = luz3;
+	}
+	luz.set_light_intensity([luz.get_light_intensity()[0],parseFloat(slider.value),luz.get_light_intensity()[2]]);
 }
 
-function onSliderRed(slider) {
-	//sel.setAngleZ(parseFloat(slider.value));
-	if(sel == lampara3)luz3.set_light_intensity(luz3.get_light_intensity()[0],luz3.get_light_intensity()[1],parseFloat(slider.value));
-
+function onSliderBlue(slider) {
+	let luz;
+	if(document.getElementById('selectobj0').value == 'Lampara1'){
+		luz = luz1;
+	}
+	if(document.getElementById('selectobj0').value == 'Lampara2'){
+		luz = luz2;
+	}
+	if(document.getElementById('selectobj0').value == 'Lampara3'){
+		luz = luz3;
+	}
+	luz.set_light_intensity([luz.get_light_intensity()[0],luz.get_light_intensity()[1],parseFloat(slider.value)]);
 }
 
 function onSliderScale(slider) {
@@ -263,21 +281,7 @@ function CamRight(){
 /*
 	se ejecuta cuando el select que selecciona taza o cafetera cambia.
 */
-function evento_cambiarObjSelect()
-{
-	if(document.getElementById('selectobj0').value == 'Lampara1')
-	{
-		setPrimeroTaza();
-	}
-	else if(document.getElementById('selectobj0').value == 'Lampara2')
-		{
-			setPrimeroCafetera();
-		}
-	document.getElementById('selectobj1').value="No";
-	document.getElementById('selectobj3').value="No";
 
-	actSliders();
-}
 
 function actSliders(){
 	if(document.getElementById('selectobj0').value == 'Lampara1'){
@@ -290,37 +294,37 @@ function actSliders(){
 		sel = lampara3;		
 	}
 	let i;
-	for (i = 1; i <= 7; i++) { 
-		switch (i) {
-			case 1:
-				document.getElementById('btn'+i).value = sel.getAngleX();
-				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
-				break;
-			case 2:
-				document.getElementById('btn'+i).value =sel.getAngleY();
-				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
-			  	break;
-			case 3:
-				document.getElementById('btn'+i).value = sel.getAngleZ();
-				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
-				break;
+	// for (i = 1; i <= 7; i++) { 
+	// 	switch (i) {
+	// 		case 1:
+	// 			document.getElementById('btn'+i).value = sel.getAngleX();
+	// 			document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
+	// 			break;
+	// 		case 2:
+	// 			document.getElementById('btn'+i).value =sel.getAngleY();
+	// 			document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
+	// 		  	break;
+	// 		case 3:
+	// 			document.getElementById('btn'+i).value = sel.getAngleZ();
+	// 			document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
+	// 			break;
 
-			case 5:
-				document.getElementById('btn'+i).value = sel.getTransX();
-				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
-				break;
-			case 6:
-				document.getElementById('btn'+i).value = sel.getTransY();
-				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
-				break;
-			case 7:
-				document.getElementById('btn'+i).value = sel.getTransZ();
-				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
-				break;
-			default:
-				break;
-		  }
-	}
+	// 		case 5:
+	// 			document.getElementById('btn'+i).value = sel.getTransX();
+	// 			document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
+	// 			break;
+	// 		case 6:
+	// 			document.getElementById('btn'+i).value = sel.getTransY();
+	// 			document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
+	// 			break;
+	// 		case 7:
+	// 			document.getElementById('btn'+i).value = sel.getTransZ();
+	// 			document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
+	// 			break;
+	// 		default:
+	// 			break;
+	// 	  }
+	// }
 }
 function apuntar(){
 	let punto = [0,0,0];
@@ -410,4 +414,12 @@ function focoCafetera(){
 function focoCentro(){
 	cam.setObjetivo(new ObjetoGrafico());
 	
+}
+
+function reiniciar_opciones()
+{
+	 document.getElementById('selectobj1').value="No";
+	 document.getElementById('selectobj3').value="No";
+	 document.getElementById('selectobj4').value="No";
+	 limpiar_timers();
 }
