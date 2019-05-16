@@ -173,7 +173,15 @@
 
         <tr>
             <th>Camara</th>
-            <th>Teclas Importantes</th>
+            <th>Material
+                <select id="selectobj2" onChange="cambiarTipoLuz();">
+                    <option value="0">Fila 1</option>
+                    <option value="1">Fila 2</option>
+                    <option value="2">Fila 3</option>
+                    <option value="3">Fila 4</option>
+                </select>
+            </th>
+            
 
         </tr>
         <tr>
@@ -182,27 +190,33 @@
                 <input disabled id="btnCamPhi" type="range" step="0.01" min="0" max="360" value="45" oninput="onSliderCamPhi(this);amountPhi.value=btnCamPhi.value;">
                 <output name="amount" id="amountPhi" for="btnCamPhi">45</output>
             </td>
-            <td align="center" rowspan="10">
-
-                L : Cargar y renderizar
+            <td rowspan="8">
+                
+                
+                    <!-- ka
+                    <input type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderKa(this);">
                 <br>
-                <br> Selección:
-                <br> 1 Taza
-                <br> 2 Cafetera
+                    kd
+                    <input type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderKd(this);">
                 <br>
-                <br> Transformaciones
-                <br> Traslación: T
-                <br> Rot sobre si mismo: R + O
-                <br> Rot Respecto al otro: R + P
-                <br> Escalado: E
+                    ks
+                    <input type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderKs(this);">
+                <br> -->
+                    F0
+                    <input type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderF0(this);">
                 <br>
-                <br> X, Y , Z para seleccionar
-                <br> el eje en el cual se aplica
-                <br> la transformación
+                    m
+                    <input type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderM(this);">
                 <br>
-                <br> Teclas IZQ y DER para
-                <br> aplicar la transformación
-
+                    ax
+                    <input type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderAx(this);">
+                <br>
+                    ay
+                    <input type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderAy(this);">
+                <br>
+                    sigma
+                    <input type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderSigma(this);">
+                </br>
             </td>
 
         </tr>

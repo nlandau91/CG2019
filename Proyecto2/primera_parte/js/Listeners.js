@@ -383,4 +383,109 @@ function cambiarTipoLuz(){
 		default:
 	}
 	selLight.set_light_intensity(nuevoTipoLuz);
+	actSliders();
+}
+
+function onSliderKa(slider) {	
+	let fila = parseFloat(document.getElementById('selectobj2').value);
+	let value = parseFloat(slider.value);
+
+	let i = fila;
+	let j = 0;	
+
+	for(j = 0; j<6; j++){			
+		esferas[i*6+j].getMaterial().set_k_ambient(value);
+	}
+	
+}
+
+function onSliderKd(slider) {	
+	let fila = parseFloat(document.getElementById('selectobj2').value);
+	let value = parseFloat(slider.value);
+
+	let i = fila;
+	let j = 0;	
+
+	for(j = 0; j<6; j++){			
+		esferas[i*6+j].getMaterial().set_k_diffuse(value);
+	}
+	
+}
+
+function onSliderKs(slider) {	
+	let fila = parseFloat(document.getElementById('selectobj2').value);
+	let value = parseFloat(slider.value);
+
+	let i = fila;
+	let j = 0;	
+
+	for(j = 0; j<6; j++){			
+		esferas[i*6+j].getMaterial().set_k_spec(value);
+	}
+	
+}
+
+function onSliderF0(slider) {	
+	let fila = parseFloat(document.getElementById('selectobj2').value);
+	let value = parseFloat(slider.value);
+
+	let i = fila;
+	let j = 0;	
+
+	for(j = 0; j<6; j++){			
+		esferas[i*6+j].getMaterial().set_f0(value);
+	}
+	
+}
+
+function onSliderM(slider) {	
+	let fila = parseFloat(document.getElementById('selectobj2').value);
+	let value = parseFloat(slider.value);
+
+	let i = fila;
+	let j = 0;	
+
+	for(j = 0; j<6; j++){			
+		esferas[i*6+j].getMaterial().set_m(value);
+	}
+	
+}
+
+function onSliderAx(slider) {	
+	let fila = parseFloat(document.getElementById('selectobj2').value);
+	let value = parseFloat(slider.value);
+
+	let i = fila;
+	let j = 0;	
+
+	for(j = 0; j<6; j++){			
+		esferas[i*6+j].getMaterial().set_alpha_x(value);
+	}
+	
+}
+
+function onSliderAy(slider) {	
+	let fila = parseFloat(document.getElementById('selectobj2').value);
+	let value = parseFloat(slider.value);
+
+	let i = fila;
+	let j = 0;	
+
+	for(j = 0; j<6; j++){			
+		esferas[i*6+j].getMaterial().set_alpha_y(value);
+	}
+	
+}
+
+function onSliderSigma(slider) {	
+	let fila = parseFloat(document.getElementById('selectobj2').value);
+	let value = parseFloat(slider.value);
+
+	let i = fila;
+	let j = 0;	
+
+	for(j = 0; j<6; j++){			
+		esferas[i*6+j].getMaterial().set_sigma(value);
+	}
+	
 }
