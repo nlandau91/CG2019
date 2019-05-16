@@ -269,6 +269,13 @@ function onRender(now) {
 	now *= 0.001;                            // milisegundos -> segundos
 	const timeDelta = now - lastDrawTime;    // tiempo entre este frame y el anterior
 
+	//actualizo posiciones y direcciones, ya que las lamparas y luces estan conectadas
+	if(luzEnCamara == 'NAVE'){
+		
+		cam.setObjetivo(platoVolador);
+		cam.setRadius(0);
+	}
+	
 	if(renderMode == 'RENDERMODE_COOK_TORRANCE')renderWithCookTorrance();
 	if(renderMode == 'RENDERMODE_WARD')renderWithWard();
 	
@@ -316,7 +323,7 @@ function renderWithCookTorrance(){
 	luz3.set_spot_direction(new_spot_direction3);
 	
 
-	luz4.set_light_pos([0.0,-1.0,0.0,0.0]);
+	luz4.set_light_pos([-0.3,-1.0,0.0,0.0]);
 
 	
 	//dibujo alien
@@ -584,6 +591,10 @@ function habilitarBotones()
 	document.getElementById('selectobj2').disabled=false;
 	document.getElementById('selectobj3').disabled=false;
 
+	///document.getElementById('rangeA').disabled=false;
+	//document.getElementById('rangeD').disabled=false;
+	//document.getElementById('rangeS').disabled=false;
+	
 	document.getElementById('sliderf0').disabled=false;
 	document.getElementById('sliderm').disabled=false;
 	document.getElementById('sliderax').disabled=false;

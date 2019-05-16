@@ -1,6 +1,6 @@
 var sel = alien; //objeto seleccionado
 
-var selLuz=luz4;
+var selLight=luz1; //luz seleccionada
 
 var Orbitando=false;
 
@@ -18,7 +18,7 @@ function onSliderRotationZ(slider) {
 }
 
 function onSliderRed(slider) {
-	if(selLuz==luz1){
+	if(selLight==luz1){
 		selLight.set_light_intensity([parseFloat(slider.value),selLight.get_light_intensity()[1],selLight.get_light_intensity()[2]]);
 	}
 	else
@@ -26,16 +26,16 @@ function onSliderRed(slider) {
 }
 
 function onSliderGreen(slider) {
-	if(selLuz==luz1){
-		luz2.set_light_intensity([parseFloat(slider.value),luz2.get_light_intensity()[1],luz2.get_light_intensity()[2]]);
+	if(selLight==luz1){
+		luz2.set_light_intensity([luz2.get_light_intensity()[0],parseFloat(slider.value),luz2.get_light_intensity()[2]]);
 	}
 	else	
 	selLight.set_light_intensity([selLight.get_light_intensity()[0],parseFloat(slider.value),selLight.get_light_intensity()[2]]);
 }
 
 function onSliderBlue(slider) {
-	if(selLuz==luz1){
-		luz3.set_light_intensity([parseFloat(slider.value),selLight.get_light_intensity()[1],selLight.get_light_intensity()[2]]);
+	if(selLight==luz1){
+		luz3.set_light_intensity([luz3.get_light_intensity()[0],luz3.get_light_intensity()[1],parseFloat(slider.value)]);
 	}
 	else
 	selLight.set_light_intensity([selLight.get_light_intensity()[0],selLight.get_light_intensity()[1],parseFloat(slider.value)]);
@@ -168,16 +168,18 @@ function reset(){//reseteo los botones y la escena
     
     luz4.set_light_intensity(luz_dia); 
 
+	
+	
+	sel = alien;
+	selLight= luz1;
+
+	alien.setTrans([0.0,0.0,0.0]);
+	platoVolador.setTrans([0.0,15.0,0.0]);
 	luz1.set_light_pos(platoVolador.getTrans(),1.0);
 	
 	luz2.set_light_pos(platoVolador.getTrans(),1.0);
 	
 	luz3.set_light_pos(platoVolador.getTrans(),1.0);
-	
-	sel = alien;
-
-	alien.setTrans([0.0,0.0,0.0]);
-	platoVolador.setTrans([0.0,15.0,0.0]);
 	
 
 
@@ -284,10 +286,10 @@ function actSliders(){
 		sel = platoVolador;		
 	}
 	if(document.getElementById('selectobj1').value == 'Nave'){
-		selLuz = luz1;		
+		selLight = luz1;		
 	}
 	if(document.getElementById('selectobj1').value == 'Sol'){
-		selLuz = luz4;		
+		selLigth = luz4;		
 	}	
 	
 	
@@ -319,7 +321,7 @@ function actSliders(){
 				break;
 		  }
 	}
-	if (selLuz==luz4){
+	if (selLight==luz4){
 	document.getElementById('btnRed').value = selLight.get_light_intensity()[0];
 	document.getElementById('btnGreen').value = selLight.get_light_intensity()[1];
 	document.getElementById('btnBlue').value = selLight.get_light_intensity()[2];
@@ -328,8 +330,43 @@ function actSliders(){
 		document.getElementById('btnRed').value = luz1.get_light_intensity()[0];
 		document.getElementById('btnGreen').value = luz2.get_light_intensity()[1];
 		document.getElementById('btnBlue').value = luz3.get_light_intensity()[2];
-
 	}
+    
+    //0 Alien
+	//1 Nave
+	//2 Tractor     
+	//3 Silo  
+	if(document.getElementById('selectobj3').value == '0'){
+		document.getElementById('sliderf0').value = alien.getMaterial().get_f0();
+		document.getElementById('sliderm').value = alien.getMaterial().get_m();
+		document.getElementById('sliderax').value = alien.getMaterial().get_alpha_x();
+		document.getElementById('slideray').value = alien.getMaterial().get_alpha_y();
+		document.getElementById('slidersigma').value = alien.getMaterial().get_sigma();
+			
+	}
+	if(document.getElementById('selectobj3').value == '1'){
+		document.getElementById('sliderf0').value = platoVolador.getMaterial().get_f0();
+		document.getElementById('sliderm').value = platoVolador.getMaterial().get_m();
+		document.getElementById('sliderax').value = platoVolador.getMaterial().get_alpha_x();
+		document.getElementById('slideray').value = platoVolador.getMaterial().get_alpha_y();
+		document.getElementById('slidersigma').value = platoVolador.getMaterial().get_sigma();		
+	}
+	if(document.getElementById('selectobj3').value == '2'){
+		document.getElementById('sliderf0').value = tractor.getMaterial().get_f0();
+		document.getElementById('sliderm').value = tractor.getMaterial().get_m();
+		document.getElementById('sliderax').value = tractor.getMaterial().get_alpha_x();
+		document.getElementById('slideray').value = tractor.getMaterial().get_alpha_y();
+		document.getElementById('slidersigma').value = tractor.getMaterial().get_sigma();	
+	}
+	if(document.getElementById('selectobj3').value == '3'){
+		document.getElementById('sliderf0').value = silo.getMaterial().get_f0();
+		document.getElementById('sliderm').value = silo.getMaterial().get_m();
+		document.getElementById('sliderax').value = silo.getMaterial().get_alpha_x();
+		document.getElementById('slideray').value = silo.getMaterial().get_alpha_y();
+		document.getElementById('slidersigma').value = silo.getMaterial().get_sigma();		
+	}
+
+
 }
 function apuntar(){
 	let punto = [0,0,0];
@@ -430,13 +467,13 @@ function onSliderKa(slider) {
 		alien.getMaterial().set_k_ambient(value);
 	}
 	else if(fila==1){
-		platoVolador.getMaterial.set_k_ambient(value);
+		platoVolador.getMaterial().set_k_ambient(value);
 		}
 		 else if(fila==2){
-		 	tractor.getMaterial.set_k_ambient(value);
+		 	tractor.getMaterial().set_k_ambient(value);
 				}
 		 else {
-		 		silo.getMaterial.set_k_ambient(value);
+		 		silo.getMaterial().set_k_ambient(value);
 			}
 	
 
@@ -452,13 +489,13 @@ function onSliderKd(slider) {
 		alien.getMaterial().set_k_diffuse(value);
 	}
 	else if(fila==1){
-		platoVolador.getMaterial.set_k_diffuse(value);
+		platoVolador.getMaterial().set_k_diffuse(value);
 		}
 		 else if(fila==2){
-		 	tractor.getMaterial.set_k_diffuse(value);
+		 	tractor.getMaterial().set_k_diffuse(value);
 				}
 		 else {
-		 		silo.getMaterial.set_k_diffuse(value);
+		 		silo.getMaterial().set_k_diffuse(value);
 			}
 	
 }
@@ -471,13 +508,13 @@ function onSliderKs(slider) {
 		alien.getMaterial().set_k_spec(value);
 	}
 	else if(fila==1){
-		platoVolador.getMaterial.set_k_spec(value);
+		platoVolador.getMaterial().set_k_spec(value);
 		}
 		 else if(fila==2){
-		 	tractor.getMaterial.set_k_spec(value);
+		 	tractor.getMaterial().set_k_spec(value);
 				}
 		 else {
-		 		silo.getMaterial.set_k_spec(value);
+		 		silo.getMaterial().set_k_spec(value);
 			}
 	
 }
@@ -490,13 +527,13 @@ function onSliderF0(slider) {
 		alien.getMaterial().set_f0(value);
 	}
 	else if(fila==1){
-		platoVolador.getMaterial.set_f0(value);
+		platoVolador.getMaterial().set_f0(value);
 		}
 		 else if(fila==2){
-		 	tractor.getMaterial.set_f0(value);
+		 	tractor.getMaterial().set_f0(value);
 				}
 		 else {
-		 		silo.getMaterial.set_f0(value);
+		 		silo.getMaterial().set_f0(value);
 			}
 	
 }
@@ -509,13 +546,13 @@ function onSliderM(slider) {
 		alien.getMaterial().set_m(value);
 	}
 	else if(fila==1){
-		platoVolador.getMaterial.set_m(value);
+		platoVolador.getMaterial().set_m(value);
 		}
 		 else if(fila==2){
-		 	tractor.getMaterial.set_m(value);
+		 	tractor.getMaterial().set_m(value);
 				}
 		 else {
-		 		silo.getMaterial.set_m(value);
+		 		silo.getMaterial().set_m(value);
 			}
 	
 }
@@ -528,13 +565,13 @@ function onSliderAx(slider) {
 		alien.getMaterial().set_alpha_x(value);
 	}
 	else if(fila==1){
-		platoVolador.getMaterial.set_alpha_x(value);
+		platoVolador.getMaterial().set_alpha_x(value);
 		}
 		 else if(fila==2){
-		 	tractor.getMaterial.set_alpha_x(value);
+		 	tractor.getMaterial().set_alpha_x(value);
 				}
 		 else {
-		 		silo.getMaterial.set_alpha_x(value);
+		 		silo.getMaterial().set_alpha_x(value);
 			}
 	
 }
@@ -547,13 +584,13 @@ function onSliderAy(slider) {
 		alien.getMaterial().set_alpha_y(value);
 	}
 	else if(fila==1){
-		platoVolador.getMaterial.set_alpha_y(value);
+		platoVolador.getMaterial().set_alpha_y(value);
 		}
 		 else if(fila==2){
-		 	tractor.getMaterial.set_alpha_y(value);
+		 	tractor.getMaterial().set_alpha_y(value);
 				}
 		 else {
-		 		silo.getMaterial.set_alpha_y(value);
+		 		silo.getMaterial().set_alpha_y(value);
 			}
 	
 }
@@ -566,12 +603,12 @@ function onSliderSigma(slider) {
 		alien.getMaterial().set_sigma(value);
 	}
 	else if(fila==1){
-		platoVolador.getMaterial.set_sigma(value);
+		platoVolador.getMaterial().set_sigma(value);
 		}
 		 else if(fila==2){
-		 	tractor.getMaterial.set_sigma(value);
+		 	tractor.getMaterial().set_sigma(value);
 				}
 		 else {
-		 		silo.getMaterial.set_sigma(value);
+		 		silo.getMaterial().set_sigma(value);
 			}	
 }
