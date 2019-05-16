@@ -99,6 +99,9 @@ var plano = new ObjetoGrafico();
 
 var alien= new ObjetoGrafico();
 var platoVolador= new ObjetoGrafico();
+var tanque=new ObjetoGrafico();
+var arboles=new ObjetoGrafico();
+var tractor=new ObjetoGrafico();
 
 var renderMode = 'RENDERMODE_COOK_TORRANCE'; //shader por defecto
 //var renderMode = 'RENDERMODE_WARD';
@@ -177,6 +180,18 @@ function onLoad() {
 	alien.setScale(0.3);
 	alien.setTrans([0.0,0.0,0.0]);
 
+	arboles.setMaterial(material_greenplastic);
+	arboles.setScale(0.3);
+	arboles.setTrans([5.0,0.0,0.0]);
+
+	tanque.setMaterial(material_silver);
+	tanque.setScale(0.3);
+	tanque.setTrans([-5.0,0.0,0.0]);
+
+	tractor.setMaterial(material_silver);
+	tractor.setScale(0.3);
+	alien.setTrans([-3.0,0.0,0.0]);
+
 	platoVolador.setMaterial(material_copper);
 	platoVolador.setScale(2.5);
 	platoVolador.setTrans([0.0,10.0,0.0]);
@@ -218,7 +233,10 @@ function onLoad() {
 			
 }
 function cargarObjetos(){	
-	plano.loadOBJ(planojs);		
+	plano.loadOBJ(planojs);
+	tractor.loadOBJ(tractorjs);
+	tanque.loadOBJ(tanquejs);	
+	arboles.loadOBJ(arbolesjs);	
 	//lampara1.loadOBJ(lamparajs);	
 	//lampara2.loadOBJ(lamparajs);
 	//lampara3.loadOBJ(lamparajs);		
@@ -297,6 +315,13 @@ function renderWithCookTorrance(){
 
 	//dibujo plato
 	drawWithCookTorrance(platoVolador);
+	//dibujo arboles
+	drawWithCookTorrance(arboles);
+	//dibujo tractor
+	drawWithCookTorrance(tractor);
+	//dibujo tanque
+	drawWithCookTorrance(tanque);
+
 
 	/*
 	//dibujarEsferas
@@ -341,6 +366,14 @@ function renderWithWard(){
 
 	//dibujo plato
 	drawWithWard(platoVolador);
+	//dibujo arboles
+	drawWithWard(arboles);
+	//dibujo tractor
+	drawWithWard(tractor);
+	//dibujo tanque
+	drawWithWard(tanque);
+
+
 	/*
 	//dibujarEsferas
 	let i = 0;
