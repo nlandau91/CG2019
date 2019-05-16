@@ -180,9 +180,25 @@ function onRender(now) {
 
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+	//actualizo posiciones y direcciones, ya que las lamparas y luces estan conectadas
+	if(luzEnCamara == 'PUNTUAL'){
+		// let mat = cam.getView();
+		// mat4.invert(mat,mat);
+		// let newPos = vec3.create();
+		// vec3.transformMat4(newPos,newPos,mat);
+		// luz1.set_light_pos([newPos,1.0]);
+		cam.setObjetivo(lampara1);
+		cam.setRadius(0);
+	}
 	luz1.set_light_pos([lampara1.getTransX(),lampara1.getTransY(),lampara1.getTransZ(),1.0]); //para controlar la luz
-
+	
+	if(luzEnCamara == 'SPOT'){
+		cam.setObjetivo(lampara2);
+		cam.setRadius(0);
+	}
 	luz2.set_light_pos([lampara2.getTransX(),lampara2.getTransY(),lampara2.getTransZ(),1.0]);
+	
+
 	let new_spot_direction2 = vec4.create();
 	vec4.transformQuat(new_spot_direction2,[0.0,-1.0,0.0,0.0],lampara2.getRotation());
 	luz2.set_spot_direction(new_spot_direction2);
@@ -277,8 +293,8 @@ function habilitarBotones()
 function cargarEsferas(){
 	
 	let esferaParsedOBJ = OBJParser.parseFile(esferaOBJ);		
-    let indicesEsfera = esferaParsedOBJ.indices;
-    let positionsEsfera = esferaParsedOBJ.positions;
+  let indicesEsfera = esferaParsedOBJ.indices;
+  let positionsEsfera = esferaParsedOBJ.positions;
 	let normalesEsfera = esferaParsedOBJ.normals;
 	
 	let esfera_vertexAttributeInfoArray = [
@@ -313,6 +329,8 @@ function iniciar_elementos(){//setea algunos valores predefinidos de los objetos
 	luz1.set_light_pos(lampara1.getTrans());
 	luz1.set_light_intensity(luz_dia);
 	luz1.set_spot_angle(-1.0); //luz puntual
+	luz1.set_attenuation_a(0.0);
+	luz1.set_attenuation_b(0.01);
 
 	lampara2.setTrans([-3.0,3.0,3.0]);
 	lampara2.setMaterial(material_silver);
@@ -321,10 +339,14 @@ function iniciar_elementos(){//setea algunos valores predefinidos de los objetos
 	luz2.set_light_intensity(luz_dia);
 	luz2.set_spot_direction([0.0,-1.0,0.0,0.0]);
 	luz2.set_spot_angle(Math.cos(glMatrix.toRadian(50)));
+	luz2.set_attenuation_a(0.0);
+	luz2.set_attenuation_b(0.01);
 
 	lampara3.setTrans([0.0,-1.0,0.0]);
 	luz3.set_light_pos(lampara3.getTrans(),0.0); //como w=0, es una direccion
 	luz3.set_light_intensity(luz_dia);
+	luz3.set_attenuation_a(0.0);
+	luz3.set_attenuation_b(0.0);
 
 	plano.setMaterial(material_plano);	
 	plano.setScale(2);
