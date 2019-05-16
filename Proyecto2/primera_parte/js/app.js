@@ -162,7 +162,7 @@ function onLoad() {
 function cargarObjetos(){	
 	plano.loadOBJ(planojs);		
 	lampara1.loadOBJ(lamparajs);	
-	lampara2.loadOBJ(lamparajs);
+	lampara2.loadOBJ(linternajs);
 	lampara3.loadOBJ(lamparajs);		
 	cargarEsferas();
 }
