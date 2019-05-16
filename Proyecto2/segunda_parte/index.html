@@ -159,25 +159,7 @@
             </td>
             <td align="center" rowspan="10">
 
-                L : Cargar y renderizar
-                <br>
-                <br> Selección:
-                <br> 1 Taza
-                <br> 2 Cafetera
-                <br>
-                <br> Transformaciones
-                <br> Traslación: T
-                <br> Rot sobre si mismo: R + O
-                <br> Rot Respecto al otro: R + P
-                <br> Escalado: E
-                <br>
-                <br> X, Y , Z para seleccionar
-                <br> el eje en el cual se aplica
-                <br> la transformación
-                <br>
-                <br> Teclas IZQ y DER para
-                <br> aplicar la transformación
-
+               
             </td>
 
         </tr>
@@ -247,6 +229,85 @@
                 <button disabled onclick="orbitar();" id="btnOrbitar">Orbitar</button>
             </td>
         </tr>
+        
+        <tr>
+            <td>Seleccionar luz </td>
+            <td>
+                <select disabled id="selectobj1" onChange="actSliders();">
+                    <option value="Nave">Nave</option>
+                    <option value="Sol">Sol</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+                <td>Luz en camara </td>
+                <td>
+                    <select id="selectobj2" onChange="selectLuzEnCam();">
+                        <option value="NO">No</option>
+                        <option value="NAVE">Nave</option>
+                    </select>
+                </td>
+            </tr>
+        <tr>
+            <td>
+                Intensidad Red
+            </td>
+            <td>
+                <input disabled type="range" step="0.01" id="btnRed" min="0" max="1" value="1" oninput="onSliderRed(this);"></button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Intensidad Green
+            </td>
+            <td>
+                <input disabled type="range" step="0.01" id="btnGreen" min="0" max="1" value="1" oninput="onSliderGreen(this)"></button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Intensidad Blue
+            </td>
+            <td>
+                <input disabled type="range" step="0.01" id="btnBlue" min="0" max="1" value="1" oninput="onSliderBlue(this)"></button>
+            </td>
+        </tr>
+         <th>Material
+                <select id="selectobj3" onChange="cambiarTipoLuz();">
+                    <option value="0">Alien</option>
+                    <option value="1">Nave</option>
+                    <option value="2">Tractor</option>
+                    <option value="3">Silo</option>
+                </select>
+            </th>
+            <td rowspan="8">
+                
+                
+                    <!-- ka
+                    <input type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderKa(this);">
+                <br>
+                    kd
+                    <input type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderKd(this);">
+                <br>
+                    ks
+                    <input type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderKs(this);">
+                <br> -->
+                    F0
+                    <input disabled id="sliderf0" type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderF0(this);">
+                <br>
+                    m
+                    <input disabled id="sliderm" type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderM(this);">
+                <br>
+                    ax
+                    <input disabled id="sliderax" type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderAx(this);">
+                <br>
+                    ay
+                    <input disabled id="slideray" type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderAy(this);">
+                <br>
+                    sigma
+                    <input disabled id="slidersigma" type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderSigma(this);">
+                </br>
+            </td>
     </table>
 
 </body>

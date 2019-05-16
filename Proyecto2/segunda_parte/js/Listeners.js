@@ -1,4 +1,7 @@
 var sel = alien; //objeto seleccionado
+
+var selLuz=luz4;
+
 var Orbitando=false;
 
 //funciones que reaccionan a los botones/sliders del panel
@@ -12,6 +15,30 @@ function onSliderRotationY(slider) {
 
 function onSliderRotationZ(slider) {
 	sel.setAngleZ(parseFloat(slider.value));	
+}
+
+function onSliderRed(slider) {
+	if(selLuz==luz1){
+		selLight.set_light_intensity([parseFloat(slider.value),selLight.get_light_intensity()[1],selLight.get_light_intensity()[2]]);
+	}
+	else
+	selLight.set_light_intensity([parseFloat(slider.value),selLight.get_light_intensity()[1],selLight.get_light_intensity()[2]]);
+}
+
+function onSliderGreen(slider) {
+	if(selLuz==luz1){
+		luz2.set_light_intensity([parseFloat(slider.value),luz2.get_light_intensity()[1],luz2.get_light_intensity()[2]]);
+	}
+	else	
+	selLight.set_light_intensity([selLight.get_light_intensity()[0],parseFloat(slider.value),selLight.get_light_intensity()[2]]);
+}
+
+function onSliderBlue(slider) {
+	if(selLuz==luz1){
+		luz3.set_light_intensity([parseFloat(slider.value),selLight.get_light_intensity()[1],selLight.get_light_intensity()[2]]);
+	}
+	else
+	selLight.set_light_intensity([selLight.get_light_intensity()[0],selLight.get_light_intensity()[1],parseFloat(slider.value)]);
 }
 
 
@@ -255,7 +282,14 @@ function actSliders(){
 	}
 	if(document.getElementById('selectobj0').value == 'Nave'){
 		sel = platoVolador;		
+	}
+	if(document.getElementById('selectobj1').value == 'Nave'){
+		selLuz = luz1;		
+	}
+	if(document.getElementById('selectobj1').value == 'Sol'){
+		selLuz = luz4;		
 	}	
+	
 	
 	let i;
 	for (i = 1; i <= 7; i++) { 
@@ -284,6 +318,17 @@ function actSliders(){
 			default:
 				break;
 		  }
+	}
+	if (selLuz==luz4){
+	document.getElementById('btnRed').value = selLight.get_light_intensity()[0];
+	document.getElementById('btnGreen').value = selLight.get_light_intensity()[1];
+	document.getElementById('btnBlue').value = selLight.get_light_intensity()[2];
+	}
+	else{
+		document.getElementById('btnRed').value = luz1.get_light_intensity()[0];
+		document.getElementById('btnGreen').value = luz2.get_light_intensity()[1];
+		document.getElementById('btnBlue').value = luz3.get_light_intensity()[2];
+
 	}
 }
 function apuntar(){
@@ -367,4 +412,8 @@ function focoTractor(){
 function focoCentro(){
 	cam.setObjetivo(new ObjetoGrafico());
 	
+}
+
+function selectLuzEnCam(){
+	luzEnCamara = document.getElementById('selectobj2').value;
 }
