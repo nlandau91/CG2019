@@ -107,13 +107,13 @@ void main()
     vec3 ambientLightning = material.k_ambient*0.3;  
 
     vec3 color1 = color_ward(luz1,N,V,tangent,bitangent);
-    //vec3 color2 = color_ward(luz2,N,V,tangent,bitangent);
-    //vec3 color3 = color_ward(luz3,N,V,tangent,bitangent);
+    vec3 color2 = color_ward(luz2,N,V,tangent,bitangent);
+    vec3 color3 = color_ward(luz3,N,V,tangent,bitangent);
 
-    //vec3 color = color1 + color2 + color3;
+    vec3 color = color1 + color2 + color3;
   
     fragColor = vec4(
                     ambientLightning + 
-    				color1, 1.0);
+    				color, 1.0);
 }
 `
