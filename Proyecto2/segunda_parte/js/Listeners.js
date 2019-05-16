@@ -417,3 +417,161 @@ function focoCentro(){
 function selectLuzEnCam(){
 	luzEnCamara = document.getElementById('selectobj2').value;
 }
+
+//0 Alien
+//1 Nave
+//2 Tractor     
+//3 Silo             
+
+function onSliderKa(slider) {	
+	let obj = parseFloat(document.getElementById('selectobj3').value);
+	let value = parseFloat(slider.value);
+	if(fila==0){
+		alien.getMaterial().set_k_ambient(value);
+	}
+	else if(fila==1){
+		platoVolador.getMaterial.set_k_ambient(value);
+		}
+		 else if(fila==2){
+		 	tractor.getMaterial.set_k_ambient(value);
+				}
+		 else {
+		 		silo.getMaterial.set_k_ambient(value);
+			}
+	
+
+	
+	
+}
+
+function onSliderKd(slider) {	
+	let fila = parseFloat(document.getElementById('selectobj3').value);
+	let value = parseFloat(slider.value);
+
+	if(fila==0){
+		alien.getMaterial().set_k_diffuse(value);
+	}
+	else if(fila==1){
+		platoVolador.getMaterial.set_k_diffuse(value);
+		}
+		 else if(fila==2){
+		 	tractor.getMaterial.set_k_diffuse(value);
+				}
+		 else {
+		 		silo.getMaterial.set_k_diffuse(value);
+			}
+	
+}
+
+function onSliderKs(slider) {	
+	let fila = parseFloat(document.getElementById('selectobj3').value);
+	let value = parseFloat(slider.value);
+
+	if(fila==0){
+		alien.getMaterial().set_k_spec(value);
+	}
+	else if(fila==1){
+		platoVolador.getMaterial.set_k_spec(value);
+		}
+		 else if(fila==2){
+		 	tractor.getMaterial.set_k_spec(value);
+				}
+		 else {
+		 		silo.getMaterial.set_k_spec(value);
+			}
+	
+}
+
+function onSliderF0(slider) {	
+	let fila = parseFloat(document.getElementById('selectobj3').value);
+	let value = parseFloat(slider.value);
+
+	if(fila==0){
+		alien.getMaterial().set_f0(value);
+	}
+	else if(fila==1){
+		platoVolador.getMaterial.set_f0(value);
+		}
+		 else if(fila==2){
+		 	tractor.getMaterial.set_f0(value);
+				}
+		 else {
+		 		silo.getMaterial.set_f0(value);
+			}
+	
+}
+
+function onSliderM(slider) {	
+	let fila = parseFloat(document.getElementById('selectobj3').value);
+	let value = parseFloat(slider.value);
+
+	if(fila==0){
+		alien.getMaterial().set_m(value);
+	}
+	else if(fila==1){
+		platoVolador.getMaterial.set_m(value);
+		}
+		 else if(fila==2){
+		 	tractor.getMaterial.set_m(value);
+				}
+		 else {
+		 		silo.getMaterial.set_m(value);
+			}
+	
+}
+
+function onSliderAx(slider) {	
+	let fila = parseFloat(document.getElementById('selectobj3').value);
+	let value = parseFloat(slider.value);
+
+	if(fila==0){
+		alien.getMaterial().set_alpha_x(value);
+	}
+	else if(fila==1){
+		platoVolador.getMaterial.set_alpha_x(value);
+		}
+		 else if(fila==2){
+		 	tractor.getMaterial.set_alpha_x(value);
+				}
+		 else {
+		 		silo.getMaterial.set_alpha_x(value);
+			}
+	
+}
+
+function onSliderAy(slider) {	
+	let fila = parseFloat(document.getElementById('selectobj3').value);
+	let value = parseFloat(slider.value);
+
+	if(fila==0){
+		alien.getMaterial().set_alpha_y(value);
+	}
+	else if(fila==1){
+		platoVolador.getMaterial.set_alpha_y(value);
+		}
+		 else if(fila==2){
+		 	tractor.getMaterial.set_alpha_y(value);
+				}
+		 else {
+		 		silo.getMaterial.set_alpha_y(value);
+			}
+	
+}
+
+function onSliderSigma(slider) {	
+	let fila = parseFloat(document.getElementById('selectobj3').value);
+	let value = parseFloat(slider.value);
+
+	if(fila==0){
+		alien.getMaterial().set_sigma(value);
+	}
+	else if(fila==1){
+		platoVolador.getMaterial.set_sigma(value);
+		}
+		 else if(fila==2){
+		 	tractor.getMaterial.set_sigma(value);
+				}
+		 else {
+		 		silo.getMaterial.set_sigma(value);
+			}	
+}

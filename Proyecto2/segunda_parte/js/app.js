@@ -580,6 +580,19 @@ function habilitarBotones()
 	document.getElementById('b12').disabled=false;
 	
 	document.getElementById('selectobj0').disabled=false;
+	document.getElementById('selectobj1').disabled=false;
+	document.getElementById('selectobj2').disabled=false;
+	document.getElementById('selectobj3').disabled=false;
+
+	document.getElementById('sliderf0').disabled=false;
+	document.getElementById('sliderm').disabled=false;
+	document.getElementById('sliderax').disabled=false;
+	document.getElementById('slideray').disabled=false;
+	document.getElementById('slidersigma').disabled=false;
+
+	document.getElementById('btnRed').disabled=false;
+	document.getElementById('btnGreen').disabled=false;
+	document.getElementById('btnBlue').disabled=false;
 
 	document.getElementById('btn1').disabled=false;
 	document.getElementById('btn2').disabled=false;
