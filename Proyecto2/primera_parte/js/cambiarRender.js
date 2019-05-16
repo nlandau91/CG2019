@@ -3,8 +3,8 @@ function renderWithCookTorrance(){
 	 drawWithCookTorrance(plano);
 
 	//dibujo las lamparas
-	drawWithCookTorrance(lampara1);
-	drawWithCookTorrance(lampara2);
+	if(luzEnCamara != 'PUNTUAL')drawWithCookTorrance(lampara1);
+	if(luzEnCamara != 'SPOT')drawWithCookTorrance(lampara2);
 
 	//dibujarEsferas
 	let i = 0;
@@ -21,8 +21,8 @@ function renderWithWard(){
 	drawWithWard(plano);
 
 	//dibujo las luces
-	drawWithWard(lampara1);
-	drawWithWard(lampara2);
+	if(luzEnCamara != 'PUNTUAL')drawWithWard(lampara1);
+	if(luzEnCamara != 'SPOT')drawWithWard(lampara2);
 
 	//dibujarEsferas
 	let i = 0;
@@ -38,8 +38,8 @@ function renderWithOrenNayar(){
 	drawWithOrenNayar(plano);
 	//dibujo las luces
 
-	drawWithOrenNayar(lampara1);
-	drawWithOrenNayar(lampara2);
+	if(luzEnCamara != 'PUNTUAL')drawWithOrenNayar(lampara1);
+	if(luzEnCamara != 'SPOT')drawWithOrenNayar(lampara2);
 
 	//dibujarEsferas
 	let i = 0;

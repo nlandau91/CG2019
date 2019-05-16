@@ -260,6 +260,8 @@ function actSliders(){
 	document.getElementById('btnGreen').value = selLight.get_light_intensity()[1];
 	document.getElementById('btnBlue').value = selLight.get_light_intensity()[2];
 	
+	
+	
 }
 function apuntar(){
 	let punto = [0,0,0];
@@ -491,4 +493,17 @@ function onSliderSigma(slider) {
 
 function selectLuzEnCam(){
 	luzEnCamara = document.getElementById('selectobj3').value;
+}
+function onSliderSpotAngle(slider){
+	luz2.set_spot_angle(Math.cos(glMatrix.toRadian(parseFloat(slider.value))));
+}
+function actSlidersEsferas(){
+	let fila = parseFloat(document.getElementById('selectobj2').value);
+	let material = esferas[fila*6].getMaterial();
+
+	document.getElementById('sliderf0').value = material.get_f0();
+	document.getElementById('sliderm').value = material.get_m();
+	document.getElementById('sliderax').value = material.get_alpha_x();
+	document.getElementById('slideray').value = material.get_alpha_y();
+	document.getElementById('slidersigma').value = material.get_sigma();
 }

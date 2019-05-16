@@ -182,11 +182,6 @@ function onRender(now) {
 
 	//actualizo posiciones y direcciones, ya que las lamparas y luces estan conectadas
 	if(luzEnCamara == 'PUNTUAL'){
-		// let mat = cam.getView();
-		// mat4.invert(mat,mat);
-		// let newPos = vec3.create();
-		// vec3.transformMat4(newPos,newPos,mat);
-		// luz1.set_light_pos([newPos,1.0]);
 		cam.setObjetivo(lampara1);
 		cam.setRadius(0);
 	}
@@ -198,7 +193,6 @@ function onRender(now) {
 	}
 	luz2.set_light_pos([lampara2.getTransX(),lampara2.getTransY(),lampara2.getTransZ(),1.0]);
 	
-
 	let new_spot_direction2 = vec4.create();
 	vec4.transformQuat(new_spot_direction2,[0.0,-1.0,0.0,0.0],lampara2.getRotation());
 	luz2.set_spot_direction(new_spot_direction2);
@@ -273,7 +267,7 @@ function habilitarBotones()
 	document.getElementById('btnRed').disabled=false;
 	document.getElementById('btnGreen').disabled=false;
 	document.getElementById('btnBlue').disabled=false;
-	
+	document.getElementById('btnSpotAngle').disabled=false;
 
 	
 	document.getElementById('btn1').disabled=false;
@@ -313,8 +307,8 @@ function cargarEsferas(){
 			esferas[i*6+j].setParsedOBJ(esferaParsedOBJ);
 			esferas[i*6+j].setVao(esfera_vao);
 
-			if(i==0) esferas[i*6+j].setMaterial(material_ceramico);
-			if(i==1) esferas[i*6+j].setMaterial(material_iron);
+			if(i==0) esferas[i*6+j].setMaterial(material_polishedsilver);
+			if(i==1) esferas[i*6+j].setMaterial(material_greenrubber);
 			if(i==2) esferas[i*6+j].setMaterial(material_redplastic);
 			if(i==3) esferas[i*6+j].setMaterial(material_copper);
 		}
