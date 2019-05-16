@@ -1,20 +1,9 @@
 var esferas = [];
 var renderloopid;
 
-var luces = [];
-
 var luz1 = new Luz(); //luz puntual
-luz1.set_light_intensity([1.0,1.0,1.0]);
-luz1.set_spot_angle(-1.0); //luz puntual
-
-var luz2 = new Luz(); // luz spot
-luz2.set_light_intensity([1.0,1.0,1.0]);
-luz2.set_spot_direction([0.0,-1.0,0.0,0.0]);
-luz2.set_spot_angle(Math.cos(glMatrix.toRadian(50)));
-
+var luz2 = new Luz(); //luz spot
 var luz3 = new Luz(); //luz direccional
-luz3.set_light_pos(-1.0,-1.0,-1.0,0.0); //como w=0, es una direccion
-luz3.set_light_intensity([1.0,1.0,1.0]);
 
 var timerRotarSobresuEje;
 var timerRotacionRespecto;
@@ -80,7 +69,6 @@ var posLocation;
 var normLocation;
 
 var cam = new Camera(); //vamos a controlar la camara desde esta clase
-cam.setRadius(20);
 
 var lampara1 = new ObjetoGrafico(); 
 var lampara2 = new ObjetoGrafico(); 
@@ -155,34 +143,20 @@ function onLoad() {
     	
 	}, false);
 
-
-	//ubico los modelos
-	lampara1.setTrans([3.0,3.0,3.0]);
-	luz1.set_light_pos(lampara1.getTrans());
-	lampara1.setMaterial(material_silver);
-	lampara2.setTrans([-3.0,3.0,3.0]);
-	luz2.set_light_pos(lampara2.getTrans());
-	lampara2.setMaterial(material_silver);
-	lampara3.setTrans([0.0,-1.0,0.0]);
-	luz3.set_light_pos(lampara3.getTrans(),0.0);
-	plano.setMaterial(material_plano);	
-	plano.setScale(2);
-	
-
-	//creo los shader
-	shaderProgramCookTorrance = ShaderProgramHelper.create(vertexShaderCookTorrance, fragmentShaderCookTorrance);
-	shaderProgramWard = ShaderProgramHelper.create(vertexShaderWard, fragmentShaderWard);
-	shaderProgramOrenNayar = ShaderProgramHelper.create(vertexShaderOrenNayar, fragmentShaderOrenNayar);
-	
+	iniciar_elementos();
 	//seteo el color del canvas
 	gl.clearColor(0.18, 0.18, 0.18, 1.0);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	//para que los fragmentos no visibles no tapen a los visibles
 	gl.enable(gl.DEPTH_TEST);
-
+	//creo los shader
+	shaderProgramCookTorrance = ShaderProgramHelper.create(vertexShaderCookTorrance, fragmentShaderCookTorrance);
+	shaderProgramWard = ShaderProgramHelper.create(vertexShaderWard, fragmentShaderWard);
+	shaderProgramOrenNayar = ShaderProgramHelper.create(vertexShaderOrenNayar, fragmentShaderOrenNayar);
 	//el boton de renderizar se habilita una vez que estemos listos para renderizar
 	let boton_renderizar = document.getElementById('btnrenderizar');
 	boton_renderizar.disabled=false;	
+	
 			
 }
 function cargarObjetos(){	
@@ -263,11 +237,12 @@ function habilitarBotones()
 
 	
 	document.getElementById('btn1').disabled=false;
+	document.getElementById('btn2').disabled=false;
 	document.getElementById('btn3').disabled=false;
-	
+	document.getElementById('btn4').disabled=false;
 	document.getElementById('btn5').disabled=false;
-	document.getElementById('btn6').disabled=false;
-	document.getElementById('btn7').disabled=false;
+
+	
 
 	document.getElementById('btnCamPhi').disabled=false;
 	document.getElementById('btnCamTheta').disabled=false;
@@ -305,4 +280,31 @@ function cargarEsferas(){
 		}
 	}
 	
+}
+
+function iniciar_elementos(){//setea algunos valores predefinidos de los objetos para la escena inicial
+	
+	lampara1.setTrans([3.0,3.0,3.0]);
+	lampara1.setMaterial(material_silver);
+	luz1.set_light_pos(lampara1.getTrans());
+	luz1.set_light_intensity([1.0,1.0,1.0]);
+	luz1.set_spot_angle(-1.0); //luz puntual
+
+	lampara2.setTrans([-3.0,3.0,3.0]);
+	lampara2.setMaterial(material_silver);
+
+	luz2.set_light_pos(lampara2.getTrans());
+	luz2.set_light_intensity([1.0,1.0,1.0]);
+	luz2.set_spot_direction([0.0,-1.0,0.0,0.0]);
+	luz2.set_spot_angle(Math.cos(glMatrix.toRadian(50)));
+
+	lampara3.setTrans([0.0,-1.0,0.0]);
+	luz3.set_light_pos(lampara3.getTrans(),0.0); //como w=0, es una direccion
+	luz3.set_light_intensity([1.0,1.0,1.0]);
+
+	plano.setMaterial(material_plano);	
+	plano.setScale(2);
+
+	cam.setRadius(20);
+
 }

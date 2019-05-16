@@ -129,19 +129,10 @@ function reset(){//reseteo los botones y la escena
 	limpiar_timers();
 	document.getElementById('btnOrbitar').disabled = false;
 	cam = new Camera(); 
-	cam.setRadius(20);
 	lampara1 = new ObjetoGrafico(); 
-	lampara1.setTrans([3.0,3.0,3.0]);
-	luz1.set_light_pos(lampara1.getTrans());
-	lampara1.setMaterial(material_silver);
 	lampara2 = new ObjetoGrafico();
-	lampara2.setTrans([-3.0,3.0,3.0]);
-	luz2.set_light_pos(lampara2.getTrans());
-	lampara2.setMaterial(material_silver);
 	lampara3 = new ObjetoGrafico();
-	lampara3.setTrans([0.0,3.0,-3.0]);
-	luz3.set_light_pos(lampara3.getTrans(),0.0);
-	lampara3.setMaterial(material_silver);
+	iniciar_elementos();
 	sel = lampara1;
 	document.getElementById('btnCamPhi').value = document.getElementById('btnCamPhi').defaultValue;
 	document.getElementById('btnCamTheta').value = document.getElementById('btnCamTheta').defaultValue;
@@ -153,10 +144,11 @@ function reset(){//reseteo los botones y la escena
 	document.getElementById('amountFovy').value = document.getElementById('btnFovy').defaultValue;
 	document.getElementById('selectobj0').value = "Lampara1";
 	let i;
-	for (i = 1; i <= 7; i++) { 
-		  if (i!=4){document.getElementById('btn'+i).value = document.getElementById('btn'+i).defaultValue;
-		  document.getElementById('amount'+i).value = document.getElementById('btn'+i).defaultValue;}
+	for (i = 1; i <= 5; i++) { 
+		document.getElementById('btn'+i).value = document.getElementById('btn'+i).defaultValue;
+		document.getElementById('amount'+i).value = document.getElementById('btn'+i).defaultValue;
 	}
+	actSliders();
 	renderizar();
 	
 }
@@ -239,33 +231,35 @@ function actSliders(){
 		selLight = luz3;	
 	}
 	let i;
-	for (i = 1; i <= 7; i++) { 
+	for (i = 1; i <= 5; i++) { 
 		switch (i) {
 			case 1:
 				document.getElementById('btn'+i).value = sel.getAngleX();
 				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
 				break;
-			case 3:
+			case 2:
 				document.getElementById('btn'+i).value = sel.getAngleZ();
 				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
 				break;
-
-			case 5:
+			case 3:
 				document.getElementById('btn'+i).value = sel.getTransX();
 				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
 				break;
-			case 6:
+			case 4:
 				document.getElementById('btn'+i).value = sel.getTransY();
 				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
 				break;
-			case 7:
+			case 5:
 				document.getElementById('btn'+i).value = sel.getTransZ();
 				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
 				break;
 			default:
-				break;
-		  }
+		}
 	}
+	document.getElementById('btnRed').value = selLight.get_light_intensity()[0];
+	document.getElementById('btnGreen').value = selLight.get_light_intensity()[1];
+	document.getElementById('btnBlue').value = selLight.get_light_intensity()[2];
+	
 }
 function apuntar(){
 	let punto = [0,0,0];
