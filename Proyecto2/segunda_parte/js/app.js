@@ -323,7 +323,7 @@ function renderWithCookTorrance(){
 	luz3.set_spot_direction(new_spot_direction3);
 	
 
-	luz4.set_light_pos([0.0,-1.0,0.0,0.0]);
+	luz4.set_light_pos([-0.3,-1.0,0.0,0.0]);
 
 	
 	//dibujo alien
