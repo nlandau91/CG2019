@@ -2,22 +2,22 @@ var esferas = [];
 var renderloopid;
 
 var luz1 = new Luz(); //luz roja nave
-luz1.set_light_intensity([1.0,0.0,0.0]);
+
 luz1.set_spot_direction([0.0,-1.0,0.5,0.0]);
 luz1.set_spot_angle(Math.cos(glMatrix.toRadian(20)));
 
 var luz2 = new Luz(); // luz verde nave
-luz2.set_light_intensity([0.0,1.0,0.0]);
+
 luz2.set_spot_direction([-0.5,-1.0,0.0,0.0]);
 luz2.set_spot_angle(Math.cos(glMatrix.toRadian(20)));
 
 var luz3 = new Luz(); //luz azul nave
-luz3.set_light_intensity([0.0,0.0,1.0]);
+
 luz3.set_spot_direction([0.5,-1.0,0.0,0.0]);
 luz3.set_spot_angle(Math.cos(glMatrix.toRadian(20)));
 
 var luz4 = new Luz(); //luz direccional
-luz4.set_light_intensity([1.0,1.0,1.0]);
+
 //luz4.set_spot_direction([0.0,-1.0,0.0,0.0]);
 //luz4.set_spot_angle(Math.cos(glMatrix.toRadian(45)));
 luz4.set_light_pos([0.0,-1.0,0.0,0.0]);
@@ -179,7 +179,11 @@ function onLoad() {
     	
 	}, false);
 
-
+luz4.set_light_intensity(luz_dia);
+	
+luz3.set_light_intensity(luz_azul);
+luz1.set_light_intensity(luz_roja);
+luz2.set_light_intensity(luz_verde);
 	//ubico los modelos
 	
 	alien.setMaterial(material_redplastic);
