@@ -48,10 +48,7 @@ function renderWithWard(){
 	drawWithWard(lampara2);
 
 	luz3.set_light_pos([lampara3.getTransX(),lampara3.getTransY(),lampara3.getTransZ(),0.0]);
-	let new_spot_direction3 = vec4.create();
-	vec4.transformQuat(new_spot_direction3,[0.0,-1.0,0.0,0.0],lampara3.getRotation());
-	luz3.set_spot_direction(new_spot_direction3);
-	drawWithWard(lampara3);
+	//drawWithWard(lampara3);
 
 	//dibujarEsferas
 	let i = 0;
@@ -84,10 +81,7 @@ function renderWithOrenNayar(){
 	drawWithOrenNayar(lampara2);
 
 	luz3.set_light_pos([lampara3.getTransX(),lampara3.getTransY(),lampara3.getTransZ(),0.0]);
-	let new_spot_direction3 = vec4.create();
-	vec4.transformQuat(new_spot_direction3,[0.0,-1.0,0.0,0.0],lampara3.getRotation());
-	luz3.set_spot_direction(new_spot_direction3);
-	drawWithOrenNayar(lampara3);
+	//drawWithOrenNayar(lampara3);
 
 	//dibujarEsferas
 	let i = 0;
