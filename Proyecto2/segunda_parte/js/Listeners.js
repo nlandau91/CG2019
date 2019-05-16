@@ -1,4 +1,4 @@
-//var sel = lampara1; //objeto seleccionado
+var sel = alien; //objeto seleccionado
 var Orbitando=false;
 
 //funciones que reaccionan a los botones/sliders del panel
@@ -14,23 +14,11 @@ function onSliderRotationZ(slider) {
 	sel.setAngleZ(parseFloat(slider.value));	
 }
 
-function onSliderScale(slider) {
-	let oldvalue = sel.getScale();
-	sel.setScale(parseFloat(slider.value));
-	if(lampara1.collision(lampara2)){
-		sel.setScale(oldvalue);
-	}
-	document.getElementById('amount4').value=sel.getScale();
-	document.getElementById('btn4').value=sel.getScale();
-		
-}
 
 function onSliderTranslationX(slider) {
 	let oldvalue = sel.getTransX();
 	sel.setTransX(parseFloat(slider.value));
-	if(lampara1.collision(lampara2)){
-		sel.setTransX(oldvalue);
-	}
+	
 	document.getElementById('amount5').value=sel.getTransX();
 	document.getElementById('btn5').value=sel.getTransX();	
 }
@@ -38,9 +26,7 @@ function onSliderTranslationX(slider) {
 function onSliderTranslationY(slider) {	
 	let oldvalue = sel.getTransY();
 	sel.setTransY(parseFloat(slider.value));
-	if(lampara1.collision(lampara2)){
-		sel.setTransY(oldvalue);
-	}
+	
 	document.getElementById('amount6').value=sel.getTransY();
 	document.getElementById('btn6').value=sel.getTransY();	
 }
@@ -48,11 +34,9 @@ function onSliderTranslationY(slider) {
 function onSliderTranslationZ(slider) {	
 	let oldvalue = sel.getTransZ();
 	sel.setTransZ(parseFloat(slider.value));
-	if(lampara1.collision(lampara2)){
-		sel.setTransZ(oldvalue);
-	}
-	document.getElementById('amount7').value=sel.getTransZ();
-	document.getElementById('btn7').value=sel.getTransZ();	
+
+	document.getElementById('amount4').value=sel.getTransZ();
+	document.getElementById('btn4').value=sel.getTransZ();	
 }
 
 function onSliderCamPhi(slider) {
@@ -150,19 +134,26 @@ function reset(){//reseteo los botones y la escena
 	document.getElementById('btnOrbitar').disabled = false;
 	cam = new Camera(); 
 	cam.setRadius(20);
-	lampara1 = new ObjetoGrafico(); 
-	lampara1.setTrans([3.0,3.0,3.0]);
-	luz1.set_light_pos(lampara1.getTrans());
-	lampara1.setMaterial(material_silver);
-	lampara2 = new ObjetoGrafico();
-	lampara2.setTrans([-3.0,3.0,3.0]);
-	luz2.set_light_pos(lampara2.getTrans());
-	lampara2.setMaterial(material_silver);
-	lampara3 = new ObjetoGrafico();
-	lampara3.setTrans([0.0,3.0,-3.0]);
-	luz3.set_light_pos(lampara3.getTrans(),0.0);
-	lampara3.setMaterial(material_silver);
-	sel = lampara1;
+	
+	luz3.set_light_intensity(luz_azul);
+	luz1.set_light_intensity(luz_roja);
+	luz2.set_light_intensity(luz_verde);
+    
+    luz4.set_light_intensity(luz_dia); 
+
+	luz1.set_light_pos(platoVolador.getTrans(),1.0);
+	
+	luz2.set_light_pos(platoVolador.getTrans(),1.0);
+	
+	luz3.set_light_pos(platoVolador.getTrans(),1.0);
+	
+	sel = alien;
+
+	alien.setTrans([0.0,0.0,0.0]);
+	platoVolador.setTrans([0.0,15.0,0.0]);
+	
+
+
 	document.getElementById('btnCamPhi').value = document.getElementById('btnCamPhi').defaultValue;
 	document.getElementById('btnCamTheta').value = document.getElementById('btnCamTheta').defaultValue;
 	document.getElementById('btnCamRadius').value = document.getElementById('btnCamRadius').defaultValue;
@@ -171,11 +162,12 @@ function reset(){//reseteo los botones y la escena
 	document.getElementById('amountTheta').value = document.getElementById('btnCamTheta').defaultValue;
 	document.getElementById('amountRadius').value = document.getElementById('btnCamRadius').defaultValue;
 	document.getElementById('amountFovy').value = document.getElementById('btnFovy').defaultValue;
-	document.getElementById('selectobj0').value = "Lampara1";
-	let i;
-	for (i = 1; i <= 7; i++) { 
-		  if (i!=4){document.getElementById('btn'+i).value = document.getElementById('btn'+i).defaultValue;
-		  document.getElementById('amount'+i).value = document.getElementById('btn'+i).defaultValue;}
+	document.getElementById('selectobj0').value = "Alien";
+
+	
+	for (i = 1; i <= 6; i++) { 
+		  document.getElementById('btn'+i).value = document.getElementById('btn'+i).defaultValue;
+		  document.getElementById('amount'+i).value = document.getElementById('btn'+i).defaultValue;
 	}
 	renderizar();
 	
@@ -245,30 +237,26 @@ function CamRight(){
 */
 function evento_cambiarObjSelect()
 {
-	if(document.getElementById('selectobj0').value == 'Lampara1')
+	if(document.getElementById('selectobj0').value == 'Alien')
 	{
-		setPrimeroTaza();
+		setPrimeroAlien();
 	}
-	else if(document.getElementById('selectobj0').value == 'Lampara2')
+	else if(document.getElementById('selectobj0').value == 'Nave')
 		{
-			setPrimeroCafetera();
+			setPrimeroNave();
 		}
-	document.getElementById('selectobj1').value="No";
-	document.getElementById('selectobj3').value="No";
-
+	
 	actSliders();
 }
 
 function actSliders(){
-	if(document.getElementById('selectobj0').value == 'Lampara1'){
-		sel = lampara1;		
+	if(document.getElementById('selectobj0').value == 'Alien'){
+		sel = alien;		
 	}
-	if(document.getElementById('selectobj0').value == 'Lampara2'){
-		sel = lampara2;		
-	}
-	if(document.getElementById('selectobj0').value == 'Lampara3'){
-		sel = lampara3;		
-	}
+	if(document.getElementById('selectobj0').value == 'Nave'){
+		sel = platoVolador;		
+	}	
+	
 	let i;
 	for (i = 1; i <= 7; i++) { 
 		switch (i) {
@@ -291,10 +279,6 @@ function actSliders(){
 				break;
 			case 6:
 				document.getElementById('btn'+i).value = sel.getTransY();
-				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
-				break;
-			case 7:
-				document.getElementById('btn'+i).value = sel.getTransZ();
 				document.getElementById('amount'+i).value = document.getElementById('btn'+i).value;
 				break;
 			default:
@@ -339,18 +323,6 @@ function onClickRotZ(delta){
 	},20)	
 }
 
-function onClickScale(delta){
-	timerOnClick = setInterval(function(){
-		let oldvalue = sel.getScale();
-		sel.setScale(sel.getScale()+delta);
-		if(lampara1.collision(lampara2)){
-			sel.setScale(oldvalue);
-		}
-		document.getElementById("btn4").value = sel.getScale();
-		document.getElementById("amount4").value = document.getElementById("btn4").value;
-		
-	},20)	
-}
 
 function onClickTransXPos(){
 	timerOnClick = setInterval("MoverEnXPos(sel)",20)	

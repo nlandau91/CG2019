@@ -1,25 +1,25 @@
 
 //la matriz del objeto principal sobre la cual se aplican cosas
-//var transfMatrix1=lampara1;
+var transfMatrix1=alien.getModelMatrix();
 
 //la matriz del objeto secundario
-//var transfMatrix2=lampara2;
+var transfMatrix2=platoVolador.getModelMatrix();
 
 let Eje="Y";
 let tipoMov="R"; //R ROTACION T TRASLACION
 let respectoA ="P"; //P respecto a un punto, O respecto al centro del objeto
 let DeltaRotarResop=3; //grados que rota
 
-function setPrimeroTaza()
+function setPrimeroAlien()
 {
-	transfMatrix1=lampara1;
-	transfMatrix2=lampara2;
+	transfMatrix1=alien.getModelMatrix();
+	transfMatrix2=platoVolador.getModelMatrix();
 }
 
-function setPrimeroCafetera()
+function setPrimeroNave()
 {
-	transfMatrix1=lampara2;
-	transfMatrix2=lampara1;
+	transfMatrix1=platoVolador.getModelMatrix();
+	transfMatrix2=alien.getModelMatrix();
 }
 
 

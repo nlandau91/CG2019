@@ -31,7 +31,7 @@
     <script src="../modelos/granero.js"></script>
     <script src="js/Listeners.js"></script>
     <script src="js/eventosTeclado.js"></script>
-    <script src="../99-common/MovimientosTraslacion.js"></script>
+    <script src="js/MovimientosTraslacion.js"></script>
     <script src="../99-common/luces.js"></script>
     
     <style>
@@ -77,40 +77,7 @@
                 </select>
             </td>
         </tr>
-        <tr>
-            <td>Rotacion sobre sus ejes </td>
-            <td>
-                <select disabled id="selectobj1" onChange="rotarObj();">
-                    <option value="No">No</option>
-                    <option value="X">X</option>
-                    <option value="Y">Y</option>
-                    <option value="Z">Z</option>
-                    <option value="XY">XY</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td>Traslacion respecto al origen </td>
-            <td>
-                <select disabled id="selectobj3" onChange="rotacionResp([0,0,0]);">
-                    <option value="No">No</option>
-                    <option value="X">X</option>
-                    <option value="Y">Y</option>
-                    <option value="Z">Z</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td>Traslacion respecto al otro objeto </td>
-            <td>
-                <select disabled id="selectobj4" onChange="rotacionResp();">
-                    <option value="No">No</option>
-                    <option value="X">X</option>
-                    <option value="Y">Y</option>
-                    <option value="Z">Z</option>
-                </select>
-            </td>
-        </tr>
+        
         <tr>
             <td>Rotar en X
                 <button disabled id="b1" onmousedown="onClickRotX(-DeltaRot);" onmouseup="offClick()">-</button>
@@ -144,17 +111,7 @@
                 <output name="amount" id="amount3" for="btn3">0</output>
             </td>
         </tr>
-        <tr>
-            <td>Escalar
-                <button disabled id="b7" onmousedown="onClickScale(-0.1);" onmouseup="offClick()">-</button>
-                <button disabled id="b8" onmousedown="onClickScale(0.1);" onmouseup="offClick()">+</button>
-            </td>
-            <td>
-                <input disabled type="range" step="0.01" id="btn4" min="0.1" max="1.9" value="1" step="0.05" oninput="onSliderScale(this);">
-                <output name="amount" id="amount4" for="btn4">1</output>
-
-            </td>
-        </tr>
+        
         <tr>
             <td>Trasladar en X
                 <button disabled id="b9" onmousedown="onClickTransXNeg();" onmouseup="offClick()">-</button>
@@ -179,12 +136,12 @@
         </tr>
         <tr>
             <td>Trasladar en Z
-                <button disabled id="b13" onmousedown="onClickTransZNeg();" onmouseup="offClick()">-</button>
-                <button disabled id="b14" onmousedown="onClickTransZPos();" onmouseup="offClick()">+</button>
+                <button disabled id="b7" onmousedown="onClickTransZNeg();" onmouseup="offClick()">-</button>
+                <button disabled id="b8" onmousedown="onClickTransZPos();" onmouseup="offClick()">+</button>
             </td>
             <td>
-                <input disabled type="range" step="0.01" id="btn7" min="-5" max="5" value="-1" step="0.1" oninput="onSliderTranslationZ(this);">
-                <output name="amount" id="amount7" for="btn7">-1</output>
+                <input disabled type="range" step="0.01" id="btn4" min="-5" max="5" value="-1" step="0.1" oninput="onSliderTranslationZ(this);">
+                <output name="amount" id="amount4" for="btn4">-1</output>
 
             </td>
         </tr>
