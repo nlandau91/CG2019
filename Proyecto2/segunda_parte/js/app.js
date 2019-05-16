@@ -103,6 +103,7 @@ var arboles4=new ObjetoGrafico();
 var tractor=new ObjetoGrafico();
 
 var granero=new ObjetoGrafico();
+var luzEnCamara = "NO";
 
 var renderMode = 'RENDERMODE_COOK_TORRANCE'; //shader por defecto
 //var renderMode = 'RENDERMODE_WARD';
