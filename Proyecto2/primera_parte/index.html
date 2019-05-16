@@ -30,6 +30,7 @@
     <script src="js/eventosTeclado.js"></script>
     <script src="../99-common/MovimientosTraslacion.js"></script>
     <script src="js/cambiarRender.js"></script>
+    <script src="../99-common/luces.js"></script>
     
     <style>
         h1 {
@@ -73,6 +74,18 @@
                     <option value="Lampara1">Puntual</option>
                     <option value="Lampara2">Spot</option>
                     <option value="Lampara3">Direccional</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Tipo de luz </td>
+            <td>
+                <select disabled id="selectobj1" onChange="actSliders();">
+                    <option value="luz_dia">Solar directo</option>
+                    <option value="luz_nublado">Solar nublado</option>
+                    <option value="luz_vela">Vela</option>
+                    <option value="luz_tungs100">Tungsteno 100w</option>
+                    <option value="luz_halogen">Halogeno</option>
                 </select>
             </td>
         </tr>
@@ -197,6 +210,7 @@
                 Theta
                 <input disabled id="btnCamTheta" type="range" step="0.01" id min="0" max="360" value="45" oninput="onSliderCamTheta(this);amountTheta.value=btnCamTheta.value;">
                 <output name="amount" id="amountTheta" for="btnCamTheta">45</output>
+                <button disabled onclick="orbitar();" id="btnOrbitar">Orbitar</button>
             </td>
 
         </tr>
@@ -239,16 +253,7 @@
                 <button disabled onclick="reset();" id="btnReiniciar">Reiniciar</button>
             </td>
         </tr>
-        <tr>
-            <th>
-                Fun
-            </th>
-        </tr>
-        <tr>
-            <td>
-                <button disabled onclick="orbitar();" id="btnOrbitar">Orbitar</button>
-            </td>
-        </tr>
+       
     </table>
 
 </body>

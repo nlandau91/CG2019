@@ -287,24 +287,24 @@ function iniciar_elementos(){//setea algunos valores predefinidos de los objetos
 	lampara1.setTrans([3.0,3.0,3.0]);
 	lampara1.setMaterial(material_silver);
 	luz1.set_light_pos(lampara1.getTrans());
-	luz1.set_light_intensity([1.0,1.0,1.0]);
+	luz1.set_light_intensity(luz_dia);
 	luz1.set_spot_angle(-1.0); //luz puntual
 
 	lampara2.setTrans([-3.0,3.0,3.0]);
 	lampara2.setMaterial(material_silver);
 
 	luz2.set_light_pos(lampara2.getTrans());
-	luz2.set_light_intensity([1.0,1.0,1.0]);
+	luz2.set_light_intensity(luz_dia);
 	luz2.set_spot_direction([0.0,-1.0,0.0,0.0]);
 	luz2.set_spot_angle(Math.cos(glMatrix.toRadian(50)));
 
 	lampara3.setTrans([0.0,-1.0,0.0]);
 	luz3.set_light_pos(lampara3.getTrans(),0.0); //como w=0, es una direccion
-	luz3.set_light_intensity([1.0,1.0,1.0]);
+	luz3.set_light_intensity(luz_dia);
 
 	plano.setMaterial(material_plano);	
 	plano.setScale(2);
 
 	cam.setRadius(20);
-
+	actSliders();
 }
