@@ -577,23 +577,15 @@ function habilitarBotones()
 	document.getElementById('b10').disabled=false;
 	document.getElementById('b11').disabled=false;
 	document.getElementById('b12').disabled=false;
-	document.getElementById('b13').disabled=false;
-	document.getElementById('b14').disabled=false;
-	
-
 	
 	document.getElementById('selectobj0').disabled=false;
-	document.getElementById('selectobj1').disabled=false;
-	document.getElementById('selectobj3').disabled=false;
-	document.getElementById('selectobj4').disabled=false;
-	
+
 	document.getElementById('btn1').disabled=false;
 	document.getElementById('btn2').disabled=false;
 	document.getElementById('btn3').disabled=false;
 	document.getElementById('btn4').disabled=false;
 	document.getElementById('btn5').disabled=false;
 	document.getElementById('btn6').disabled=false;
-	document.getElementById('btn7').disabled=false;
 
 	document.getElementById('btnCamPhi').disabled=false;
 	document.getElementById('btnCamTheta').disabled=false;
