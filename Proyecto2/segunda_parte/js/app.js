@@ -4,22 +4,20 @@ var renderloopid;
 var luz1 = new Luz(); //luz roja nave
 
 luz1.set_spot_direction([0.0,-1.0,0.5,0.0]);
-luz1.set_spot_angle(Math.cos(glMatrix.toRadian(20)));
+luz1.set_spot_angle(Math.cos(glMatrix.toRadian(15)));
 
 var luz2 = new Luz(); // luz verde nave
 
 luz2.set_spot_direction([-0.5,-1.0,0.0,0.0]);
-luz2.set_spot_angle(Math.cos(glMatrix.toRadian(20)));
+luz2.set_spot_angle(Math.cos(glMatrix.toRadian(15)));
 
 var luz3 = new Luz(); //luz azul nave
 
 luz3.set_spot_direction([0.5,-1.0,0.0,0.0]);
-luz3.set_spot_angle(Math.cos(glMatrix.toRadian(20)));
+luz3.set_spot_angle(Math.cos(glMatrix.toRadian(15)));
 
 var luz4 = new Luz(); //luz direccional
 
-//luz4.set_spot_direction([0.0,-1.0,0.0,0.0]);
-//luz4.set_spot_angle(Math.cos(glMatrix.toRadian(45)));
 luz4.set_light_pos([0.0,-1.0,0.0,0.0]);
 
 var timerRotarSobresuEje;
@@ -92,9 +90,6 @@ var normLocation;
 var cam = new Camera(); //vamos a controlar la camara desde esta clase
 cam.setRadius(20);
 
-//var lampara1 = new ObjetoGrafico(); 
-//var lampara2 = new ObjetoGrafico(); 
-//var lampara3 = new ObjetoGrafico();
 var plano = new ObjetoGrafico();
 var alien= new ObjetoGrafico();
 var platoVolador= new ObjetoGrafico();
@@ -179,11 +174,13 @@ function onLoad() {
     	
 	}, false);
 
-luz4.set_light_intensity(luz_dia);
-	
-luz3.set_light_intensity(luz_azul);
-luz1.set_light_intensity(luz_roja);
-luz2.set_light_intensity(luz_verde);
+
+	//intensidad de las luces de la nave
+	luz3.set_light_intensity(luz_azul);
+	luz1.set_light_intensity(luz_roja);
+	luz2.set_light_intensity(luz_verde);
+    
+    luz4.set_light_intensity(luz_dia);
 	//ubico los modelos
 	
 	alien.setMaterial(material_redplastic);
@@ -222,24 +219,15 @@ luz2.set_light_intensity(luz_verde);
 	platoVolador.setScale(3.5);
 	platoVolador.setTrans([0.0,15.0,0.0]);
 
-
-
-	//lampara1.setTrans([10.0,30.0,10.0]);
-	//luz4.set_light_pos([-0.5,-1.0,0.0,0.0]);
-	//lampara1.setMaterial(material_silver);
-
-    
-	luz1.set_light_pos(platoVolador.getTrans(),1.0);
-	//lampara1.setMaterial(material_silver);
-	//lampara2.setTrans([-5.0,20.0,5.0]);
-	luz2.set_light_pos(platoVolador.getTrans(),1.0);
-	//lampara2.setMaterial(material_silver);
-	//lampara3.setTrans([0.0,20.0,-5.0]);
-	luz3.set_light_pos(platoVolador.getTrans(),1.0);
-	//lampara3.setMaterial(material_silver);
-	
-	plano.setMaterial(material_plano);	
+  	plano.setMaterial(material_plano);	
 	plano.setScale(2);
+	//ubicacion de las luces de la nave
+	luz1.set_light_pos(platoVolador.getTrans(),1.0);
+	luz2.set_light_pos(platoVolador.getTrans(),1.0);
+	luz3.set_light_pos(platoVolador.getTrans(),1.0);
+	
+	
+	
 	
 	//creo los shader
 	shaderProgramCookTorrance = ShaderProgramHelper.create(vertexShaderCookTorrance, fragmentShaderCookTorrance);
@@ -265,12 +253,9 @@ function cargarObjetos(){
 	arboles3.loadOBJ(arbolesjs);
 	arboles4.loadOBJ(arbolesjs);
 	granero.loadOBJ(granerojs);		
-	//lampara1.loadOBJ(lamparajs);	
-	//lampara2.loadOBJ(lamparajs);
-	//lampara3.loadOBJ(lamparajs);		
 	platoVolador.loadOBJ(platoVoladorjs);
 	alien.loadOBJ(alienjs);
-	//lampara1.loadOBJ(lamparajs);
+	
 }
 function renderizar(){
 	if(renderMode == 'RENDERMODE_COOK_TORRANCE')setShaderCookTorrance();
@@ -355,15 +340,6 @@ function renderWithCookTorrance(){
 	drawWithCookTorrance(granero);
 
 
-	/*
-	//dibujarEsferas
-	let i = 0;
-	let j = 0;
-	for(i = 0; i<4; i++){
-		for(j = 0; j<6; j++){
-			drawWithCookTorrance(esferas[i*6+j]);
-		}
-	}*/
 }
 
 function renderWithWard(){
@@ -409,16 +385,6 @@ function renderWithWard(){
 	drawWithWard(silo);
 	drawWithWard(granero);
 
-
-	/*
-	//dibujarEsferas
-	let i = 0;
-	let j = 0;
-	for(i = 0; i<4; i++){
-		for(j = 0; j<6; j++){
-			drawWithWard(esferas[i*6+j]);
-		}
-	}*/
 }
 
 //reordena los indices de un obj para poder ser dibujado en forma de wireframes
