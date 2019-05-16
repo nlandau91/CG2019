@@ -379,12 +379,17 @@ function onClickTransZNeg(){
 function offClick(){
 	clearInterval(timerOnClick);
 }
-function focoTaza(){
-	cam.setObjetivo(lampara1);
+
+function focoAlien(){
+	cam.setObjetivo(alien);
 	
 }
-function focoCafetera(){
-	cam.setObjetivo(lampara2);
+function focoNave(){
+	cam.setObjetivo(platoVolador);
+	
+}
+function focoTractor(){
+	cam.setObjetivo(tractor);
 	
 }
 function focoCentro(){

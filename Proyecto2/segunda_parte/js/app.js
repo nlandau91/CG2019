@@ -301,28 +301,23 @@ function renderWithCookTorrance(){
 	let new_spot_direction1 = vec4.create();
 	vec4.transformQuat(new_spot_direction1,[-0.1,-1.0,0.0,0.0],platoVolador.getRotation());
 	luz1.set_spot_direction(new_spot_direction1);	
-	//drawWithCookTorrance(lampara1);
+	
 
 	luz2.set_light_pos([platoVolador.getTransX(),platoVolador.getTransY(),platoVolador.getTransZ(),1.0]);
 	let new_spot_direction2 = vec4.create();
 	vec4.transformQuat(new_spot_direction2,[0.1,-1.0,0.0,0.0],platoVolador.getRotation());
 	luz2.set_spot_direction(new_spot_direction2);
-	//drawWithCookTorrance(lampara2);
+	
 
 	luz3.set_light_pos([platoVolador.getTransX(),platoVolador.getTransY(),platoVolador.getTransZ(),1.0]);
 	let new_spot_direction3 = vec4.create();
 	vec4.transformQuat(new_spot_direction3,[0.0,-1.0,0.1,0.0],platoVolador.getRotation());
 	luz3.set_spot_direction(new_spot_direction3);
-	//drawWithCookTorrance(lampara3);
+	
 
 	luz4.set_light_pos([0.0,-1.0,0.0,0.0]);
 
-	//let new_spot_direction4 = vec4.create();
-	//vec4.transformQuat(new_spot_direction3,[0.0,-1.0,0.0,0.0],platoVolador.getRotation());
-	//luz3.set_spot_direction(new_spot_direction3);
-	//drawWithCookTorrance(lampara3);
-
-
+	
 	//dibujo alien
 	drawWithCookTorrance(alien);
 
@@ -354,20 +349,19 @@ function renderWithWard(){
 	let new_spot_direction1 = vec4.create();
 	vec4.transformQuat(new_spot_direction1,[0.0,-1.0,0.0,0.0],platoVolador.getRotation());
 	luz1.set_spot_direction(new_spot_direction1);	
-	//drawWithWard(lampara1);
+	
 
 	luz2.set_light_pos([platoVolador.getTransX(),platoVolador.getTransY(),platoVolador.getTransZ(),1.0]);
 	let new_spot_direction2 = vec4.create();
 	vec4.transformQuat(new_spot_direction2,[0.0,-1.0,0.0,0.0],platoVolador.getRotation());
 	luz2.set_spot_direction(new_spot_direction2);
-	//drawWithWard(lampara2);
+	
 
 	luz3.set_light_pos([platoVolador.getTransX(),platoVolador.getTransY(),platoVolador.getTransZ(),1.0]);
 	let new_spot_direction3 = vec4.create();
 	vec4.transformQuat(new_spot_direction3,[0.0,-1.0,0.0,0.0],platoVolador.getRotation());
 	luz3.set_spot_direction(new_spot_direction3);
-	//drawWithWard(lampara3);
-
+	
 
 	//dibujo alien
 	drawWithWard(alien);
@@ -606,43 +600,12 @@ function habilitarBotones()
 	document.getElementById('btnCamRadius').disabled=false;
 	document.getElementById('btnFovy').disabled=false;
 
-	document.getElementById('btnFocoTaza').disabled=false;
-	document.getElementById('btnFocoCafetera').disabled=false;
 	document.getElementById('btnFocoCentro').disabled=false;
+	document.getElementById('btnFocoAlien').disabled=false;
+	document.getElementById('btnFocoNave').disabled=false;
+	document.getElementById('btnFocoTractor').disabled=false;
 }
-/*
-function cargarEsferas(){
-	
-	let esferaParsedOBJ = OBJParser.parseFile(esferaOBJ);		
-    let indicesEsfera = esferaParsedOBJ.indices;
-    let positionsEsfera = esferaParsedOBJ.positions;
-	let normalesEsfera = esferaParsedOBJ.normals;
-	
-	let esfera_vertexAttributeInfoArray = [
-        new VertexAttributeInfo(positionsEsfera, posLocation, 3),
-        new VertexAttributeInfo(normalesEsfera, normLocation, 3)
-	];
-	
-	esfera_vao = VAOHelper.create(indicesEsfera, esfera_vertexAttributeInfoArray);
-	let i = 0;
-	let j = 0;
-	
-	for(i = 0; i<4; i++){
-		//console.log("cargando..."+i*25+"%");
-		for(j = 0; j<6; j++){
-			esferas[i*6+j] = new ObjetoGrafico();
-			esferas[i*6+j].setTrans([3*i-4.0,0.0,3*j-6.0]);
-			esferas[i*6+j].setParsedOBJ(esferaParsedOBJ);
-			esferas[i*6+j].setVao(esfera_vao);
 
-			if(i==0) esferas[i*6+j].setMaterial(material_ceramico);
-			if(i==1) esferas[i*6+j].setMaterial(material_iron);
-			if(i==2) esferas[i*6+j].setMaterial(material_redplastic);
-			if(i==3) esferas[i*6+j].setMaterial(material_copper);
-		}
-	}
-	
-}*/
 
 function drawWithCookTorrance(objeto){//dibujamos el objeto con el shader de cook torrance
 
