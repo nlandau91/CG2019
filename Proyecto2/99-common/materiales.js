@@ -20,10 +20,10 @@ material_bronze.set_alpha_x(0.2);
 material_bronze.set_alpha_y(0.5);
 
 var material_copper = new Material();//pulido
-material_copper.set_k_ambient([0.22,0.08,0.02]);
-material_copper.set_k_diffuse([0.55,0.21,0.06]);
-material_copper.set_k_spec([0.58,0.22,0.06]);
-material_copper.set_exp_spec(51);
+material_copper.set_k_ambient([0.2295,0.08825,0.0275]);
+material_copper.set_k_diffuse([0.5508,0.2118,0.066]);
+material_copper.set_k_spec([0.580594,0.223257,0.0695701]);
+material_copper.set_exp_spec(51.2);
 material_copper.set_f0(0.99);
 material_copper.set_m(0.14);
 material_copper.set_alpha_x(0.15);
@@ -73,7 +73,7 @@ var material_redplastic = new Material();
 material_redplastic.set_k_ambient([0.0,0,0]);
 material_redplastic.set_k_diffuse([0.5,0,0]);
 material_redplastic.set_k_spec([0.7,0.6,0.6]);
-material_redplastic.set_exp_spec(46.8);
+material_redplastic.set_exp_spec(32);
 material_redplastic.set_f0(0.04);
 material_redplastic.set_m(0.2);
 material_redplastic.set_alpha_x(0.99);

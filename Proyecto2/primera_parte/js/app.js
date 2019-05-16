@@ -24,6 +24,7 @@ var shaderProgram  = null; //Shader program to use.
 var shaderProgramCookTorrance = null;
 var shaderProgramWard = null;
 var shaderProgramOrennayar = null;
+var shaderProgramBlinnPhong = null;
 
 //Uniform de matrices
 var u_modelMatrix;
@@ -36,6 +37,7 @@ var	u_normalMatrix;
 //Uniform de materiales
 var	u_k_ambient;
 var	u_k_diffuse;
+var u_k_spec;
 var	u_exp_spec;
 var u_alphaX;
 var u_alphaY;
@@ -153,6 +155,7 @@ function onLoad() {
 	shaderProgramCookTorrance = ShaderProgramHelper.create(vertexShaderCookTorrance, fragmentShaderCookTorrance);
 	shaderProgramWard = ShaderProgramHelper.create(vertexShaderWard, fragmentShaderWard);
 	shaderProgramOrenNayar = ShaderProgramHelper.create(vertexShaderOrenNayar, fragmentShaderOrenNayar);
+	shaderProgramBlinnPhong = ShaderProgramHelper.create(vertexShaderBlinnPhong, fragmentShaderBlinnPhong);
 	//el boton de renderizar se habilita una vez que estemos listos para renderizar
 	let boton_renderizar = document.getElementById('btnrenderizar');
 	boton_renderizar.disabled=false;	
@@ -170,6 +173,7 @@ function renderizar(){
 	if(renderMode == 'RENDERMODE_COOK_TORRANCE')setShaderCookTorrance();
 	if(renderMode == 'RENDERMODE_WARD')setShaderWard();
 	if(renderMode == 'RENDERMODE_OREN_NAYAR')setShaderOrenNayar();
+	if(renderMode == 'RENDERMODE_BLINN_PHONG')setShaderBlinnPhong();
 	cargarObjetos();
 	renderloopid = requestAnimationFrame(onRender);
 
@@ -203,6 +207,7 @@ function onRender(now) {
 	if(renderMode == 'RENDERMODE_COOK_TORRANCE')renderWithCookTorrance();
 	if(renderMode == 'RENDERMODE_WARD')renderWithWard();
 	if(renderMode == 'RENDERMODE_OREN_NAYAR')renderWithOrenNayar();
+	if(renderMode == 'RENDERMODE_BLINN_PHONG')renderWithBlinnPhong();
 	
 
 	// Guardamos el momento en el que se dibujo este frame y solicitamos el proximo

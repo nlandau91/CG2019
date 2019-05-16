@@ -19,7 +19,6 @@ struct Light{
     float attenuation_b;
 };
 
-uniform mat4 viewMatrix; //solo para convertir la posicion de la luz
 uniform Material material;
 uniform Light luz1,luz2,luz3,luz4;
 

@@ -80,7 +80,7 @@ void main(){
     vec3 specular = vec3(0.0);
        
     //fragColor = vec4(1.0,1.0,1.0,1.0);
-    fragColor = vec4(material.k_ambient + (diffuse + specular),1.0); 
+    fragColor = vec4(material.k_ambient*0.3 + (diffuse + specular),1.0); 
     
 }
 `
