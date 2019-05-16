@@ -3,18 +3,18 @@ var renderloopid;
 
 var luz1 = new Luz(); //luz roja nave
 luz1.set_light_intensity([1.0,0.0,0.0]);
-luz1.set_spot_direction([0.0,-1.0,1.0,0.0]);
-luz1.set_spot_angle(Math.cos(glMatrix.toRadian(25)));
+luz1.set_spot_direction([0.0,-1.0,0.5,0.0]);
+luz1.set_spot_angle(Math.cos(glMatrix.toRadian(20)));
 
 var luz2 = new Luz(); // luz verde nave
 luz2.set_light_intensity([0.0,1.0,0.0]);
-luz2.set_spot_direction([-1.0,-1.0,0.0,0.0]);
-luz2.set_spot_angle(Math.cos(glMatrix.toRadian(25)));
+luz2.set_spot_direction([-0.5,-1.0,0.0,0.0]);
+luz2.set_spot_angle(Math.cos(glMatrix.toRadian(20)));
 
 var luz3 = new Luz(); //luz azul nave
 luz3.set_light_intensity([0.0,0.0,1.0]);
-luz3.set_spot_direction([1.0,-1.0,0.0,0.0]);
-luz3.set_spot_angle(Math.cos(glMatrix.toRadian(25)));
+luz3.set_spot_direction([0.5,-1.0,0.0,0.0]);
+luz3.set_spot_angle(Math.cos(glMatrix.toRadian(20)));
 
 var luz4 = new Luz(); //luz direccional
 luz4.set_light_intensity([1.0,1.0,1.0]);
@@ -96,12 +96,18 @@ cam.setRadius(20);
 //var lampara2 = new ObjetoGrafico(); 
 //var lampara3 = new ObjetoGrafico();
 var plano = new ObjetoGrafico();
-
 var alien= new ObjetoGrafico();
 var platoVolador= new ObjetoGrafico();
-var tanque=new ObjetoGrafico();
+var silo=new ObjetoGrafico();
+
 var arboles=new ObjetoGrafico();
+var arboles2=new ObjetoGrafico();
+var arboles3=new ObjetoGrafico();
+var arboles4=new ObjetoGrafico();
+
 var tractor=new ObjetoGrafico();
+
+var granero=new ObjetoGrafico();
 
 var renderMode = 'RENDERMODE_COOK_TORRANCE'; //shader por defecto
 //var renderMode = 'RENDERMODE_WARD';
@@ -181,20 +187,38 @@ function onLoad() {
 	alien.setTrans([0.0,0.0,0.0]);
 
 	arboles.setMaterial(material_greenplastic);
-	arboles.setScale(0.3);
-	arboles.setTrans([5.0,0.0,0.0]);
+	arboles.setScale(2.5);
+	arboles.setTrans([10.0,0.0,10.0]);
+	
+	arboles2.setMaterial(material_greenplastic);
+	arboles2.setScale(2.5);
+	arboles2.setTrans([13.0,0.0,0.0]);
 
-	tanque.setMaterial(material_silver);
-	tanque.setScale(0.3);
-	tanque.setTrans([-5.0,0.0,0.0]);
+	arboles3.setMaterial(material_greenplastic);
+	arboles3.setScale(2.5);
+	arboles3.setTrans([13.0,0.0,5.0]);
 
-	tractor.setMaterial(material_silver);
-	tractor.setScale(0.3);
-	alien.setTrans([-3.0,0.0,0.0]);
+	arboles4.setMaterial(material_greenplastic);
+	arboles4.setScale(2.5);
+	arboles4.setTrans([13.0,0.0,-5.0]);
+
+	silo.setMaterial(material_silver);
+	silo.setScale(2.0);
+	silo.setTrans([-10.0,0.0,-7.0]);
+
+	granero.setMaterial(material_blueplastic);
+	granero.setScale(3.5);
+	granero.setTrans([-3.0,0.0,-10.0]);
+
+	tractor.setMaterial(material_brass);
+	tractor.setScale(3.0);
+	tractor.setTrans([-10.0,0.0,0.0]);
 
 	platoVolador.setMaterial(material_copper);
-	platoVolador.setScale(2.5);
-	platoVolador.setTrans([0.0,10.0,0.0]);
+	platoVolador.setScale(3.5);
+	platoVolador.setTrans([0.0,15.0,0.0]);
+
+
 
 	//lampara1.setTrans([10.0,30.0,10.0]);
 	//luz4.set_light_pos([-0.5,-1.0,0.0,0.0]);
@@ -213,10 +237,6 @@ function onLoad() {
 	plano.setMaterial(material_plano);	
 	plano.setScale(2);
 	
-	
-
-	
-
 	//creo los shader
 	shaderProgramCookTorrance = ShaderProgramHelper.create(vertexShaderCookTorrance, fragmentShaderCookTorrance);
 	shaderProgramWard = ShaderProgramHelper.create(vertexShaderWard, fragmentShaderWard);
@@ -235,8 +255,12 @@ function onLoad() {
 function cargarObjetos(){	
 	plano.loadOBJ(planojs);
 	tractor.loadOBJ(tractorjs);
-	tanque.loadOBJ(tanquejs);	
-	arboles.loadOBJ(arbolesjs);	
+	silo.loadOBJ(silojs);	
+	arboles.loadOBJ(arbolesjs);
+	arboles2.loadOBJ(arbolesjs);	
+	arboles3.loadOBJ(arbolesjs);
+	arboles4.loadOBJ(arbolesjs);
+	granero.loadOBJ(granerojs);		
 	//lampara1.loadOBJ(lamparajs);	
 	//lampara2.loadOBJ(lamparajs);
 	//lampara3.loadOBJ(lamparajs);		
@@ -317,10 +341,14 @@ function renderWithCookTorrance(){
 	drawWithCookTorrance(platoVolador);
 	//dibujo arboles
 	drawWithCookTorrance(arboles);
+	drawWithCookTorrance(arboles2);
+	drawWithCookTorrance(arboles3);
+	drawWithCookTorrance(arboles4);
 	//dibujo tractor
 	drawWithCookTorrance(tractor);
-	//dibujo tanque
-	drawWithCookTorrance(tanque);
+	//dibujo silo
+	drawWithCookTorrance(silo);
+	drawWithCookTorrance(granero);
 
 
 	/*
@@ -368,10 +396,14 @@ function renderWithWard(){
 	drawWithWard(platoVolador);
 	//dibujo arboles
 	drawWithWard(arboles);
+	drawWithWard(arboles2);
+	drawWithWard(arboles3);
+	drawWithWard(arboles4);
 	//dibujo tractor
 	drawWithWard(tractor);
-	//dibujo tanque
-	drawWithWard(tanque);
+	//dibujo silo
+	drawWithWard(silo);
+	drawWithWard(granero);
 
 
 	/*

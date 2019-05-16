@@ -119,3 +119,13 @@ material_greenplastic.set_f0(0.04);
 material_greenplastic.set_m(0.05);
 material_greenplastic.set_alpha_x(0.1);
 material_greenplastic.set_alpha_y(0.5);
+
+var material_blueplastic = new Material();
+material_blueplastic.set_k_ambient([0.1,0.1,0.5]);
+material_blueplastic.set_k_diffuse([0.1,0.1,0.4]);
+material_blueplastic.set_k_spec([0.1,0.1,0.5]);
+material_blueplastic.set_exp_spec(26.8);
+material_blueplastic.set_f0(0.04);
+material_blueplastic.set_m(0.05);
+material_blueplastic.set_alpha_x(0.1);
+material_blueplastic.set_alpha_y(0.5);
