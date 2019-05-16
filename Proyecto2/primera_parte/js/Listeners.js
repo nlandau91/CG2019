@@ -358,3 +358,29 @@ function reiniciar_opciones()
 	 document.getElementById('selectobj4').value="No";
 	 limpiar_timers();
 }
+function cambiarTipoLuz(){
+	let tipo = document.getElementById('selectobj1').value;
+	let nuevoTipoLuz;
+	switch (tipo) {
+		case 'luz_dia':
+			nuevoTipoLuz = luz_dia;
+			break;
+		case 'luz_nublado':
+			nuevoTipoLuz = luz_nublado;
+			break;
+		case 'luz_vela':
+			nuevoTipoLuz = luz_vela;
+			break;
+		case 'luz_tungs100':
+			nuevoTipoLuz = luz_tungs100;
+			break;
+		case 'luz_halogen':
+			nuevoTipoLuz = luz_halogen;
+			break;
+			case 'luz_negra':
+			nuevoTipoLuz = luz_negra;
+			break;
+		default:
+	}
+	selLight.set_light_intensity(nuevoTipoLuz);
+}
