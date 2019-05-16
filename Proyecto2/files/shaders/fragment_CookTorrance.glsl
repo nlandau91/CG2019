@@ -106,7 +106,7 @@ void main(){
     color = color1+color2+color3+color4;
 	   
     
-    fragColor = vec4(material.k_ambient*0.1 + color,1.0); 
+    fragColor = vec4(material.k_ambient*0.3 + color,1.0); 
 
 }
 `

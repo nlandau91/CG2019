@@ -16,8 +16,8 @@ material_bronze.set_k_spec([0.39,0.27,0.16]);
 material_bronze.set_exp_spec(25.6);
 material_bronze.set_f0(0.99);
 material_bronze.set_m(0.14);
-material_bronze.set_alpha_x(0.1);
-material_bronze.set_alpha_y(0.9);
+material_bronze.set_alpha_x(0.2);
+material_bronze.set_alpha_y(0.5);
 
 var material_copper = new Material();//pulido
 material_copper.set_k_ambient([0.22,0.08,0.02]);
@@ -26,8 +26,8 @@ material_copper.set_k_spec([0.58,0.22,0.06]);
 material_copper.set_exp_spec(51);
 material_copper.set_f0(0.99);
 material_copper.set_m(0.14);
-material_copper.set_alpha_x(0.3);
-material_copper.set_alpha_y(0.9);
+material_copper.set_alpha_x(0.15);
+material_copper.set_alpha_y(0.5);
 
 var material_iron = new Material(); //hierro fundido
 material_iron.set_k_ambient([0.01,0.01,0.01]);
@@ -35,7 +35,7 @@ material_iron.set_k_diffuse([0.2,0.2,0.2]);
 material_iron.set_k_spec([0.9,0.9,0.9]);
 material_iron.set_exp_spec(25.6);
 material_iron.set_f0(0.6);
-material_iron.set_m(0.15);
+material_iron.set_m(0.25);
 material_iron.set_alpha_x(0.3);
 material_iron.set_alpha_y(0.6);
 
@@ -46,8 +46,8 @@ material_ceramico.set_k_spec([0.774597,0.458561,0.200621]);
 material_ceramico.set_exp_spec(7.8974);
 material_ceramico.set_f0(0.05);
 material_ceramico.set_m(0.95);
-material_ceramico.set_alpha_x(0.4);
-material_ceramico.set_alpha_y(0.4);
+material_ceramico.set_alpha_x(0.9);
+material_ceramico.set_alpha_y(0.9);
 
 var material_gold = new Material();
 material_gold.set_k_ambient([0.24725,0.1995,0.0745]);
@@ -70,14 +70,14 @@ material_blackplastic.set_alpha_x(0.4);
 material_blackplastic.set_alpha_y(0.4);
 
 var material_redplastic = new Material();
-material_redplastic.set_k_ambient([0.2,0,0]);
-material_redplastic.set_k_diffuse([0.8,0,0]);
-material_redplastic.set_k_spec([0.8,0.2,0.2]);
+material_redplastic.set_k_ambient([0.0,0,0]);
+material_redplastic.set_k_diffuse([0.5,0,0]);
+material_redplastic.set_k_spec([0.7,0.6,0.6]);
 material_redplastic.set_exp_spec(46.8);
 material_redplastic.set_f0(0.04);
-material_redplastic.set_m(0.05);
-material_redplastic.set_alpha_x(0.1);
-material_redplastic.set_alpha_y(0.5);
+material_redplastic.set_m(0.2);
+material_redplastic.set_alpha_x(0.99);
+material_redplastic.set_alpha_y(0.99);
 
 var material_silver = new Material();
 material_silver.set_k_ambient([0.19225,0.19225,0.19225]);
@@ -88,6 +88,16 @@ material_silver.set_f0(0.99);
 material_silver.set_m(0.14);
 material_silver.set_alpha_x(0.4);
 material_silver.set_alpha_y(0.4);
+
+var material_polishedsilver = new Material();
+material_polishedsilver.set_k_ambient([0.23125,0.23125,0.23125]);
+material_polishedsilver.set_k_diffuse([0.2775,0.2775,0.2775]);
+material_polishedsilver.set_k_spec([0.773911,0.773911,0.773911]);
+material_polishedsilver.set_exp_spec(89.6);
+material_polishedsilver.set_f0(0.99);
+material_polishedsilver.set_m(0.14);
+material_polishedsilver.set_alpha_x(0.4);
+material_polishedsilver.set_alpha_y(0.4);
 
 var material_pearl = new Material();
 material_pearl.set_k_ambient([0.25,0.20725,0.20725]);
@@ -100,9 +110,18 @@ material_pearl.set_alpha_x(0.4);
 material_pearl.set_alpha_y(0.4);
 
 //material para el plano, totalmente difuso sin especularidad
+// var material_plano = new Material();
+// material_plano.set_k_ambient([0.2,0.2,0.2]);
+// material_plano.set_k_diffuse([0.5,0.5,0.5]);
+// material_plano.set_k_spec([0.0,0.0,0.0]);
+// material_plano.set_exp_spec(1.0);
+// material_plano.set_f0(0.01);
+// material_plano.set_m(0.99);
+// material_plano.set_alpha_x(0.4);
+// material_plano.set_alpha_y(0.4);
 var material_plano = new Material();
-material_plano.set_k_ambient([0.2,0.2,0.2]);
-material_plano.set_k_diffuse([0.5,0.5,0.5]);
+material_plano.set_k_ambient([0.0,0.0,0.0]);
+material_plano.set_k_diffuse([0.9,0.9,0.9]);
 material_plano.set_k_spec([0.0,0.0,0.0]);
 material_plano.set_exp_spec(1.0);
 material_plano.set_f0(0.01);
@@ -129,3 +148,13 @@ material_blueplastic.set_f0(0.04);
 material_blueplastic.set_m(0.05);
 material_blueplastic.set_alpha_x(0.1);
 material_blueplastic.set_alpha_y(0.5);
+
+var material_greenrubber = new Material();
+material_greenrubber.set_k_ambient([0.0,0.05,0.0]);
+material_greenrubber.set_k_diffuse([0.4,0.5,0.4]);
+material_greenrubber.set_k_spec([0.04,0.7,0.04]);
+material_greenrubber.set_exp_spec(10);
+material_greenrubber.set_f0(0.04);
+material_greenrubber.set_m(0.95);
+material_greenrubber.set_alpha_x(1.0);
+material_greenrubber.set_alpha_y(1.0);
