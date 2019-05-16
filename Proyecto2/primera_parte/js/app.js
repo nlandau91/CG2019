@@ -76,7 +76,7 @@ var lampara3 = new ObjetoGrafico();
 var plano = new ObjetoGrafico();
 
 var renderMode = 'RENDERMODE_COOK_TORRANCE'; //shader por defecto
-//var renderMode = 'RENDERMODE_WARD';
+var luzEnCamara = "NO";
 
 const DeltaRot=1; //cantidad de grados que rota
 let teclaPresionada =false;
@@ -178,6 +178,18 @@ function onRender(now) {
 	now *= 0.001;                            // milisegundos -> segundos
 	const timeDelta = now - lastDrawTime;    // tiempo entre este frame y el anterior
 
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+	luz1.set_light_pos([lampara1.getTransX(),lampara1.getTransY(),lampara1.getTransZ(),1.0]); //para controlar la luz
+
+	luz2.set_light_pos([lampara2.getTransX(),lampara2.getTransY(),lampara2.getTransZ(),1.0]);
+	let new_spot_direction2 = vec4.create();
+	vec4.transformQuat(new_spot_direction2,[0.0,-1.0,0.0,0.0],lampara2.getRotation());
+	luz2.set_spot_direction(new_spot_direction2);
+
+	luz3.set_light_pos([lampara3.getTransX(),lampara3.getTransY(),lampara3.getTransZ(),0.0]);
+
+
 	if(renderMode == 'RENDERMODE_COOK_TORRANCE')renderWithCookTorrance();
 	if(renderMode == 'RENDERMODE_WARD')renderWithWard();
 	if(renderMode == 'RENDERMODE_OREN_NAYAR')renderWithOrenNayar();
@@ -233,7 +245,19 @@ function habilitarBotones()
 
 	
 	document.getElementById('selectobj0').disabled=false;
+	document.getElementById('selectobj1').disabled=false;
+	document.getElementById('selectobj2').disabled=false;
 
+	document.getElementById('sliderf0').disabled=false;
+	document.getElementById('sliderm').disabled=false;
+	document.getElementById('sliderax').disabled=false;
+	document.getElementById('slideray').disabled=false;
+	document.getElementById('slidersigma').disabled=false;
+
+	document.getElementById('btnRed').disabled=false;
+	document.getElementById('btnGreen').disabled=false;
+	document.getElementById('btnBlue').disabled=false;
+	
 
 	
 	document.getElementById('btn1').disabled=false;

@@ -1,21 +1,10 @@
 function renderWithCookTorrance(){
-	//limpio el canvas
-	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
 	//dibujo el plano
-	drawWithCookTorrance(plano);
+	 drawWithCookTorrance(plano);
 
-	//dibujo las luces, acomodo sus posiciones y direcciones de acuerdo a las lamparas
-	luz1.set_light_pos([lampara1.getTransX(),lampara1.getTransY(),lampara1.getTransZ(),1.0]); //para controlar la luz	
+	//dibujo las lamparas
 	drawWithCookTorrance(lampara1);
-
-	luz2.set_light_pos([lampara2.getTransX(),lampara2.getTransY(),lampara2.getTransZ(),1.0]);
-	let new_spot_direction1 = vec4.create();
-	vec4.transformQuat(new_spot_direction1,[0.0,-1.0,0.0,0.0],lampara2.getRotation());
-	luz2.set_spot_direction(new_spot_direction1);
 	drawWithCookTorrance(lampara2);
-
-	luz3.set_light_pos([lampara3.getTransX(),lampara3.getTransY(),lampara3.getTransZ(),0.0]);
 
 	//dibujarEsferas
 	let i = 0;
@@ -28,27 +17,12 @@ function renderWithCookTorrance(){
 }
 
 function renderWithWard(){
-	//limpio el canvas
-	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
 	//dibujo el plano
 	drawWithWard(plano);
 
-	//dibujo las luces, acomodo sus posiciones y direcciones de acuerdo a las lamparas
-	luz1.set_light_pos([lampara1.getTransX(),lampara1.getTransY(),lampara1.getTransZ(),1.0]); //para controlar la luz
-	let new_spot_direction1 = vec4.create();
-	vec4.transformQuat(new_spot_direction1,[0.0,-1.0,0.0,0.0],lampara1.getRotation());
-	luz1.set_spot_direction(new_spot_direction1);	
+	//dibujo las luces
 	drawWithWard(lampara1);
-
-	luz2.set_light_pos([lampara2.getTransX(),lampara2.getTransY(),lampara2.getTransZ(),1.0]);
-	let new_spot_direction2 = vec4.create();
-	vec4.transformQuat(new_spot_direction2,[0.0,-1.0,0.0,0.0],lampara2.getRotation());
-	luz2.set_spot_direction(new_spot_direction2);
 	drawWithWard(lampara2);
-
-	luz3.set_light_pos([lampara3.getTransX(),lampara3.getTransY(),lampara3.getTransZ(),0.0]);
-	//drawWithWard(lampara3);
 
 	//dibujarEsferas
 	let i = 0;
@@ -61,27 +35,11 @@ function renderWithWard(){
 }
 
 function renderWithOrenNayar(){
-	//limpio el canvas
-	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-	//dibujo el plano
 	drawWithOrenNayar(plano);
+	//dibujo las luces
 
-	//dibujo las luces, acomodo sus posiciones y direcciones de acuerdo a las lamparas
-	luz1.set_light_pos([lampara1.getTransX(),lampara1.getTransY(),lampara1.getTransZ(),1.0]); //para controlar la luz
-	let new_spot_direction1 = vec4.create();
-	vec4.transformQuat(new_spot_direction1,[0.0,-1.0,0.0,0.0],lampara1.getRotation());
-	luz1.set_spot_direction(new_spot_direction1);	
 	drawWithOrenNayar(lampara1);
-
-	luz2.set_light_pos([lampara2.getTransX(),lampara2.getTransY(),lampara2.getTransZ(),1.0]);
-	let new_spot_direction2 = vec4.create();
-	vec4.transformQuat(new_spot_direction2,[0.0,-1.0,0.0,0.0],lampara2.getRotation());
-	luz2.set_spot_direction(new_spot_direction2);
 	drawWithOrenNayar(lampara2);
-
-	luz3.set_light_pos([lampara3.getTransX(),lampara3.getTransY(),lampara3.getTransZ(),0.0]);
-	//drawWithOrenNayar(lampara3);
 
 	//dibujarEsferas
 	let i = 0;
@@ -440,8 +398,6 @@ function setShaderOrenNayar(){
 function changeRender(){
 	let mode = document.getElementById('renderOption').value;
 	renderMode = mode;
-	//if(mode == 'RENDERMODE_COOK_TORRANCE') renderMode = 'RENDERMODE_COOK_TORRANCE';
-	//if(mode == 'RENDERMODE_WARD') renderMode = 'RENDERMODE_WARD';
 	cancelAnimationFrame(renderloopid);
 
 	renderizar();

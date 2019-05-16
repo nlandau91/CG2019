@@ -486,6 +486,9 @@ function onSliderSigma(slider) {
 
 	for(j = 0; j<6; j++){			
 		esferas[i*6+j].getMaterial().set_sigma(value);
-	}
-	
+	}	
+}
+
+function selectLuzEnCam(){
+	luzEnCamara = document.getElementById('selectobj3').value;
 }

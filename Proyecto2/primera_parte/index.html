@@ -91,11 +91,21 @@
             </td>
         </tr>
         <tr>
+                <td>Luz en camara </td>
+                <td>
+                    <select id="selectobj3" onChange="selectLuzEnCam();">
+                        <option value="NO">No</option>
+                        <option value="PUNTUAL">Puntual</option>
+                        <option value="SPOT">Spot</option>
+                    </select>
+                </td>
+            </tr>
+        <tr>
             <td>
                 Intensidad Red
             </td>
             <td>
-                <input  type="range" step="0.01" id="btnRed" min="0" max="1" value="1" oninput="onSliderRed(this);"></button>
+                <input disabled type="range" step="0.01" id="btnRed" min="0" max="1" value="1" oninput="onSliderRed(this);"></button>
             </td>
         </tr>
         <tr>
@@ -103,7 +113,7 @@
                 Intensidad Green
             </td>
             <td>
-                <input  type="range" step="0.01" id="btnGreen" min="0" max="1" value="1" oninput="onSliderGreen(this)"></button>
+                <input disabled type="range" step="0.01" id="btnGreen" min="0" max="1" value="1" oninput="onSliderGreen(this)"></button>
             </td>
         </tr>
         <tr>
@@ -111,7 +121,7 @@
                 Intensidad Blue
             </td>
             <td>
-                <input  type="range" step="0.01" id="btnBlue" min="0" max="1" value="1" oninput="onSliderBlue(this)"></button>
+                <input disabled type="range" step="0.01" id="btnBlue" min="0" max="1" value="1" oninput="onSliderBlue(this)"></button>
             </td>
         </tr>
         <tr>
@@ -203,19 +213,19 @@
                     <input type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderKs(this);">
                 <br> -->
                     F0
-                    <input type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderF0(this);">
+                    <input disabled id="sliderf0" type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderF0(this);">
                 <br>
                     m
-                    <input type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderM(this);">
+                    <input disabled id="sliderm" type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderM(this);">
                 <br>
                     ax
-                    <input type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderAx(this);">
+                    <input disabled id="sliderax" type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderAx(this);">
                 <br>
                     ay
-                    <input type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderAy(this);">
+                    <input disabled id="slideray" type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderAy(this);">
                 <br>
                     sigma
-                    <input type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderSigma(this);">
+                    <input disabled id="slidersigma" type="range" step="0.01" min="0" max="1" value="0" step="0.1" oninput="onSliderSigma(this);">
                 </br>
             </td>
 
@@ -253,9 +263,9 @@
                 <button disabled onclick="CamFront();" id="Frente">Frente</button>
                 <button disabled onclick="CamTrasera();" id="Trasera">Trasera</button>
                 <button disabled onclick="CamLeft();" id="Izquierda">Izquierda</button>
-                <button disabled onclick="CamRight();" id="Derecha">Derecha</button>
+                <button disabled onclick="CamRight();" id="Derecha">Derecha</button>              
             </td>
-        </tr>
+        </tr>         
         <tr>
 
             <th>Carga</th>
