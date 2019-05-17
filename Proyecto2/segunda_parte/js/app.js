@@ -277,7 +277,6 @@ function onRender(now) {
 	}
 	if(luzEnCamara == 'NO'){
 		cam.setObjetivo(alien);
-		cam.setRadius(20);
 	}
 	
 	if(renderMode == 'RENDERMODE_COOK_TORRANCE')renderWithCookTorrance();
