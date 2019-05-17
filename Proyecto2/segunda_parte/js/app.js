@@ -212,7 +212,7 @@ function onLoad() {
 	granero.setScale(3.5);
 	granero.setTrans([-3.0,0.0,-10.0]);
 
-	tractor.setMaterial(material_brass);
+	tractor.setMaterial(material_oxido);
 	tractor.setScale(3.0);
 	tractor.setTrans([-10.0,0.0,0.0]);
 

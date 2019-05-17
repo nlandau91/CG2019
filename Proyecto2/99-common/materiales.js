@@ -29,6 +29,16 @@ material_copper.set_m(0.14);
 material_copper.set_alpha_x(0.15);
 material_copper.set_alpha_y(0.5);
 
+var material_oxido = new Material();//pulido
+material_oxido.set_k_ambient([0.39,0.14,0.14]);
+material_oxido.set_k_diffuse([0.39,0.14,0.14]);
+material_oxido.set_k_spec([0.39,0.14,0.14]);
+material_oxido.set_exp_spec(51.2);
+material_oxido.set_f0(0.50);
+material_oxido.set_m(0.14);
+material_oxido.set_alpha_x(0.15);
+material_oxido.set_alpha_y(0.5);
+
 var material_iron = new Material(); //hierro fundido
 material_iron.set_k_ambient([0.01,0.01,0.01]);
 material_iron.set_k_diffuse([0.2,0.2,0.2]);
