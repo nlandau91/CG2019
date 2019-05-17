@@ -191,8 +191,10 @@ function reset(){//reseteo los botones y la escena
 	document.getElementById('amountTheta').value = document.getElementById('btnCamTheta').defaultValue;
 	document.getElementById('amountRadius').value = document.getElementById('btnCamRadius').defaultValue;
 	document.getElementById('amountFovy').value = document.getElementById('btnFovy').defaultValue;
-	document.getElementById('selectobj0').value = "Alien";
-
+	document.getElementById('selectobj0').value = 'Alien';
+	document.getElementById('selectobj1').value = 'Nave';
+	document.getElementById('selectobj2').value = 'NO';
+	document.getElementById('selectobj3').value = '0';
 	
 	for (i = 1; i <= 6; i++) { 
 		  document.getElementById('btn'+i).value = document.getElementById('btn'+i).defaultValue;
