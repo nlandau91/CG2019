@@ -191,10 +191,8 @@ function reset(){//reseteo los botones y la escena
 	document.getElementById('amountTheta').value = document.getElementById('btnCamTheta').defaultValue;
 	document.getElementById('amountRadius').value = document.getElementById('btnCamRadius').defaultValue;
 	document.getElementById('amountFovy').value = document.getElementById('btnFovy').defaultValue;
-	document.getElementById('selectobj0').value = 'Alien';
-	document.getElementById('selectobj1').value = 'Nave';
-	document.getElementById('selectobj2').value = 'NO';
-	document.getElementById('selectobj3').value = '0';
+	document.getElementById('selectobj0').value = "Alien";
+
 	
 	for (i = 1; i <= 6; i++) { 
 		  document.getElementById('btn'+i).value = document.getElementById('btn'+i).defaultValue;
@@ -323,12 +321,14 @@ function actSliders(){
 				break;
 		  }
 	}
-	if (selLight==luz4){
-	document.getElementById('btnRed').value = selLight.get_light_intensity()[0];
-	document.getElementById('btnGreen').value = selLight.get_light_intensity()[1];
-	document.getElementById('btnBlue').value = selLight.get_light_intensity()[2];
+	if (selLight=luz4){
+	console.log(1);
+	document.getElementById('btnRed').value = luz4.get_light_intensity()[0];
+	document.getElementById('btnGreen').value = luz4.get_light_intensity()[1];
+	document.getElementById('btnBlue').value = luz4.get_light_intensity()[2];
 	}
 	else{
+		console.log(0);
 		document.getElementById('btnRed').value = luz1.get_light_intensity()[0];
 		document.getElementById('btnGreen').value = luz2.get_light_intensity()[1];
 		document.getElementById('btnBlue').value = luz3.get_light_intensity()[2];
