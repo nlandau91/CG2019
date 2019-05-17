@@ -18,26 +18,14 @@ function onSliderRotationZ(slider) {
 }
 
 function onSliderRed(slider) {
-	if(selLight==luz1){
-		selLight.set_light_intensity([parseFloat(slider.value),selLight.get_light_intensity()[1],selLight.get_light_intensity()[2]]);
-	}
-	else
 	selLight.set_light_intensity([parseFloat(slider.value),selLight.get_light_intensity()[1],selLight.get_light_intensity()[2]]);
 }
 
-function onSliderGreen(slider) {
-	if(selLight==luz1){
-		luz2.set_light_intensity([luz2.get_light_intensity()[0],parseFloat(slider.value),luz2.get_light_intensity()[2]]);
-	}
-	else	
+function onSliderGreen(slider) {	
 	selLight.set_light_intensity([selLight.get_light_intensity()[0],parseFloat(slider.value),selLight.get_light_intensity()[2]]);
 }
 
 function onSliderBlue(slider) {
-	if(selLight==luz1){
-		luz3.set_light_intensity([luz3.get_light_intensity()[0],luz3.get_light_intensity()[1],parseFloat(slider.value)]);
-	}
-	else
 	selLight.set_light_intensity([selLight.get_light_intensity()[0],selLight.get_light_intensity()[1],parseFloat(slider.value)]);
 }
 
@@ -285,12 +273,21 @@ function actSliders(){
 	if(document.getElementById('selectobj0').value == 'Nave'){
 		sel = platoVolador;		
 	}
-	if(document.getElementById('selectobj1').value == 'Nave'){
+	if(document.getElementById('selectobj1').value == 'Nave1'){
 		selLight = luz1;		
 	}
+	if(document.getElementById('selectobj1').value == 'Nave2'){
+		selLight = luz2;		
+	}
+	if(document.getElementById('selectobj1').value == 'Nave3'){
+		selLight = luz3;		
+	}
 	if(document.getElementById('selectobj1').value == 'Sol'){
-		selLigth = luz4;		
+		selLight = luz4;		
 	}	
+	document.getElementById('btnRed').value = selLight.get_light_intensity()[0];
+	document.getElementById('btnGreen').value = selLight.get_light_intensity()[1];
+	document.getElementById('btnBlue').value = selLight.get_light_intensity()[2];
 	
 	
 	let i;
@@ -320,18 +317,6 @@ function actSliders(){
 			default:
 				break;
 		  }
-	}
-	if (selLight=luz4){
-	console.log(1);
-	document.getElementById('btnRed').value = luz4.get_light_intensity()[0];
-	document.getElementById('btnGreen').value = luz4.get_light_intensity()[1];
-	document.getElementById('btnBlue').value = luz4.get_light_intensity()[2];
-	}
-	else{
-		console.log(0);
-		document.getElementById('btnRed').value = luz1.get_light_intensity()[0];
-		document.getElementById('btnGreen').value = luz2.get_light_intensity()[1];
-		document.getElementById('btnBlue').value = luz3.get_light_intensity()[2];
 	}
     
     //0 Alien

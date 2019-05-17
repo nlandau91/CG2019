@@ -49,7 +49,7 @@
         <option value="RENDERMODE_WARD">Ward</option>
     </select>
 
-    <h1>Proyecto 1</h1>
+    <h1>Proyecto 2</h1>
 
     <table id="tabla_tam_canvas" border='2'>
         <tr>
@@ -234,7 +234,9 @@
             <td>Seleccionar luz </td>
             <td>
                 <select disabled id="selectobj1" onChange="actSliders();">
-                    <option value="Nave">Nave</option>
+                    <option value="Nave1">Luz nave 1</option>
+                    <option value="Nave2">Luz nave 2 </option>
+                    <option value="Nave3">Luz nave 3</option>
                     <option value="Sol">Sol</option>
                 </select>
             </td>
@@ -261,7 +263,7 @@
                 Intensidad Green
             </td>
             <td>
-                <input disabled type="range" step="0.01" id="btnGreen" min="0" max="1" value="1" oninput="onSliderGreen(this)"></button>
+                <input disabled type="range" step="0.01" id="btnGreen" min="0" max="1" value="0" oninput="onSliderGreen(this)"></button>
             </td>
         </tr>
         <tr>
@@ -269,7 +271,7 @@
                 Intensidad Blue
             </td>
             <td>
-                <input disabled type="range" step="0.01" id="btnBlue" min="0" max="1" value="1" oninput="onSliderBlue(this)"></button>
+                <input disabled type="range" step="0.01" id="btnBlue" min="0" max="1" value="0" oninput="onSliderBlue(this)"></button>
             </td>
         </tr>
          <th>Material
