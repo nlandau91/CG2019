@@ -10,10 +10,9 @@ async function main() {
 
     // #️⃣ Cargamos assets a usar (modelos, codigo de shaders, etc)
 
-    //const cubeGeometryData      = await parse("/models/cube.obj")
     const graneroGeometryData      = await parse("/models/granero.obj")
-    const platoVoladorGeometryData = await parse("/models/platoVolador.obj")
-    const alienGeometryData      = await parse("/models/alien.obj")
+    const ufoGeometryData = await parse("/models/ufo.obj")
+    const alienGeometryData      = await parse("/models/alien_demon.obj")
     const planoGeometryData      = await parse("/models/plano.obj")
     const tractorGeometryData        = await parse("/models/tractor.obj")
     const siloGeometryData      = await parse("/models/silo.obj")
@@ -48,7 +47,7 @@ async function main() {
     planoTexture.image.onload = function () {
         handleLoadedTexture(planoTexture)
     }
-    planoTexture.image.src = "textures/plano.jpeg"
+    planoTexture.image.src = "textures/grass1.jpg"
 
     const graneroTexture = gl.createTexture()
     graneroTexture.image = new Image()
@@ -71,10 +70,24 @@ async function main() {
     }
     siloTexture.image.src = "textures/silo.jpeg"
 
+    const ufoTexture = gl.createTexture()
+    ufoTexture.image = new Image()
+    ufoTexture.image.onload = function() {
+        handleLoadedTexture(ufoTexture)
+    }
+    ufoTexture.image.src = "textures/ufo_diffuse.png"
+
+    const alienTexture = gl.createTexture()
+    alienTexture.image = new Image()
+    alienTexture.image.onload = function() {
+        handleLoadedTexture(alienTexture)
+    }
+    alienTexture.image.src = "textures/alien_monster1_color.jpeg"
+
     // #️⃣ Geometrias disponibles
 
     const graneroGeometry      = new Geometry(gl, graneroGeometryData)
-    const platoVoladorGeometry = new Geometry(gl, platoVoladorGeometryData)
+    const ufoGeometry = new Geometry(gl, ufoGeometryData)
     const alienGeometry    = new Geometry(gl, alienGeometryData)
     const planoGeometry    = new Geometry(gl, planoGeometryData)
     const tractorGeometry   = new Geometry(gl, tractorGeometryData)
@@ -93,54 +106,54 @@ async function main() {
     const whiteBasicMaterial   = new Material(basicProgram, false, { color: [1, 1, 1] })
     const normalsMaterial      = new Material(normalsProgram, false)
     const whiteDiffuseMaterial = new Material(diffuseProgram, true, { Ka: [0.1, 0.1, 0.1], Kd: [1, 1, 1] })
-    const phongMaterial = new Material(phongProgram, true, false, { Ka: [0.1,0.1,0.1], Kd: [0.4,0.4,0.4], Ks: [0.8,0.8,0.8], shininess: 50})
-    const planoMaterial = new Material(phongTProgram, true, true, { Ka: [0.1,0.1,0.1], Kd: [0.4,0.4,0.4], Ks: [0.8,0.8,0.8], shininess: 50})
-    const graneroMaterial = new Material(phongTProgram, true, true, { Ka: [0.1,0.1,0.1], Kd: [0.4,0.4,0.4], Ks: [0.8,0.8,0.8], shininess: 50})
-    const tractorMaterial = new Material(phongTProgram, true, true, { Ka: [0.1,0.1,0.1], Kd: [0.4,0.4,0.4], Ks: [0.8,0.8,0.8], shininess: 50})
-    const siloMaterial = new Material(phongTProgram, true, true, { Ka: [0.1,0.1,0.1], Kd: [0.4,0.4,0.4], Ks: [0.8,0.8,0.8], shininess: 50})
-    
+    const phongMaterial = new Material(phongProgram, true, false, { Ka: [0.1,0.1,0.1], Kd: [0.4,0.4,0.4], Ks: [0.8,0.8,0.8], shininess: 50.0})
+    const planoMaterial = new Material(phongTProgram, true, true, { shininess: 50.0})
+    const graneroMaterial = new Material(phongTProgram, true, true, { shininess: 50.0})
+    const tractorMaterial = new Material(phongTProgram, true, true, { shininess: 50.0})
+    const siloMaterial = new Material(phongTProgram, true, true, { shininess: 50.0})
+    const ufoMaterial = new Material(phongTProgram, true, true, { shininess: 50.0})
+    const alienMaterial = new Material(phongTProgram, true, true, { shininess: 50.0})
 
     // #️⃣ Creamos los objetos de la escena
 
     const granero      = new SceneObject(gl, graneroGeometry, graneroMaterial, graneroTexture, false)
     const tractor      = new SceneObject(gl, tractorGeometry, tractorMaterial, tractorTexture, false)
     const silo      = new SceneObject(gl, siloGeometry, siloMaterial, siloTexture, false)
-    const platoVolador = new SceneObject(gl, platoVoladorGeometry, phongMaterial, false)
-    const alien    = new SceneObject(gl, alienGeometry, phongMaterial, false)
+    const ufo = new SceneObject(gl, ufoGeometry, ufoMaterial, ufoTexture, false)
+    const alien    = new SceneObject(gl, alienGeometry, alienMaterial, alienTexture, false)
     const plano = new SceneObject(gl, planoGeometry, planoMaterial, planoTexture, false)
 
-   // const sceneObjects = [granero, platoVolador, alien, plano]
-   const sceneObjects = [plano, granero, tractor, silo, alien, platoVolador ]
+    const sceneObjects = [plano, granero, tractor, silo, alien, ufo ]
 
-    const lightPosition0 = [-5, 5, 5, 1]
-    const lightColor0 = [1, 1, 1]
-    const lightSpotDirection0 = [0,-1,0]
-    const lightSpotCutoff0 = -1
+    const lightPosition0 = [-5.0, 5.0, 5.0, 1.0]
+    const lightColor0 = [1.0, 1.0, 1.0]
+    const lightSpotDirection0 = [0.0,-1.0,0.0]
+    const lightSpotCutoff0 = -1.0
     const light0 = new SceneLight(lightPosition0, lightColor0)
 
-    const ligthPosition1 = [5, -5, -5, 1]
-    const lightColor1 = [1, 0, 0]
-    const lightSpotDirection1 = [0,-1,0]
-    const lightSpotCutoff1 = -1
+    const ligthPosition1 = [5.0, -5.0, -5.0, 1.0]
+    const lightColor1 = [1.0, 1.0, 1.0]
+    const lightSpotDirection1 = [0.0,-1.0,0.0]
+    const lightSpotCutoff1 = -1.0
     const light1 = new SceneLight(ligthPosition1, lightColor1)
 
     const sceneLights = [light0,light1]
 
     // #️⃣ Posicion inicial de cada objeto
 
-    granero.setPosition(1.5, 0, 0)
+    granero.setPosition(0.0, 0.0, 0.0)
     granero.updateModelMatrix()
 
-    silo.setPosition(-2,0,0)
+    silo.setPosition(4.0,0.0,0.0)
     silo.updateModelMatrix()
 
-    tractor.setPosition(-1,0,2)
+    tractor.setPosition(-2.0,0.0,1.0)
     tractor.updateModelMatrix()
 
-    platoVolador.setPosition(0, 10, 5)
-    platoVolador.updateModelMatrix()
+    ufo.setPosition(0.0, 10.0, 0.0)
+    ufo.updateModelMatrix()
 
-    alien.setPosition(0, 0, 5)
+    alien.setPosition(0.0, 0.0, 0.0)
     alien.updateModelMatrix()
 
     // #️⃣ Iniciamos el render-loop 🎬
@@ -223,8 +236,10 @@ async function main() {
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE,texture.image)
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+        //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+        //gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT)
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT)
         gl.bindTexture(gl.TEXTURE_2D, null)
     }
 }
