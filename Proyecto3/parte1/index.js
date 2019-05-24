@@ -11,7 +11,7 @@ async function main() {
     // #️⃣ Cargamos assets a usar (modelos, codigo de shaders, etc)
 
     const planoGeometryData      = await parse("/models/plano.obj")
-    const esferaGeometryData      = await parse("/models/esfera.obj")
+    const esferaGeometryData      = await parse("/models/esfera2.obj")
 
     const basicVertexShaderSource     = await getFileContentsAsText("/shaders/basic.vert.glsl")
     const basicFragmentShaderSource   = await getFileContentsAsText("/shaders/basic.frag.glsl")
