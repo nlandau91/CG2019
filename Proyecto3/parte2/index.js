@@ -123,21 +123,56 @@ async function main() {
     const alien    = new SceneObject(gl, alienGeometry, alienMaterial, alienTexture, false)
     const plano = new SceneObject(gl, planoGeometry, planoMaterial, planoTexture, false)
 
-    const sceneObjects = [plano, granero, tractor, silo, alien, ufo ]
+    const sceneObjects = [alien, ufo, plano, granero, tractor, silo ]
 
-    const lightPosition0 = [-5.0, 5.0, 5.0, 1.0]
+    const lightPosition0 = [5.0, 5.0, -5.0, 1.0]
     const lightColor0 = [1.0, 1.0, 1.0]
     const lightSpotDirection0 = [0.0,-1.0,0.0]
     const lightSpotCutoff0 = -1.0
     const light0 = new SceneLight(lightPosition0, lightColor0)
 
-    const ligthPosition1 = [5.0, -5.0, -5.0, 1.0]
+    const ligthPosition1 = [-5.0, 5.0, 5.0, 1.0]
     const lightColor1 = [1.0, 1.0, 1.0]
     const lightSpotDirection1 = [0.0,-1.0,0.0]
     const lightSpotCutoff1 = -1.0
     const light1 = new SceneLight(ligthPosition1, lightColor1)
 
     const sceneLights = [light0,light1]
+
+    // 🎛 Setup de sliders
+
+    // Buscamos elementos en el DOM
+    const selectedObject = document.getElementById("select0")
+    const rotSliderX = document.getElementById("slider0")
+    const rotSliderY  = document.getElementById("slider1")
+    const rotSliderZ  = document.getElementById("slider2")
+    const transSliderX   = document.getElementById('slider3')
+    const transSliderY    = document.getElementById("slider4")
+    const transSliderZ     = document.getElementById("slider5")
+
+    // Configuramos sus eventos
+    // transSliderX.addEventListener("input", (event) => { 
+    //     sceneObjects[parseFloat(selectedObject.value)].setPosition(parseFloat(transSliderX.value),
+    //                                                                 parseFloat(transSliderY.value),
+    //                                                                 parseFloat(transSliderZ.value))} );
+    //                                                                 console.log("asd");
+    //transSliderX.addEventListener("input", (event) => { console.log("asd"); } )
+    transSliderX.addEventListener("input", (event) => { 
+
+
+
+        //alien.setPosition(parseFloat(transSliderX.value),parseFloat(transSliderY.value),parseFloat(transSliderZ.value));
+        sceneObjects[parseFloat(selectedObject.value)].setPosition(parseFloat(transSliderX.value),parseFloat(transSliderY.value),parseFloat(transSliderZ.value));
+
+
+        sceneObjects[parseFloat(selectedObject.value)].updateModelMatrix();
+
+
+
+     } )
+    //thetaSlider.addEventListener("input", (event) => { camera.theta = toRadians(event.target.valueAsNumber) } )
+
+
 
     // #️⃣ Posicion inicial de cada objeto
 
@@ -153,7 +188,7 @@ async function main() {
     ufo.setPosition(0.0, 10.0, 0.0)
     ufo.updateModelMatrix()
 
-    alien.setPosition(0.0, 0.0, 0.0)
+    alien.setPosition(0.0, 0.0, 2.0)
     alien.updateModelMatrix()
 
     // #️⃣ Iniciamos el render-loop 🎬
@@ -220,14 +255,6 @@ async function main() {
 
         // Solicitamos el proximo frame
         requestAnimationFrame(render)
-    }
-    function initTexture() {
-        miTextura = gl.createTexture() //crear objeto textura
-        miTextura.image = new Image() // cargar imagen
-        miTextura.image.onload = function () {
-            handleLoadedTexture(miTextura)
-        }
-        miTextura.image.src = "textures/plano.jpeg"
     }
     
     function handleLoadedTexture(texture) {

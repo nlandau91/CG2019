@@ -1,14 +1,247 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title> Dibujando varios objetos </title>
-        <link rel="stylesheet" type="text/css" href="styles.css">
-    </head>
-    <body>
-        <canvas id="webgl-canvas" width="400" height="400">
-            Browser not supported
-        </canvas>
-        <script type="module" src="index.js"></script>
-    </body>
+
+<head>
+    <meta charset='utf-8'>
+    <title> Dibujando varios objetos </title>
+    <link rel='stylesheet' type='text/css' href='styles.css'>
+</head>
+
+<body>
+    <script src="../libs/listeners.js"></script>
+    <canvas id='webgl-canvas' width='800' height='800' style='border: 1px solid black;' style='float:left;'>
+        Browser not supported
+    </canvas>
+
+    <table align='right' border='2'>
+        <tr>
+            <td>Seleccionar objeto </td>
+            <td>
+                <select id='select0' onChange='selectObject();'>
+                    <option value='0'>Alien</option>
+                    <option value='1'>Nave</option>
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Rotar en X
+                <button id='b1' onmousedown='onClickRotX(-DeltaRot);' onmouseup='offClick()'>-</button>
+                <button id='b2' onmousedown='onClickRotX(DeltaRot);' onmouseup='offClick()'>+</button>
+            </td>
+            <td>
+                <input type='range' step='0.01' id='slider0' min='-180' max='180' value='0' oninput='onSliderRotation();'>
+
+            </td>
+
+        </tr>
+        <tr>
+            <td>Rotar en Y
+                <button id='b3' onmousedown='onClickRotY(-DeltaRot);' onmouseup='offClick()'>-</button>
+                <button id='b4' onmousedown='onClickRotY(DeltaRot);' onmouseup='offClick()'>+</button>
+            </td>
+            <td>
+                <input type='range' step='0.01' id='slider1' min='-180' max='180' value='0' oninput='onSliderRotation();'>
+
+            </td>
+        </tr>
+        <tr>
+            <td>Rotar en Z
+                <button id='b5' onmousedown='onClickRotZ(-DeltaRot);' onmouseup='offClick()'>-</button>
+                <button id='b6' onmousedown='onClickRotZ(DeltaRot);' onmouseup='offClick()'>+</button>
+            </td>
+            <td>
+                <input type='range' step='0.01' id='slider2' min='-180' max='180' value='0' oninput='onSliderRotation();'>
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>Trasladar en X
+                <button id='b9' onmousedown='onClickTransXNeg();' onmouseup='offClick()'>-</button>
+                <button id='b10' onmousedown='onClickTransXPos();' onmouseup='offClick()'>+</button>
+            </td>
+            <td>
+                <input type='range' step='0.01' id='slider3' min='-3' max='3' value='0' step='0.1'>
+
+            </td>
+        </tr>
+        <tr>
+            <td>Trasladar en Y
+                <button id='b11' onmousedown='onClickTransYNeg();' onmouseup='offClick()'>-</button>
+                <button id='b12' onmousedown='onClickTransYPos();' onmouseup='offClick()'>+</button>
+            </td>
+            <td>
+                <input type='range' step='0.01' id='slider4' min='0' max='50' value='0' step='0.1' oninput='onSliderTranslation();'>
+
+            </td>
+        </tr>
+        <tr>
+            <td>Trasladar en Z
+                <button id='b7' onmousedown='onClickTransZNeg();' onmouseup='offClick()'>-</button>
+                <button id='b8' onmousedown='onClickTransZPos();' onmouseup='offClick()'>+</button>
+            </td>
+            <td>
+                <input type='range' step='0.01' id='slider5' min='-5' max='5' value='-1' step='0.1' oninput='onSliderTranslation();'>
+
+            </td>
+        </tr>
+
+        <tr>
+            <th>Camara</th>
+            <th>Teclas Importantes</th>
+
+        </tr>
+        <tr>
+            <td>
+                Phi
+                <input id='btnCamPhi' type='range' id='slider6' step='0.01' min='0' max='360' value='45' oninput='onSliderCamPhi(this);'>
+
+            </td>
+            <td align='center' rowspan='10'>
+
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                Theta
+                <input id='btnCamTheta' type='range' id='slider7' step='0.01' id min='0' max='360' value='45' oninput='onSliderCamTheta(this);'>
+
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                Distancia
+                <input id='btnCamRadius' type='range' id='slider8' step='0.01' min='1' max='100' value='20' step='0.1' oninput='onSliderCamRadius(this);'>
+
+            </td>
+
+        </tr>
+        <tr>
+
+            <td>
+                Fovy
+                <input type='range' step='0.01' id='slider9' min='30' max='120' value='50' oninput='onSliderFovy(this);'>
+
+            </td>
+
+        </tr>
+
+        <tr>
+            <td>
+                Enfocar
+                <button id='btnFocoCentro' onclick='focoCentro();'>Centro</button>
+                <button id='btnFocoAlien' onclick='focoAlien();'>Alien</button>
+                <button id='btnFocoNave' onclick='focoNave();'>Nave</button>
+                <button id='btnFocoTractor' onclick='focoTractor();'>Tractor</button>
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                <button onclick='CamFront();' id='Frente'>Frente</button>
+                <button onclick='CamTrasera();' id='Trasera'>Trasera</button>
+                <button onclick='CamLeft();' id='Izquierda'>Izquierda</button>
+                <button onclick='CamRight();' id='Derecha'>Derecha</button>
+            </td>
+        </tr>
+        <tr>
+
+            <th>Carga</th>
+
+        </tr>
+        <tr>
+            <td>
+                <button onclick='onLoad();'>Cargar</button>
+                <button id='btnrenderizar' onclick='renderizar();habilitarBotones();'>Renderizar</button>
+                <button onclick='reset();' id='btnReiniciar'>Reiniciar</button>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Fun
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <button onclick='orbitar();' id='btnOrbitar'>Orbitar</button>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Seleccionar luz </td>
+            <td>
+                <select id='select1' onChange='actSliders();'>
+                    <option value='Nave1'>Luz nave 1</option>
+                    <option value='Nave2'>Luz nave 2 </option>
+                    <option value='Nave3'>Luz nave 3</option>
+                    <option value='Sol'>Sol</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Luz en camara </td>
+            <td>
+                <select id='select2' onChange='selectLuzEnCam();'>
+                    <option value='NO'>No</option>
+                    <option value='NAVE'>Nave</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Intensidad Red
+            </td>
+            <td>
+                <input type='range' step='0.01' id='slider10' min='0' max='1' value='1' oninput='onSliderRed(this);'>
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Intensidad Green
+            </td>
+            <td>
+                <input type='range' step='0.01' id='slider11' min='0' max='1' value='0' oninput='onSliderGreen(this)'>
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Intensidad Blue
+            </td>
+            <td>
+                <input type='range' step='0.01' id='slider12' min='0' max='1' value='0' oninput='onSliderBlue(this)'>
+                </button>
+            </td>
+        </tr>
+        <th>Material
+            <select id='select3' onChange='selectMaterial();'>
+                <option value='0'>Alien</option>
+                <option value='1'>Nave</option>
+                <option value='2'>Tractor</option>
+                <option value='3'>Silo</option>
+            </select>
+        </th>
+        <td rowspan='8'>
+
+            F0
+            <input type='range' id='slider13' step='0.01' min='0' max='1' value='0' step='0.1' oninput='onSliderF0(this);'>
+            <br> m
+            <input type='range' id='slider14' step='0.01' min='0' max='1' value='0' step='0.1' oninput='onSliderM(this);'>
+            <br> ax
+            <input type='range' id='slider15' step='0.01' min='0' max='1' value='0' step='0.1' oninput='onSliderAx(this);'>
+            <br> ay
+            <input type='range' id='slider16' step='0.01' min='0' max='1' value='0' step='0.1' oninput='onSliderAy(this);'>
+            <br> sigma
+            <input type='range' id='slider17' step='0.01' min='0' max='1' value='0' step='0.1' oninput='onSliderSigma(this);'>
+            </br>
+        </td>
+    </table>
+    <script type='module' src='index.js'></script>
+
+</body>
+
 </html>

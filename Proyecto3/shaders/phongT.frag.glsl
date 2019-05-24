@@ -30,7 +30,11 @@ vec3 calcPhong(Light light,vec3 N, vec3 V){
     vec3 vertColor = texture(imagen,fTexCoor).rgb;
     vec3 ambient = vertColor * 0.05 * light.color;
     vec3 diffuse = vertColor * light.color * max(dot(L, N), 0.0);
-    vec3 specular = vertColor * pow(max(dot(H,N),0.0),material.shininess) * light.color;
+    vec3 specular = vec3(0.0);
+    if(dot(L,N)>0.0){
+        diffuse = vertColor * light.color * max(dot(L, N), 0.0);
+        specular = vertColor * pow(max(dot(H,N),0.0),material.shininess) * light.color;    
+    }
     return ambient + diffuse + specular;
 }
 
@@ -41,7 +45,6 @@ void main () {
     vec3 color0 = calcPhong(light0,N,V);
     vec3 color1 = calcPhong(light1,N,V);
 
-    //vec3 outgoingLight = color0 + color1;
-    //fragmentColor = vec4(outgoingLight, 1);
+    //fragmentColor = vec4(1.0,1.0,1.0, 1);
     fragmentColor = vec4(color0 + color1, 1);
 }
