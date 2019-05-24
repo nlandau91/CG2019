@@ -11,7 +11,7 @@ async function main() {
     // #️⃣ Cargamos assets a usar (modelos, codigo de shaders, etc)
 
     const planoGeometryData      = await parse("/models/plano.obj")
-    const esferaGeometryData      = await parse("/models/esfera2.obj")
+    const esferaGeometryData      = await parse("/models/esfera3.obj")
 
     const basicVertexShaderSource     = await getFileContentsAsText("/shaders/basic.vert.glsl")
     const basicFragmentShaderSource   = await getFileContentsAsText("/shaders/basic.frag.glsl")
@@ -75,7 +75,7 @@ async function main() {
     const whiteDiffuseMaterial = new Material(diffuseProgram, true, { Ka: [0.1, 0.1, 0.1], Kd: [1, 1, 1] })
     const phongMaterial = new Material(phongProgram, true, false, { Ka: [0.1,0.1,0.1], Kd: [0.4,0.4,0.4], Ks: [0.8,0.8,0.8], shininess: 50})
     const planoMaterial = new Material(phongTProgram, true, true, { Ka: [0.1,0.1,0.1], Kd: [0.4,0.4,0.4], Ks: [0.8,0.8,0.8], shininess: 50})
-    const esferaMaterial = new Material(phongTProgram, true, true, { Ka: [0.1,0.1,0.1], Kd: [0.4,0.4,0.4], Ks: [0.8,0.8,0.8], shininess: 50})
+    const esferaMaterial = new Material(phongTProgram, true, true, { Ka: [0.1,0.1,0.1], Kd: [0.4,0.4,0.4], Ks: [0.1,0.1,0.1], shininess: 100})
     
 
     // #️⃣ Creamos los objetos de la escena
@@ -93,7 +93,7 @@ async function main() {
     const light0 = new SceneLight(lightPosition0, lightColor0)
 
     const ligthPosition1 = [5, -5, -5, 1]
-    const lightColor1 = [1, 0, 0]
+    const lightColor1 = [1, 1, 1]
     const lightSpotDirection1 = [0,-1,0]
     const lightSpotCutoff1 = -1
     const light1 = new SceneLight(ligthPosition1, lightColor1)
