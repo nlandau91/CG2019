@@ -126,10 +126,10 @@ async function main() {
     const sceneObjects = [alien, ufo, plano, granero, tractor, silo ]
 
 
-    const lightUfo1 = new SceneLight( [0.0, 5.0, 0.0, 1.0], [1.0, 0.0, 0.0], [0.2, -1.0, -0.2, 0.0], 0.5 )
-    const lightUfo2 = new SceneLight( [0.0, 5.0, 0.0, 1.0], [0.0, 1.0, 0.0], [-0.2, -1.0, 0.0, 0.0], 0.5 )
-    const lightUfo3 = new SceneLight( [0.0, 5.0, 0.0, 1.0], [0.0, 0.0, 1.0], [0.2, -1.0, 0.2, 0.0], 0.5 )
-    const lightDirectional = new SceneLight( [0.0, -1.0, 0.0, 0.0], [0.2, 0.2, 0.2], [0.5, -1.0, 0.0, 0.0], -1.0 )
+    const lightUfo1 = new SceneLight( [0.0, 5.0, 0.0, 1.0], [1.0, 0.0, 0.0], [0.2, -1.0, -0.2, 0.0], 0.5, ufo )
+    const lightUfo2 = new SceneLight( [0.0, 5.0, 0.0, 1.0], [0.0, 1.0, 0.0], [-0.2, -1.0, 0.0, 0.0], 0.5, ufo )
+    const lightUfo3 = new SceneLight( [0.0, 5.0, 0.0, 1.0], [0.0, 0.0, 1.0], [0.2, -1.0, 0.2, 0.0], 0.5, ufo )
+    const lightDirectional = new SceneLight( [0.0, -1.0, 0.0, 0.0], [0.5, 0.5, 0.5], [0.5, -1.0, 0.0, 0.0], -1.0 )
 
     const sceneLights = [lightUfo1, lightUfo2, lightUfo3, lightDirectional]
 
@@ -250,16 +250,21 @@ async function main() {
                 let i = 0
                 for( let light of sceneLights ) {
                     //paso la informacion de las luces. La posicion de la luz y la direccion del spot son convertidas a coordenadas del ojo
+                    //si la luz esta asociada a un objeto, se obtiene su posicion y rotacion a partir del objeto
+                    if(light.model != null){
+                        //si la luz esta asociada a un objeto, actualizo su posicion y rotacion
+                        light.position[0] = light.model.position[0]
+                        light.position[1] = light.model.position[1]
+                        light.position[2] = light.model.position[2]
+                        vec4.transformQuat(light.spot_direction,light.default_spot_direction,light.model.rotQuat)
+                    }
                     let lightPosEye = vec4.create();
                     vec4.transformMat4( lightPosEye, light.position, camera.viewMatrix )
                     object.material.program.setUniformValue( 'light'+ i.toString() + '.position', lightPosEye )
-                    object.material.program.setUniformValue( 'light'+ i.toString() + '.color', light.color )
-                    
-                    
+                    object.material.program.setUniformValue( 'light'+ i.toString() + '.color', light.color )                                   
                     let spotDirEye = vec4.create()
                     vec4.transformMat4( spotDirEye, light.spot_direction, camera.viewMatrix )
                     object.material.program.setUniformValue( 'light'+ i.toString() + '.spot_direction', spotDirEye )   
-
                     object.material.program.setUniformValue( 'light'+ i.toString() + '.spot_cutoff', light.spot_cutoff )
                     i++
                     
