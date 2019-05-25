@@ -8,7 +8,6 @@
 </head>
 
 <body>
-    <script src="../libs/listeners.js"></script>
     <canvas id='webgl-canvas' width='800' height='800' style='border: 1px solid black;' style='float:left;'>
         Browser not supported
     </canvas>
@@ -17,7 +16,7 @@
         <tr>
             <td>Seleccionar objeto </td>
             <td>
-                <select id='select0' onChange='selectObject();'>
+                <select id='select0'>
                     <option value='0'>Alien</option>
                     <option value='1'>Nave</option>
                 </select>
@@ -30,7 +29,7 @@
                 <button id='b2' onmousedown='onClickRotX(DeltaRot);' onmouseup='offClick()'>+</button>
             </td>
             <td>
-                <input type='range' step='0.01' id='slider0' min='-180' max='180' value='0' oninput='onSliderRotation();'>
+                <input type='range' step='0.01' id='slider0' min='-180' max='180' value='0'>
 
             </td>
 
@@ -41,7 +40,7 @@
                 <button id='b4' onmousedown='onClickRotY(DeltaRot);' onmouseup='offClick()'>+</button>
             </td>
             <td>
-                <input type='range' step='0.01' id='slider1' min='-180' max='180' value='0' oninput='onSliderRotation();'>
+                <input type='range' step='0.01' id='slider1' min='-180' max='180' value='0'>
 
             </td>
         </tr>
@@ -51,7 +50,7 @@
                 <button id='b6' onmousedown='onClickRotZ(DeltaRot);' onmouseup='offClick()'>+</button>
             </td>
             <td>
-                <input type='range' step='0.01' id='slider2' min='-180' max='180' value='0' oninput='onSliderRotation();'>
+                <input type='range' step='0.01' id='slider2' min='-180' max='180' value='0'>
 
             </td>
         </tr>
@@ -72,7 +71,7 @@
                 <button id='b12' onmousedown='onClickTransYPos();' onmouseup='offClick()'>+</button>
             </td>
             <td>
-                <input type='range' step='0.01' id='slider4' min='0' max='50' value='0' step='0.1' oninput='onSliderTranslation();'>
+                <input type='range' step='0.01' id='slider4' min='0' max='50' value='0' step='0.1'>
 
             </td>
         </tr>
@@ -82,7 +81,7 @@
                 <button id='b8' onmousedown='onClickTransZPos();' onmouseup='offClick()'>+</button>
             </td>
             <td>
-                <input type='range' step='0.01' id='slider5' min='-5' max='5' value='-1' step='0.1' oninput='onSliderTranslation();'>
+                <input type='range' step='0.01' id='slider5' min='-5' max='5' value='-1' step='0.1'>
 
             </td>
         </tr>
@@ -95,7 +94,7 @@
         <tr>
             <td>
                 Phi
-                <input id='btnCamPhi' type='range' id='slider6' step='0.01' min='0' max='360' value='45' oninput='onSliderCamPhi(this);'>
+                <input type='range' id='slider6' step='0.01' min='0' max='360' value='45'>
 
             </td>
             <td align='center' rowspan='10'>
@@ -106,7 +105,7 @@
         <tr>
             <td>
                 Theta
-                <input id='btnCamTheta' type='range' id='slider7' step='0.01' id min='0' max='360' value='45' oninput='onSliderCamTheta(this);'>
+                <input type='range' id='slider7' step='0.01' id min='-180' max='180' value='45'>
 
             </td>
 
@@ -114,7 +113,7 @@
         <tr>
             <td>
                 Distancia
-                <input id='btnCamRadius' type='range' id='slider8' step='0.01' min='1' max='100' value='20' step='0.1' oninput='onSliderCamRadius(this);'>
+                <input type='range' id='slider8' step='0.01' min='1' max='100' value='20' step='0.1'>
 
             </td>
 
@@ -122,8 +121,8 @@
         <tr>
 
             <td>
-                Fovy
-                <input type='range' step='0.01' id='slider9' min='30' max='120' value='50' oninput='onSliderFovy(this);'>
+                Fov
+                <input type='range' step='0.01' id='slider9' min='30' max='120' value='45'>
 
             </td>
 

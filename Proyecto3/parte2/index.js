@@ -1,6 +1,6 @@
 // 📥 Imports
 import { mat4 } from "/libs/gl-matrix/index.js"
-import { getFileContentsAsText } from "/libs/utils.js"
+import { getFileContentsAsText, toRadians, toDegrees } from "/libs/utils.js"
 import { Program, Material, Geometry, SceneObject, SceneLight, Camera, CameraMouseControls } from "/libs/gl-engine/index.js"
 import { parse } from "/libs/gl-engine/parsers/obj-parser.js"
 
@@ -11,7 +11,7 @@ async function main() {
     // #️⃣ Cargamos assets a usar (modelos, codigo de shaders, etc)
 
     const graneroGeometryData      = await parse("/models/granero.obj")
-    const ufoGeometryData = await parse("/models/ufo.obj")
+    const ufoGeometryData = await parse("/models/ufo2.obj")
     const alienGeometryData      = await parse("/models/alien_demon.obj")
     const planoGeometryData      = await parse("/models/plano.obj")
     const tractorGeometryData        = await parse("/models/tractor.obj")
@@ -131,7 +131,7 @@ async function main() {
     const lightSpotCutoff0 = -1.0
     const light0 = new SceneLight(lightPosition0, lightColor0)
 
-    const ligthPosition1 = [-5.0, 5.0, 5.0, 1.0]
+    const ligthPosition1 = [-5.0, 20.0, 5.0, 1.0]
     const lightColor1 = [1.0, 1.0, 1.0]
     const lightSpotDirection1 = [0.0,-1.0,0.0]
     const lightSpotCutoff1 = -1.0
@@ -144,34 +144,58 @@ async function main() {
     // Buscamos elementos en el DOM
     const selectedObject = document.getElementById("select0")
     const rotSliderX = document.getElementById("slider0")
-    const rotSliderY  = document.getElementById("slider1")
-    const rotSliderZ  = document.getElementById("slider2")
-    const transSliderX   = document.getElementById('slider3')
-    const transSliderY    = document.getElementById("slider4")
-    const transSliderZ     = document.getElementById("slider5")
+    const rotSliderY = document.getElementById("slider1")
+    const rotSliderZ = document.getElementById("slider2")
+    const transSliderX = document.getElementById('slider3')
+    const transSliderY = document.getElementById("slider4")
+    const transSliderZ = document.getElementById("slider5")
+    const camPhiSlider = document.getElementById("slider6")
+    const camThetaSlider = document.getElementById("slider7")
+    const camRadiusSlider = document.getElementById("slider8")
+    const camFovSlider = document.getElementById("slider9")
 
-    // Configuramos sus eventos
-    // transSliderX.addEventListener("input", (event) => { 
-    //     sceneObjects[parseFloat(selectedObject.value)].setPosition(parseFloat(transSliderX.value),
-    //                                                                 parseFloat(transSliderY.value),
-    //                                                                 parseFloat(transSliderZ.value))} );
-    //                                                                 console.log("asd");
-    //transSliderX.addEventListener("input", (event) => { console.log("asd"); } )
-    transSliderX.addEventListener("input", (event) => { 
+    selectedObject.addEventListener("input", updateObjectSliders)
 
+    transSliderX.addEventListener("input", updateTranslation)
+    transSliderY.addEventListener("input", updateTranslation)
+    transSliderZ.addEventListener("input", updateTranslation)
+    
+    rotSliderX.addEventListener("input", updateRotation)
+    rotSliderY.addEventListener("input", updateRotation)
+    rotSliderZ.addEventListener("input", updateRotation)
 
+    camPhiSlider.addEventListener("input", (event) => { camera.phi = toRadians(event.target.valueAsNumber) })
+    camThetaSlider.addEventListener("input", (event) => { camera.theta = toRadians(event.target.valueAsNumber) })
+    camRadiusSlider.addEventListener("input", (event) => { camera.radius = event.target.valueAsNumber })
+    camFovSlider.addEventListener("input", (event) => { camera.setFov(toRadians(event.target.valueAsNumber)) })
 
-        //alien.setPosition(parseFloat(transSliderX.value),parseFloat(transSliderY.value),parseFloat(transSliderZ.value));
+    function updateObjectSliders(){
+        let objeto = sceneObjects[parseFloat(selectedObject.value)]
+        rotSliderX.value = objeto.rotation[0]
+        rotSliderY.value = objeto.rotation[1]
+        rotSliderZ.value = objeto.rotation[2]
+        transSliderX.value = objeto.position[0]
+        transSliderY.value = objeto.position[1]
+        transSliderZ.value = objeto.position[2]
+    }
+
+    function updateTranslation(){
         sceneObjects[parseFloat(selectedObject.value)].setPosition(parseFloat(transSliderX.value),parseFloat(transSliderY.value),parseFloat(transSliderZ.value));
-
-
         sceneObjects[parseFloat(selectedObject.value)].updateModelMatrix();
+    }
+    function updateRotation(){
+        sceneObjects[parseFloat(selectedObject.value)].setRotation(parseFloat(rotSliderX.value),parseFloat(rotSliderY.value),parseFloat(rotSliderZ.value));
+        sceneObjects[parseFloat(selectedObject.value)].updateModelMatrix();
+    }
 
+    function updateCamSliders(){
+        camPhiSlider.value = toDegrees(camera.phi)
+        camThetaSlider.value = toDegrees(camera.theta)
+        camRadiusSlider.value = camera.radius
+        camFovSlider.value = toDegrees(camera.getFov())
+    }
 
-
-     } )
-    //thetaSlider.addEventListener("input", (event) => { camera.theta = toRadians(event.target.valueAsNumber) } )
-
+    updateCamSliders()
 
 
     // #️⃣ Posicion inicial de cada objeto
@@ -185,7 +209,7 @@ async function main() {
     tractor.setPosition(-2.0,0.0,1.0)
     tractor.updateModelMatrix()
 
-    ufo.setPosition(0.0, 10.0, 0.0)
+    ufo.setPosition(0.0, 5.0, 0.0)
     ufo.updateModelMatrix()
 
     alien.setPosition(0.0, 0.0, 2.0)
