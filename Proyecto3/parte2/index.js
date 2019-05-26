@@ -256,7 +256,9 @@ async function main() {
                         light.position[0] = light.model.position[0]
                         light.position[1] = light.model.position[1]
                         light.position[2] = light.model.position[2]
-                        vec4.transformQuat(light.spot_direction,light.default_spot_direction,light.model.rotQuat)
+                        let newSpotDirection = vec4.create()
+                        vec4.transformQuat(newSpotDirection,light.default_spot_direction,light.model.rotQuat)
+                        light.spot_direction = newSpotDirection
                     }
                     let lightPosEye = vec4.create();
                     vec4.transformMat4( lightPosEye, light.position, camera.viewMatrix )
