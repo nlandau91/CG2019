@@ -11,7 +11,7 @@ async function main() {
     // #️⃣ Cargamos assets a usar (modelos, codigo de shaders, etc)
 
     const planoGeometryData      = await parse("/models/plano.obj")
-    const esferaGeometryData      = await parse("/models/esfera3.obj")
+    const esferaGeometryData      = await parse("/models/esfera2.obj")
 
     const basicVertexShaderSource     = await getFileContentsAsText("/shaders/basic.vert.glsl")
     const basicFragmentShaderSource   = await getFileContentsAsText("/shaders/basic.frag.glsl")
@@ -52,12 +52,10 @@ async function main() {
     }
     esferaTexture.image.src = "textures/TexturesCom_Plastic_SpaceBlanketFolds_512_albedo.jpg"
 
-    
-
     // #️⃣ Geometrias disponibles
 
-    const planoGeometry    = new Geometry(gl, planoGeometryData)
-    const esferaGeometry      = new Geometry(gl, esferaGeometryData)
+    const planoGeometry  = new Geometry(gl, planoGeometryData)
+    const esferaGeometry  = new Geometry(gl, esferaGeometryData)
     
 
     // #️⃣ Programas de shaders disponibles
@@ -74,17 +72,17 @@ async function main() {
     const normalsMaterial      = new Material(normalsProgram, false)
     const whiteDiffuseMaterial = new Material(diffuseProgram, true, { Ka: [0.1, 0.1, 0.1], Kd: [1, 1, 1] })
     const phongMaterial = new Material(phongProgram, true, false, { Ka: [0.1,0.1,0.1], Kd: [0.4,0.4,0.4], Ks: [0.8,0.8,0.8], shininess: 50})
-    const planoMaterial = new Material(phongTProgram, true, true, { Ka: [0.1,0.1,0.1], Kd: [0.4,0.4,0.4], Ks: [0.8,0.8,0.8], shininess: 50})
-    const esferaMaterial = new Material(phongTProgram, true, true, { Ka: [0.1,0.1,0.1], Kd: [0.4,0.4,0.4], Ks: [0.1,0.1,0.1], shininess: 100})
+    const planoMaterial = new Material(phongTProgram, true, true, { shininess: 50})
+    const esferaMaterial = new Material(phongTProgram, true, true, { shininess: 100})
     
 
     // #️⃣ Creamos los objetos de la escena
 
-    const plano = new SceneObject(gl, planoGeometry, planoMaterial, planoTexture, false)
-    const esfera = new SceneObject(gl, esferaGeometry, esferaMaterial, esferaTexture, false)
+    const plano = new SceneObject(gl, planoGeometry, planoMaterial, [planoTexture], false)
+    const esfera = new SceneObject(gl, esferaGeometry, esferaMaterial, [esferaTexture], false)
 
    // const sceneObjects = [granero, platoVolador, alien, plano]
-   const sceneObjects = [plano, esfera ]
+    const sceneObjects = [plano, esfera]
 
     const lightPosition0 = [-5, 5, 5, 1]
     const lightColor0 = [1, 1, 1]
@@ -160,10 +158,13 @@ async function main() {
             object.vertexArray.bind()
             
             //info de texturas
-            if(object.material.textured){
-                gl.activeTexture(gl.TEXTURE0)
-                gl.bindTexture(gl.TEXTURE_2D,object.texture)
-                gl.uniform1i(object.material.program.program.samplerUniform,0)
+            if( object.material.textured ) {
+                let i
+                for(i = 0; i < object.texture.length; i++) {                                                                     
+                    gl.activeTexture( gl.TEXTURE0 + i)
+                    gl.bindTexture( gl.TEXTURE_2D, object.texture[i] )
+                    gl.uniform1i( object.material.program.program.samplerUniform, i )
+                }
             }
             // Lo dibujamos
             gl.drawElements(object.drawMode, object.indexBuffer.size, object.indexBuffer.dataType, 0)
