@@ -61,7 +61,7 @@
                 <button id='b10' onmousedown='onClickTransXPos();' onmouseup='offClick()'>+</button>
             </td>
             <td>
-                <input type='range' step='0.01' id='slider3' min='-3' max='3' value='0' step='0.1'>
+                <input type='range' step='0.01' id='slider3' min='-25' max='25' value='0' step='0.1'>
 
             </td>
         </tr>
@@ -81,7 +81,7 @@
                 <button id='b8' onmousedown='onClickTransZPos();' onmouseup='offClick()'>+</button>
             </td>
             <td>
-                <input type='range' step='0.01' id='slider5' min='-5' max='5' value='-1' step='0.1'>
+                <input type='range' step='0.01' id='slider5' min='-25' max='25' value='0' step='0.1'>
 
             </td>
         </tr>
@@ -105,7 +105,7 @@
         <tr>
             <td>
                 Theta
-                <input type='range' id='slider7' step='0.01' id min='-180' max='180' value='45'>
+                <input type='range' id='slider7' step='0.01' id min='-0' max='360' value='45'>
 
             </td>
 
@@ -173,10 +173,10 @@
             <td>Seleccionar luz </td>
             <td>
                 <select id='select1'>
-                    <option value='1'>Luz nave 1</option>
-                    <option value='2'>Luz nave 2 </option>
-                    <option value='3'>Luz nave 3</option>
-                    <option value='4'>Sol</option>
+                    <option value='0'>Luz nave 1</option>
+                    <option value='1'>Luz nave 2 </option>
+                    <option value='2'>Luz nave 3</option>
+                    <option value='3'>Sol</option>
                 </select>
             </td>
         </tr>
@@ -194,7 +194,7 @@
                 Intensidad Red
             </td>
             <td>
-                <input type='range' step='0.01' id='slider10' min='0' max='1' value='1' oninput='onSliderRed(this);'>
+                <input type='range' step='0.01' id='slider10' min='0' max='1' value='1'>
                 </button>
             </td>
         </tr>
@@ -203,7 +203,7 @@
                 Intensidad Green
             </td>
             <td>
-                <input type='range' step='0.01' id='slider11' min='0' max='1' value='0' oninput='onSliderGreen(this)'>
+                <input type='range' step='0.01' id='slider11' min='0' max='1' value='0'>
                 </button>
             </td>
         </tr>
@@ -212,7 +212,7 @@
                 Intensidad Blue
             </td>
             <td>
-                <input type='range' step='0.01' id='slider12' min='0' max='1' value='0' oninput='onSliderBlue(this)'>
+                <input type='range' step='0.01' id='slider12' min='0' max='1' value='0'>
                 </button>
             </td>
         </tr>

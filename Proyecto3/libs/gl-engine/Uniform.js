@@ -22,7 +22,9 @@ export class Uniform {
             case (gl.FLOAT_MAT4):
                 return (value) => { gl.uniformMatrix4fv(location, false, value) }
              case(gl.SAMPLER_2D):
-                 return() => {} //no hago nada?
+                return (value) => {
+                   // gl.uniform1i(location, value)
+                }
             default:
                 console.error("Unsupported uniform type")
                 return () => {} // no-op

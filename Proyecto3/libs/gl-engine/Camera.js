@@ -1,8 +1,8 @@
 import { mat4 } from "/libs/gl-matrix/index.js"
 import { toCartesian, toRadians, limitToRange } from "/libs/utils.js"
 
-const DEFAULT_RADIUS = 20                // distancia al origen
-const DEFAULT_THETA  = toRadians(-40)   // angulo horizontal alrededor del eje y (partiendo del eje z positivo, en sentido anti-horario)
+const DEFAULT_RADIUS = 50                // distancia al origen
+const DEFAULT_THETA  = toRadians(0)   // angulo horizontal alrededor del eje y (partiendo del eje z positivo, en sentido anti-horario)
 const DEFAULT_PHI    = toRadians(60)    // angulo vertical desde el eje y positivo
 
 export class Camera {
@@ -14,7 +14,7 @@ export class Camera {
         this.fov    = toRadians(45)
         this.aspect = 1
         this.near   = 0.1
-        this.far    = 100
+        this.far    = 1000
 
         this.onPositionChange = () => {} // funcion que se ejecuta ante cada cambio en la posicion de la camara (por defecto una "funcion vacia" o no-op)
 

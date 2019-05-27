@@ -17,16 +17,13 @@ async function main() {
     const tractorGeometryData = await parse( '/models/tractor.obj' )
     const siloGeometryData = await parse( '/models/silo.obj' )
 
-    const basicVertexShaderSource = await getFileContentsAsText( '/shaders/basic.vert.glsl' )
-    const basicFragmentShaderSource = await getFileContentsAsText( '/shaders/basic.frag.glsl' )
-    const normalsVertexShaderSource = await getFileContentsAsText( '/shaders/normals.vert.glsl' )
-    const normalsFragmentShaderSource = await getFileContentsAsText( '/shaders/normals.frag.glsl' )
-    const diffuseVertexShaderSource = await getFileContentsAsText( '/shaders/diffuse.vert.glsl' )
-    const diffuseFragmentShaderSource = await getFileContentsAsText( '/shaders/diffuse.frag.glsl' )
     const phongVertexShaderSource = await getFileContentsAsText( '/shaders/phong.vert.glsl' )
     const phongFragmentShaderSource = await getFileContentsAsText( '/shaders/phong.frag.glsl' )
+
     const phongTVertexShaderSource = await getFileContentsAsText( '/shaders/phongT.vert.glsl' )
     const phongTFragmentShaderSource = await getFileContentsAsText( '/shaders/phongT.frag.glsl' )
+
+    const phong2TFragmentShaderSource = await getFileContentsAsText( '/shaders/phong2T.frag.glsl' )
 
     // #️⃣ Configuracion base de WebGL
 
@@ -70,6 +67,13 @@ async function main() {
     }
     siloTexture.image.src = 'textures/silo.jpeg'
 
+    const alienTexture = gl.createTexture()
+    alienTexture.image = new Image()
+    alienTexture.image.onload = function() {
+        handleLoadedTexture( alienTexture )
+    }
+    alienTexture.image.src = 'textures/alien_monster1_color.jpeg'
+
     const ufoTexture = gl.createTexture()
     ufoTexture.image = new Image()
     ufoTexture.image.onload = function() {
@@ -77,12 +81,12 @@ async function main() {
     }
     ufoTexture.image.src = 'textures/ufo_diffuse.png'
 
-    const alienTexture = gl.createTexture()
-    alienTexture.image = new Image()
-    alienTexture.image.onload = function() {
-        handleLoadedTexture( alienTexture )
+    const ufoTexture2 = gl.createTexture()
+    ufoTexture2.image = new Image()
+    ufoTexture2.image.onload = function() {
+        handleLoadedTexture( ufoTexture2 )
     }
-    alienTexture.image.src = 'textures/alien_monster1_color.jpeg'
+    ufoTexture2.image.src = 'textures/ufo_spec.png'
 
     // #️⃣ Geometrias disponibles
 
@@ -95,41 +99,36 @@ async function main() {
 
     // #️⃣ Programas de shaders disponibles
 
-    const basicProgram = new Program( gl, basicVertexShaderSource, basicFragmentShaderSource )
-    const normalsProgram = new Program( gl, normalsVertexShaderSource, normalsFragmentShaderSource )
-    const diffuseProgram = new Program( gl, diffuseVertexShaderSource, diffuseFragmentShaderSource )
     const phongProgram = new Program( gl, phongVertexShaderSource, phongFragmentShaderSource )
     const phongTProgram = new Program( gl, phongTVertexShaderSource, phongTFragmentShaderSource )
+    const phong2TProgram = new Program( gl, phongTVertexShaderSource, phong2TFragmentShaderSource )
 
     // #️⃣ Creamos materiales combinando programas con distintas propiedades
 
-    const whiteBasicMaterial = new Material( basicProgram, false, { color: [1, 1, 1] } )
-    const normalsMaterial = new Material( normalsProgram, false )
-    const whiteDiffuseMaterial = new Material( diffuseProgram, true, { Ka: [0.1, 0.1, 0.1], Kd: [1, 1, 1] } )
     const phongMaterial = new Material( phongProgram, true, false, { Ka: [0.1, 0.1, 0.1], Kd: [0.4, 0.4, 0.4], Ks: [0.8, 0.8, 0.8], shininess: 50.0} )
-    const planoMaterial = new Material( phongTProgram, true, true, { shininess: 50.0} )
-    const graneroMaterial = new Material( phongTProgram, true, true, { shininess: 50.0} )
-    const tractorMaterial = new Material( phongTProgram, true, true, { shininess: 50.0} )
-    const siloMaterial = new Material( phongTProgram, true, true, { shininess: 50.0} )
+    const planoMaterial = new Material( phongTProgram, true, true, { shininess: 0.0} )
+    const graneroMaterial = new Material( phongTProgram, true, true, { shininess: 0.0} )
+    const tractorMaterial = new Material( phongTProgram, true, true, { shininess: 27.0} )
+    const siloMaterial = new Material( phong2TProgram, true, true, { shininess: 35.0} )
     const ufoMaterial = new Material( phongTProgram, true, true, { shininess: 50.0} )
-    const alienMaterial = new Material( phongTProgram, true, true, { shininess: 50.0} )
+    const alienMaterial = new Material( phongTProgram, true, true, { shininess: 0.0} )
 
     // #️⃣ Creamos los objetos de la escena
 
-    const granero = new SceneObject( gl, graneroGeometry, graneroMaterial, graneroTexture, false )
-    const tractor = new SceneObject( gl, tractorGeometry, tractorMaterial, tractorTexture, false )
-    const silo = new SceneObject( gl, siloGeometry, siloMaterial, siloTexture, false )
-    const ufo = new SceneObject( gl, ufoGeometry, ufoMaterial, ufoTexture, false )
-    const alien = new SceneObject( gl, alienGeometry, alienMaterial, alienTexture, false )
-    const plano = new SceneObject( gl, planoGeometry, planoMaterial, planoTexture, false )
+    const granero = new SceneObject( gl, graneroGeometry, graneroMaterial, [graneroTexture], false )
+    const tractor = new SceneObject( gl, tractorGeometry, tractorMaterial, [tractorTexture], false )
+    const silo = new SceneObject( gl, siloGeometry, siloMaterial, [siloTexture], false )
+    const ufo = new SceneObject( gl, ufoGeometry, ufoMaterial, [ufoTexture, ufoTexture2], false )
+    const alien = new SceneObject( gl, alienGeometry, alienMaterial, [alienTexture], false )
+    const plano = new SceneObject( gl, planoGeometry, planoMaterial, [planoTexture], false )
 
     const sceneObjects = [alien, ufo, plano, granero, tractor, silo ]
 
 
-    const lightUfo1 = new SceneLight( [0.0, 5.0, 0.0, 1.0], [1.0, 0.0, 0.0], [0.2, -1.0, -0.2, 0.0], 0.5, ufo )
-    const lightUfo2 = new SceneLight( [0.0, 5.0, 0.0, 1.0], [0.0, 1.0, 0.0], [-0.2, -1.0, 0.0, 0.0], 0.5, ufo )
-    const lightUfo3 = new SceneLight( [0.0, 5.0, 0.0, 1.0], [0.0, 0.0, 1.0], [0.2, -1.0, 0.2, 0.0], 0.5, ufo )
-    const lightDirectional = new SceneLight( [0.0, -1.0, 0.0, 0.0], [0.5, 0.5, 0.5], [0.5, -1.0, 0.0, 0.0], -1.0 )
+    const lightUfo1 = new SceneLight( [0.0, 5.0, 0.0, 1.0], [1.0, 0.0, 0.0], [0.0, -1.0, 0.2, 0.0], Math.cos(toRadians(15)), ufo )
+    const lightUfo2 = new SceneLight( [0.0, 5.0, 0.0, 1.0], [0.0, 1.0, 0.0], [-0.2, -1.0, 0.0, 0.0],  Math.cos(toRadians(15)), ufo )
+    const lightUfo3 = new SceneLight( [0.0, 5.0, 0.0, 1.0], [0.0, 0.0, 1.0], [0.2, -1.0, 0.0, 0.0],  Math.cos(toRadians(15)), ufo )
+    const lightDirectional = new SceneLight( [-1.0, -1.0, -1.0, 0.0], [0.5, 0.5, 0.5], [0.5, -1.0, 0.0, 0.0], -1.0 )
 
     const sceneLights = [lightUfo1, lightUfo2, lightUfo3, lightDirectional]
 
@@ -147,6 +146,10 @@ async function main() {
     const camThetaSlider = document.getElementById( 'slider7' )
     const camRadiusSlider = document.getElementById( 'slider8' )
     const camFovSlider = document.getElementById( 'slider9' )
+    const selectedLight = document.getElementById('select1')
+    const lightRedSlider = document.getElementById( 'slider10')
+    const lightGreenSlider = document.getElementById( 'slider11')
+    const lightBlueSlider = document.getElementById( 'slider12')
 
     selectedObject.addEventListener( 'input', updateObjectSliders )
 
@@ -163,6 +166,25 @@ async function main() {
     camRadiusSlider.addEventListener( 'input', ( event ) => { camera.radius = event.target.valueAsNumber } )
     camFovSlider.addEventListener( 'input', ( event ) => { camera.setFov( toRadians( event.target.valueAsNumber ) ) } )
 
+    selectedLight.addEventListener( 'input', updateLightSliders )
+
+    lightRedSlider.addEventListener( 'input', updateLightColor )
+    lightGreenSlider.addEventListener( 'input', updateLightColor )
+    lightBlueSlider.addEventListener( 'input', updateLightColor )
+
+    function updateLightColor() {
+        sceneLights[parseFloat(selectedLight.value)].color = [parseFloat(lightRedSlider.value),
+                                                                parseFloat(lightGreenSlider.value),
+                                                                parseFloat(lightBlueSlider.value)]
+    }
+       
+    function updateLightSliders() {
+        let luz = sceneLights[parseFloat( selectedLight.value )]
+        lightRedSlider.value = luz.color[0]
+        lightGreenSlider.value = luz.color[1]
+        lightBlueSlider.value = luz.color[2]
+    }
+
     function updateObjectSliders() {
         let objeto = sceneObjects[parseFloat( selectedObject.value )]
         rotSliderX.value = objeto.rotation[0]
@@ -174,11 +196,15 @@ async function main() {
     }
 
     function updateTranslation() {
-        sceneObjects[parseFloat( selectedObject.value )].setPosition( parseFloat( transSliderX.value ), parseFloat( transSliderY.value ), parseFloat( transSliderZ.value ) );
+        sceneObjects[parseFloat( selectedObject.value )].setPosition( parseFloat( transSliderX.value ), 
+                                                                        parseFloat( transSliderY.value ), 
+                                                                        parseFloat( transSliderZ.value ) );
         sceneObjects[parseFloat( selectedObject.value )].updateModelMatrix();
     }
     function updateRotation() {
-        sceneObjects[parseFloat( selectedObject.value )].setRotation( parseFloat( rotSliderX.value ), parseFloat( rotSliderY.value ), parseFloat( rotSliderZ.value ) );
+        sceneObjects[parseFloat( selectedObject.value )].setRotation( parseFloat( rotSliderX.value ), 
+                                                                        parseFloat( rotSliderY.value ), 
+                                                                        parseFloat( rotSliderZ.value ) );
         sceneObjects[parseFloat( selectedObject.value )].updateModelMatrix();
     }
 
@@ -189,8 +215,9 @@ async function main() {
         camFovSlider.value = toDegrees( camera.getFov() )
     }
 
+    updateObjectSliders()
     updateCamSliders()
-
+    updateLightSliders()
 
     // #️⃣ Posicion inicial de cada objeto
 
@@ -278,15 +305,21 @@ async function main() {
             
             //info de texturas
             if( object.material.textured ) {
-                gl.activeTexture( gl.TEXTURE0 )
-                gl.bindTexture( gl.TEXTURE_2D, object.texture )
-                gl.uniform1i( object.material.program.program.samplerUniform, 0 )
+                let i
+                for(i = 0; i < object.texture.length; i++) {                                                                     
+                    gl.activeTexture( gl.TEXTURE0 + i)
+                    gl.bindTexture( gl.TEXTURE_2D, object.texture[i] )
+                    gl.uniform1i( object.material.program.program.samplerUniform, i )
+                }
             }
             // Lo dibujamos
             gl.drawElements( object.drawMode, object.indexBuffer.size, object.indexBuffer.dataType, 0 )
         }
 
         // Solicitamos el proximo frame
+        updateObjectSliders()
+        updateCamSliders()
+        updateLightSliders()
         requestAnimationFrame( render )
     }
     
@@ -296,10 +329,10 @@ async function main() {
         gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image )
         gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST )
         gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST )
-        //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE )
-        //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE )
-        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT )
-        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT )
+        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE )
+        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE )
+        //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT )
+        //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT )
         gl.bindTexture( gl.TEXTURE_2D, null )
     }
 }
