@@ -10,12 +10,12 @@ struct Light {
 };
 struct Material {
     float shininess;
+    sampler2D texture0; //diffuse texture
+    sampler2D texture1; //specular texture
 };
 
 uniform Light light0, light1, light2, light3;
 uniform Material material;
-uniform sampler2D t_diffuse;
-uniform sampler2D t_specular;
 
 in vec3 vVE;
 in vec3 vNE;
@@ -58,8 +58,8 @@ void main () {
     vec3 N = normalize(vNE);
     vec3 V = normalize(vVE);
 
-    vec3 diffuseColorFromTexture = texture(t_diffuse,fTexCoor).rgb;
-    vec3 specularColorFromTexture = texture(t_specular,fTexCoor).rgb;
+    vec3 diffuseColorFromTexture = texture(material.texture0,fTexCoor).rgb;
+    vec3 specularColorFromTexture = texture(material.texture1,fTexCoor).rgb;
 
     vec3 color0 = calcPhong(light0,diffuseColorFromTexture,specularColorFromTexture,N,V);
     vec3 color1 = calcPhong(light1,diffuseColorFromTexture,specularColorFromTexture,N,V);

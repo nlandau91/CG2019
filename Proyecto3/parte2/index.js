@@ -11,7 +11,7 @@ async function main() {
     // #️⃣ Cargamos assets a usar ( modelos, codigo de shaders, etc )
 
     const graneroGeometryData = await parse( '/models/granero.obj' )
-    const ufoGeometryData = await parse( '/models/ufo2.obj' )
+    const ufoGeometryData = await parse( '/models/ufofixed.obj' )
     const alienGeometryData = await parse( '/models/alien_demon.obj' )
     const planoGeometryData = await parse( '/models/plano.obj' )
     const tractorGeometryData = await parse( '/models/tractor.obj' )
@@ -23,6 +23,7 @@ async function main() {
     const phongTVertexShaderSource = await getFileContentsAsText( '/shaders/phongT.vert.glsl' )
     const phongTFragmentShaderSource = await getFileContentsAsText( '/shaders/phongT.frag.glsl' )
 
+    const phong2TVertexShaderSource = await getFileContentsAsText( '/shaders/phong2T.vert.glsl' )
     const phong2TFragmentShaderSource = await getFileContentsAsText( '/shaders/phong2T.frag.glsl' )
 
     // #️⃣ Configuracion base de WebGL
@@ -79,7 +80,7 @@ async function main() {
     ufoTexture.image.onload = function() {
         handleLoadedTexture( ufoTexture )
     }
-    ufoTexture.image.src = 'textures/ufo_diffuse.png'
+    ufoTexture.image.src = 'textures/ufo_diffusefixed.png'
 
     const ufoTexture2 = gl.createTexture()
     ufoTexture2.image = new Image()
@@ -101,17 +102,17 @@ async function main() {
 
     const phongProgram = new Program( gl, phongVertexShaderSource, phongFragmentShaderSource )
     const phongTProgram = new Program( gl, phongTVertexShaderSource, phongTFragmentShaderSource )
-    const phong2TProgram = new Program( gl, phongTVertexShaderSource, phong2TFragmentShaderSource )
+    const phong2TProgram = new Program( gl, phong2TVertexShaderSource, phong2TFragmentShaderSource )
 
     // #️⃣ Creamos materiales combinando programas con distintas propiedades
 
     const phongMaterial = new Material( phongProgram, true, false, { Ka: [0.1, 0.1, 0.1], Kd: [0.4, 0.4, 0.4], Ks: [0.8, 0.8, 0.8], shininess: 50.0} )
-    const planoMaterial = new Material( phongTProgram, true, true, { shininess: 0.0} )
-    const graneroMaterial = new Material( phongTProgram, true, true, { shininess: 0.0} )
-    const tractorMaterial = new Material( phongTProgram, true, true, { shininess: 27.0} )
-    const siloMaterial = new Material( phong2TProgram, true, true, { shininess: 35.0} )
-    const ufoMaterial = new Material( phongTProgram, true, true, { shininess: 50.0} )
-    const alienMaterial = new Material( phongTProgram, true, true, { shininess: 0.0} )
+    const planoMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 0.0} )
+    const graneroMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 0.0} )
+    const tractorMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 27.0} )
+    const siloMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 35.0} )
+    const ufoMaterial = new Material( phong2TProgram, true, true, { texture0: 0, texture1: 1, shininess: 50.0} )
+    const alienMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 0.0} )
 
     // #️⃣ Creamos los objetos de la escena
 
@@ -295,8 +296,7 @@ async function main() {
                     vec4.transformMat4( spotDirEye, light.spot_direction, camera.viewMatrix )
                     object.material.program.setUniformValue( 'light'+ i.toString() + '.spot_direction', spotDirEye )   
                     object.material.program.setUniformValue( 'light'+ i.toString() + '.spot_cutoff', light.spot_cutoff )
-                    i++
-                    
+                    i++                    
                 }
             }          
 
@@ -306,10 +306,9 @@ async function main() {
             //info de texturas
             if( object.material.textured ) {
                 let i
-                for(i = 0; i < object.texture.length; i++) {                                                                     
-                    gl.activeTexture( gl.TEXTURE0 + i)
-                    gl.bindTexture( gl.TEXTURE_2D, object.texture[i] )
-                    gl.uniform1i( object.material.program.program.samplerUniform, i )
+                for(i = 0; i < object.textures.length; i++) {                                                                     
+                    gl.activeTexture( gl.TEXTURE0 + i )
+                    gl.bindTexture( gl.TEXTURE_2D, object.textures[i] )
                 }
             }
             // Lo dibujamos

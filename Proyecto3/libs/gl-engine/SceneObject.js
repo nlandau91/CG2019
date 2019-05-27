@@ -2,10 +2,10 @@ import { VertexArray } from "./VertexArray.js"
 import { mat4, quat, glMatrix } from "/libs/gl-matrix/index.js"
 
 export class SceneObject {
-    constructor(gl, geometry, material, texture, wireframe = false) {
+    constructor(gl, geometry, material, textures, wireframe = false) {
         this.gl = gl
         this.material = material
-        this.texture = texture
+        this.textures = textures
         this.indexBuffer = wireframe ? geometry.indexBuffers.lines : geometry.indexBuffers.triangles
         this.vertexArray = new VertexArray(gl, material.program, geometry.vertexBuffers, this.indexBuffer)
         this.drawMode = wireframe ? gl.LINES : gl.TRIANGLES
