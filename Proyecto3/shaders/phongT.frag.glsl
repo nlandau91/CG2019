@@ -10,11 +10,11 @@ struct Light {
 };
 struct Material {
     float shininess;
+    sampler2D texture0;
 };
 
 uniform Light light0, light1, light2, light3;
 uniform Material material;
-uniform sampler2D imagen;
 
 in vec3 vVE;
 in vec3 vNE;
@@ -61,7 +61,7 @@ void main () {
     vec3 N = normalize(vNE);
     vec3 V = normalize(vVE);
 
-    vec3 fragColorFromTexture = texture(imagen,fTexCoor).rgb;
+    vec3 fragColorFromTexture = texture(material.texture0,fTexCoor).rgb;
 
     vec3 color0 = calcPhong(light0,fragColorFromTexture,N,V);
     vec3 color1 = calcPhong(light1,fragColorFromTexture,N,V);
@@ -70,4 +70,5 @@ void main () {
     vec3 ambient = fragColorFromTexture.rgb * 0.05;
 
     fragmentColor = vec4(ambient + color0 + color1 + color2 + color3, 1);
+    //fragmentColor = vec4(1.0,0.0,0.0,1.0);
 }
