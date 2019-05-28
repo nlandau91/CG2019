@@ -49,24 +49,103 @@ export async function parse(objFileUrl) {
         }
     }
 
+    // Calculo de tangentes
+
+    const tangents = []
+
+    if (positions.length && normals.length && textureCoordinates.length) {
+        for (let faceVertices of faces) {
+            // Indices a cada vertice en el arreglo de vertices
+            const [v1Index, v2Index, v3Index] = faceVertices
+
+            // Extraemos la info de los tres vertices de la cara (cada uno un arreglo [posIndex, texCoordIndex, normalIndex])
+            const v1 = vertices[v1Index]
+            const v2 = vertices[v2Index]
+            const v3 = vertices[v3Index]
+
+            // Posicion de c/vertice
+            const p1 = positions[v1[0]] // p1 = [x, y, z]
+            const p2 = positions[v2[0]]
+            const p3 = positions[v3[0]]
+
+            // Coordenadas de textura de c/vertice
+            const tc1 = textureCoordinates[v1[1]] // tc1 = [s, t]
+            const tc2 = textureCoordinates[v2[1]]
+            const tc3 = textureCoordinates[v3[1]]
+
+            // Normales de c/vertice
+            const n1 = normals[v1[2]] // n1 = [x, y, z]
+            const n2 = normals[v2[2]]
+            const n3 = normals[v3[2]]
+
+            // Formamos dos de los tres lados del triangulo, con las posiciones de los vertices 1,2 y 1,3
+            const edge1 = [p2[0] - p1[0], p2[1] - p1[1], p2[2] - p1[2]]
+            const edge2 = [p3[0] - p1[0], p3[1] - p1[1], p3[2] - p1[2]]
+
+            // Calculamos la diferencia sobre el eje 's' entre las coordenadas de texturas de esos pares de vertices
+            const deltaS1 = tc2[0] - tc1[0]
+            const deltaS2 = tc3[0] - tc1[0]
+
+            // Sobre el eje 't'
+            const deltaT1 = tc2[1] - tc1[1]
+            const deltaT2 = tc3[1] - tc1[1]
+
+            // Calculamos el vector tangente
+            const k = 1 / (deltaS1 * deltaT2 - deltaS2 * deltaT1)
+            const tangent = [
+                k * (deltaT2 * edge1[0] - deltaT1 * edge2[0]),  // componente x de la tengente
+                k * (deltaT2 * edge1[1] - deltaT1 * edge2[1]),  // y
+                k * (deltaT2 * edge1[2] - deltaT1 * edge2[2])   // z
+            ]
+
+            // Lo normalizamos
+            normalizeVector(tangent)
+
+            // Y asociamos los tres vertices del triangulo a la tangente calculada (el vertice con el indice N tiene su tangente en tangents[N])
+            tangents[v1Index] = tangent
+            tangents[v2Index] = tangent
+            tangents[v3Index] = tangent
+        }
+    } else {
+        console.warn("Faltan atributos para el calculo de tangentes")
+    }
+
     // Pasamos la informacion obtenida a un formato apropiado para ser almacenada en buffers (flattened)
 
     const vertexPositions = []              // [x, y, z, x, y, z, x...]
     const vertexTextureCoordinates = []     // [s, t, s, t, s, ...]
     const vertexNormals = []                // [x, y, z, x, y, z, x...]
+    const vertexTangents = []               // [x, y, z, x, y, z, x...]
 
-    for (let vertex of vertices) {
-            const positionIndex           = vertex[0]
-            const textureCoordinatesIndex = vertex[1]
-            const normalIndex             = vertex[2]
-
-            if ( !isNaN(positionIndex) ) vertexPositions.push(...positions[positionIndex])
-            if ( !isNaN(textureCoordinatesIndex) ) vertexTextureCoordinates.push(...textureCoordinates[textureCoordinatesIndex])
-            if ( !isNaN(normalIndex) ) vertexNormals.push(...normals[normalIndex])
+    if (positions.length) {
+        for (let vertex of vertices) {
+            const positionIndex = vertex[0]
+            vertexPositions.push(...positions[positionIndex])
+        }
     }
 
-    const indexTriangles  = []        // indices para dibujado con gl.TRIANGLES
-    const indexLines      = []        // indices para dibujado con gl.LINES
+    if (textureCoordinates.length) {
+        for (let vertex of vertices) {
+            const textureCoordinatesIndex = vertex[1]
+            vertexTextureCoordinates.push(...textureCoordinates[textureCoordinatesIndex])
+        }
+    }
+
+    if (normals.length) {
+        for (let vertex of vertices) {
+            const normalIndex = vertex[2]
+            vertexNormals.push(...normals[normalIndex])
+        }
+    }
+
+    if (tangents.length) {
+        for (let tangent of tangents) {
+            vertexTangents.push(...tangent)
+        }
+    }
+
+    const indexTriangles    = []        // indices para dibujado con gl.TRIANGLES
+    const indexLines        = []        // indices para dibujado con gl.LINES
     const alreadyAddedLines = new Set() // lineas ya agregadas al indice ("1/2", "2/3", ... con "1/2" siendo la linea que una al vertice 1 y 2)
 
     for (let faceVertices of faces) {
@@ -92,7 +171,20 @@ export async function parse(objFileUrl) {
         vertexPositions,
         vertexTextureCoordinates,
         vertexNormals,
+        vertexTangents,
         indexTriangles,
         indexLines
     }
+}
+
+function normalizeVector(vector) {
+  let x = vector[0]
+  let y = vector[1]
+  let z = vector[2]
+
+  let length = Math.sqrt(x*x + y*y + z*z)
+
+  vector[0] = x / length
+  vector[1] = y / length
+  vector[2] = z / length
 }

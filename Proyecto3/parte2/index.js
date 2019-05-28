@@ -26,6 +26,9 @@ async function main() {
     const phong2TVertexShaderSource = await getFileContentsAsText( '/shaders/phong2T.vert.glsl' )
     const phong2TFragmentShaderSource = await getFileContentsAsText( '/shaders/phong2T.frag.glsl' )
 
+    const phong2TNVertexShaderSource = await getFileContentsAsText( '/shaders/phong2TN.vert.glsl' )
+    const phong2TNFragmentShaderSource = await getFileContentsAsText( '/shaders/phong2TN.frag.glsl' )
+
     // #️⃣ Configuracion base de WebGL
 
     const canvas = document.getElementById( 'webgl-canvas' )
@@ -89,6 +92,13 @@ async function main() {
     }
     ufoTexture2.image.src = 'textures/ufo_spec.png'
 
+    const ufoTexture3 = gl.createTexture()
+    ufoTexture3.image = new Image()
+    ufoTexture3.image.onload = function() {
+        handleLoadedTexture( ufoTexture3 )
+    }
+    ufoTexture3.image.src = 'textures/ufo_normal.png'
+
     // #️⃣ Geometrias disponibles
 
     const graneroGeometry = new Geometry( gl, graneroGeometryData )
@@ -103,6 +113,7 @@ async function main() {
     const phongProgram = new Program( gl, phongVertexShaderSource, phongFragmentShaderSource )
     const phongTProgram = new Program( gl, phongTVertexShaderSource, phongTFragmentShaderSource )
     const phong2TProgram = new Program( gl, phong2TVertexShaderSource, phong2TFragmentShaderSource )
+    const phong2TNProgram = new Program( gl, phong2TNVertexShaderSource, phong2TNFragmentShaderSource )
 
     // #️⃣ Creamos materiales combinando programas con distintas propiedades
 
@@ -111,7 +122,7 @@ async function main() {
     const graneroMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 0.0} )
     const tractorMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 27.0} )
     const siloMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 35.0} )
-    const ufoMaterial = new Material( phong2TProgram, true, true, { texture0: 0, texture1: 1, shininess: 50.0} )
+    const ufoMaterial = new Material( phong2TNProgram, true, true, { texture0: 0, texture1: 1, texture2: 2, shininess: 50.0} )
     const alienMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 0.0} )
 
     // #️⃣ Creamos los objetos de la escena
@@ -119,7 +130,7 @@ async function main() {
     const granero = new SceneObject( gl, graneroGeometry, graneroMaterial, [graneroTexture], false )
     const tractor = new SceneObject( gl, tractorGeometry, tractorMaterial, [tractorTexture], false )
     const silo = new SceneObject( gl, siloGeometry, siloMaterial, [siloTexture], false )
-    const ufo = new SceneObject( gl, ufoGeometry, ufoMaterial, [ufoTexture, ufoTexture2], false )
+    const ufo = new SceneObject( gl, ufoGeometry, ufoMaterial, [ufoTexture, ufoTexture2, ufoTexture3], false )
     const alien = new SceneObject( gl, alienGeometry, alienMaterial, [alienTexture], false )
     const plano = new SceneObject( gl, planoGeometry, planoMaterial, [planoTexture], false )
 
@@ -334,4 +345,5 @@ async function main() {
         //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT )
         gl.bindTexture( gl.TEXTURE_2D, null )
     }
+
 }
