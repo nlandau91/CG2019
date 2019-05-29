@@ -25,7 +25,7 @@ out vec4 fragmentColor;
 
 vec3 calcPhong(Light light, vec3 diffuseColor, vec3 specularColor, vec3 N, vec3 V){
     vec3 toReturn = vec3(0.0);
-    if(length(light.position) > 0.0){//si la luz no esta apagada
+    if(length(light.color) > 0.0){//si la luz no esta apagada
         vec3 vLE = vec3(0.0);
         if(light.position.w < 0.00001){ //si es luz direccional
             vLE = -light.position.xyz;

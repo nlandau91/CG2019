@@ -48,7 +48,7 @@ async function main() {
     planoTexture.image.onload = function () {
         handleLoadedTexture( planoTexture )
     }
-    planoTexture.image.src = 'textures/grass1.jpg'
+    planoTexture.image.src = 'textures/pastopixelado.png'
 
     const graneroTexture = gl.createTexture()
     graneroTexture.image = new Image()
@@ -301,12 +301,16 @@ async function main() {
                     }
                     let lightPosEye = vec4.create();
                     vec4.transformMat4( lightPosEye, light.position, camera.viewMatrix )
-                    object.material.program.setUniformValue( 'light'+ i.toString() + '.position', lightPosEye )
-                    object.material.program.setUniformValue( 'light'+ i.toString() + '.color', light.color )                                   
+                    //object.material.program.setUniformValue( 'light'+ i.toString() + '.position', lightPosEye )
+                    object.material.program.setUniformValue( 'allLights['+ i.toString() + '].position', lightPosEye )
+                    //object.material.program.setUniformValue( 'light'+ i.toString() + '.color', light.color )        
+                    object.material.program.setUniformValue( 'allLights['+ i.toString() + '].color', light.color )                              
                     let spotDirEye = vec4.create()
                     vec4.transformMat4( spotDirEye, light.spot_direction, camera.viewMatrix )
-                    object.material.program.setUniformValue( 'light'+ i.toString() + '.spot_direction', spotDirEye )   
-                    object.material.program.setUniformValue( 'light'+ i.toString() + '.spot_cutoff', light.spot_cutoff )
+                    //object.material.program.setUniformValue( 'light'+ i.toString() + '.spot_direction', spotDirEye )
+                    object.material.program.setUniformValue( 'allLights['+ i.toString() + '].spot_direction', spotDirEye )   
+                    //object.material.program.setUniformValue( 'light'+ i.toString() + '.spot_cutoff', light.spot_cutoff )
+                    object.material.program.setUniformValue( 'allLights['+ i.toString() + '].spot_cutoff', light.spot_cutoff )
                     i++                    
                 }
             }          
@@ -337,12 +341,10 @@ async function main() {
         gl.bindTexture( gl.TEXTURE_2D, texture )
         gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true )
         gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image )
-        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST )
-        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST )
-        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE )
-        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE )
-        //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT )
-        //gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT )
+        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR )
+        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR )
+        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT )
+        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT )
         gl.bindTexture( gl.TEXTURE_2D, null )
     }
 

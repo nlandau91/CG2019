@@ -1,13 +1,15 @@
 #version 300 es
+#define MAX_LIGHTS 10
 
 precision highp float;
 
-struct Light {
-    vec3 color;     // Light intensity
-    vec4 position;  // Light position in eye coordinates. If w==0.0, it is a directional light and [w,y,z] is the incident direction
+uniform struct Light {
+    vec3 color; // Light intensity
+    vec4 position; // Light position in eye coordinates. If w==0.0, it is a directional light and [w,y,z] is the incident direction
     vec4 spot_direction; //spot direction in eye coordinates
     float spot_cutoff; //cosine of the angle, point lights have a spot_cutoff set to -1.0
-};
+} allLights[MAX_LIGHTS];
+
 struct Material {
     float shininess;
     sampler2D texture0; //diffuse texture
@@ -15,10 +17,9 @@ struct Material {
     sampler2D texture2; //normal map
 };
 
-uniform Light light0, light1, light2, light3;
 uniform Material material;
 
-in vec3 vVE; //
+in vec3 vVE;
 in vec3 vNE;
 in vec2 fTexCoor;
 in mat3 TBNMatrix;
@@ -27,7 +28,7 @@ out vec4 fragmentColor;
 
 vec3 calcPhong(Light light, vec3 diffuseColor, vec3 specularColor, vec3 N, vec3 V){
     vec3 toReturn = vec3(0.0);
-    if(length(light.position) > 0.0){//si la luz no esta apagada
+    if(length(light.color) > 0.0){//si la luz no esta apagada
         vec3 vLE = vec3(0.0);
         if(light.position.w < 0.00001){ //si es luz direccional
             vLE = -light.position.xyz;
@@ -66,11 +67,13 @@ void main () {
     vec3 diffuseColorFromTexture = texture(material.texture0,fTexCoor).rgb;
     vec3 specularColorFromTexture = texture(material.texture1,fTexCoor).rgb;
 
-    vec3 color0 = calcPhong(light0,diffuseColorFromTexture,specularColorFromTexture,N,V);
-    vec3 color1 = calcPhong(light1,diffuseColorFromTexture,specularColorFromTexture,N,V);
-    vec3 color2 = calcPhong(light2,diffuseColorFromTexture,specularColorFromTexture,N,V);
-    vec3 color3 = calcPhong(light3,diffuseColorFromTexture,specularColorFromTexture,N,V);
+    vec3 outputColor = vec3(0.0);
+    int numLights = 4; //este valor deberia ser pasado por uniform, hardcodeamos 4 luces
+    for(int i = 0; i < numLights; i++){
+        outputColor += calcPhong(allLights[i],diffuseColorFromTexture,specularColorFromTexture,N,V);
+    }
+
     vec3 ambient = diffuseColorFromTexture * 0.05;
 
-    fragmentColor = vec4(ambient + color0 + color1 + color2 + color3, 1);
+    fragmentColor = vec4(ambient + outputColor, 1);
 }
