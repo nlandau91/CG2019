@@ -1,5 +1,9 @@
 #version 300 es
 #define MAX_LIGHTS 10
+//Shader de fragmentos que implementa iluminacion de phong con sombreado de phong
+//Hasta 10 luces de tipo puntual, spot y direccional
+//Una textura difusa, una textura especular, textura de emision y normal mapping
+//Pensado para ser usado solamente un el modelo de ufo
 
 precision highp float;
 
@@ -15,9 +19,11 @@ struct Material {
     sampler2D texture0; //diffuse texture
     sampler2D texture1; //specular texture
     sampler2D texture2; //normal map
+    sampler2D texture3; //emission
 };
 
 uniform Material material;
+uniform int numLights;
 
 in vec3 vVE;
 in vec3 vNE;
@@ -66,14 +72,14 @@ void main () {
 
     vec3 diffuseColorFromTexture = texture(material.texture0,fTexCoor).rgb;
     vec3 specularColorFromTexture = texture(material.texture1,fTexCoor).rgb;
+    vec3 emission = texture(material.texture3,fTexCoor).rgb;
 
     vec3 outputColor = vec3(0.0);
-    int numLights = 4; //este valor deberia ser pasado por uniform, hardcodeamos 4 luces
     for(int i = 0; i < numLights; i++){
         outputColor += calcPhong(allLights[i],diffuseColorFromTexture,specularColorFromTexture,N,V);
     }
 
     vec3 ambient = diffuseColorFromTexture * 0.05;
 
-    fragmentColor = vec4(ambient + outputColor, 1);
+    fragmentColor = vec4(ambient + outputColor + emission, 1);
 }

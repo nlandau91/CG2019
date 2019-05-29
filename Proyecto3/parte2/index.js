@@ -83,7 +83,7 @@ async function main() {
     ufoTexture.image.onload = function() {
         handleLoadedTexture( ufoTexture )
     }
-    ufoTexture.image.src = 'textures/ufo_diffusefixed.png'
+    ufoTexture.image.src = 'textures/ufo_diffuse_fixed.png'
 
     const ufoTexture2 = gl.createTexture()
     ufoTexture2.image = new Image()
@@ -98,6 +98,13 @@ async function main() {
         handleLoadedTexture( ufoTexture3 )
     }
     ufoTexture3.image.src = 'textures/ufo_normal.png'
+
+    const ufoTexture4 = gl.createTexture()
+    ufoTexture4.image = new Image()
+    ufoTexture4.image.onload = function() {
+        handleLoadedTexture( ufoTexture4 )
+    }
+    ufoTexture4.image.src = 'textures/ufo_diffuse_glow_fixed.png'
 
     // #️⃣ Geometrias disponibles
 
@@ -122,7 +129,7 @@ async function main() {
     const graneroMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 0.0} )
     const tractorMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 27.0} )
     const siloMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 35.0} )
-    const ufoMaterial = new Material( phong2TNProgram, true, true, { texture0: 0, texture1: 1, texture2: 2, shininess: 50.0} )
+    const ufoMaterial = new Material( phong2TNProgram, true, true, { texture0: 0, texture1: 1, texture2: 2, texture3 : 3, shininess: 50.0} )
     const alienMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 0.0} )
 
     // #️⃣ Creamos los objetos de la escena
@@ -130,7 +137,7 @@ async function main() {
     const granero = new SceneObject( gl, graneroGeometry, graneroMaterial, [graneroTexture], false )
     const tractor = new SceneObject( gl, tractorGeometry, tractorMaterial, [tractorTexture], false )
     const silo = new SceneObject( gl, siloGeometry, siloMaterial, [siloTexture], false )
-    const ufo = new SceneObject( gl, ufoGeometry, ufoMaterial, [ufoTexture, ufoTexture2, ufoTexture3], false )
+    const ufo = new SceneObject( gl, ufoGeometry, ufoMaterial, [ufoTexture, ufoTexture2, ufoTexture3, ufoTexture4], false )
     const alien = new SceneObject( gl, alienGeometry, alienMaterial, [alienTexture], false )
     const plano = new SceneObject( gl, planoGeometry, planoMaterial, [planoTexture], false )
 
@@ -210,14 +217,14 @@ async function main() {
     function updateTranslation() {
         sceneObjects[parseFloat( selectedObject.value )].setPosition( parseFloat( transSliderX.value ), 
                                                                         parseFloat( transSliderY.value ), 
-                                                                        parseFloat( transSliderZ.value ) );
-        sceneObjects[parseFloat( selectedObject.value )].updateModelMatrix();
+                                                                        parseFloat( transSliderZ.value ) )
+        sceneObjects[parseFloat( selectedObject.value )].updateModelMatrix()
     }
     function updateRotation() {
         sceneObjects[parseFloat( selectedObject.value )].setRotation( parseFloat( rotSliderX.value ), 
                                                                         parseFloat( rotSliderY.value ), 
-                                                                        parseFloat( rotSliderZ.value ) );
-        sceneObjects[parseFloat( selectedObject.value )].updateModelMatrix();
+                                                                        parseFloat( rotSliderZ.value ) )
+        sceneObjects[parseFloat( selectedObject.value )].updateModelMatrix()
     }
 
     function updateCamSliders() {
@@ -299,20 +306,17 @@ async function main() {
                         vec4.transformQuat(newSpotDirection,light.default_spot_direction,light.model.rotQuat)
                         light.spot_direction = newSpotDirection
                     }
-                    let lightPosEye = vec4.create();
+                    let lightPosEye = vec4.create()
                     vec4.transformMat4( lightPosEye, light.position, camera.viewMatrix )
-                    //object.material.program.setUniformValue( 'light'+ i.toString() + '.position', lightPosEye )
-                    object.material.program.setUniformValue( 'allLights['+ i.toString() + '].position', lightPosEye )
-                    //object.material.program.setUniformValue( 'light'+ i.toString() + '.color', light.color )        
+                    object.material.program.setUniformValue( 'allLights['+ i.toString() + '].position', lightPosEye )     
                     object.material.program.setUniformValue( 'allLights['+ i.toString() + '].color', light.color )                              
                     let spotDirEye = vec4.create()
                     vec4.transformMat4( spotDirEye, light.spot_direction, camera.viewMatrix )
-                    //object.material.program.setUniformValue( 'light'+ i.toString() + '.spot_direction', spotDirEye )
                     object.material.program.setUniformValue( 'allLights['+ i.toString() + '].spot_direction', spotDirEye )   
-                    //object.material.program.setUniformValue( 'light'+ i.toString() + '.spot_cutoff', light.spot_cutoff )
                     object.material.program.setUniformValue( 'allLights['+ i.toString() + '].spot_cutoff', light.spot_cutoff )
                     i++                    
                 }
+                object.material.program.setUniformValue( 'numLights', i )
             }          
 
             // Seteamos info de su geometria

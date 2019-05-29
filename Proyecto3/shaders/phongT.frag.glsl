@@ -1,5 +1,8 @@
 #version 300 es
 #define MAX_LIGHTS 10
+//Shader de fragmentos que implementa iluminacion de phong
+//Hasta 10 luces de tipo puntual, spot y direccional
+//Una textura
 
 precision highp float;
 
@@ -15,7 +18,7 @@ struct Material {
     sampler2D texture0;
 };
 
-//uniform int numLights;
+uniform int numLights;
 uniform Material material;
 
 in vec3 vVE;
@@ -67,7 +70,6 @@ void main () {
     vec3 fragColorFromTexture = texture(material.texture0,fTexCoor).rgb;
 
     vec3 outputColor = vec3(0.0);
-    int numLights = 4;
     for(int i = 0; i < numLights; i++){
         outputColor += calcPhong(allLights[i],fragColorFromTexture,N,V);
     }

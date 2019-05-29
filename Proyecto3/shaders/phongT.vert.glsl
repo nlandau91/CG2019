@@ -1,4 +1,5 @@
 #version 300 es
+//shader de vertices para implementar iluminacion de phong con sombreado de phong
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;

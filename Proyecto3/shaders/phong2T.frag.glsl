@@ -1,21 +1,26 @@
 #version 300 es
+#define MAX_LIGHTS 10
+//Shader de fragmentos que implementa iluminacion de phong
+//Hasta 10 luces de tipo puntual, spot y direccional
+//Una textura difusa y una textura especular
 
 precision highp float;
 
-struct Light {
-    vec3 color;     // Light intensity
-    vec4 position;  // Light position in eye coordinates. If w==0.0, it is a directional light and [w,y,z] is the incident direction
-    vec4 spot_direction;
+uniform struct Light {
+    vec3 color; // Light intensity
+    vec4 position; // Light position in eye coordinates. If w==0.0, it is a directional light and [w,y,z] is the incident direction
+    vec4 spot_direction; //spot direction in eye coordinates
     float spot_cutoff; //cosine of the angle, point lights have a spot_cutoff set to -1.0
-};
+} allLights[MAX_LIGHTS];
+
 struct Material {
     float shininess;
     sampler2D texture0; //diffuse texture
     sampler2D texture1; //specular texture
 };
 
-uniform Light light0, light1, light2, light3;
 uniform Material material;
+uniform int numLights;
 
 in vec3 vVE;
 in vec3 vNE;
@@ -61,11 +66,12 @@ void main () {
     vec3 diffuseColorFromTexture = texture(material.texture0,fTexCoor).rgb;
     vec3 specularColorFromTexture = texture(material.texture1,fTexCoor).rgb;
 
-    vec3 color0 = calcPhong(light0,diffuseColorFromTexture,specularColorFromTexture,N,V);
-    vec3 color1 = calcPhong(light1,diffuseColorFromTexture,specularColorFromTexture,N,V);
-    vec3 color2 = calcPhong(light2,diffuseColorFromTexture,specularColorFromTexture,N,V);
-    vec3 color3 = calcPhong(light3,diffuseColorFromTexture,specularColorFromTexture,N,V);
+    vec3 outputColor = vec3(0.0);
+    for(int i = 0; i < numLights; i++){
+        outputColor += calcPhong(allLights[i],diffuseColorFromTexture,specularColorFromTexture,N,V);
+    }
+
     vec3 ambient = diffuseColorFromTexture * 0.05;
 
-    fragmentColor = vec4(ambient + color0 + color1 + color2 + color3, 1);
+    fragmentColor = vec4(ambient + outputColor, 1);
 }
