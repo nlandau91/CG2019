@@ -73,8 +73,12 @@ void main () {
     for(int i = 0; i < numLights; i++){
         outputColor += calcPhong(allLights[i],fragColorFromTexture,N,V);
     }
-
+    
     vec3 ambient = fragColorFromTexture.rgb * 0.05;
+    if(numLights < 1) {
+        ambient = fragColorFromTexture.rgb;
+    }
 
     fragmentColor = vec4(ambient + outputColor, 1);
+
 }

@@ -26,6 +26,8 @@ uniform Light luz1,luz2,luz3,luz4;
 
 in vec3 vNE;
 in vec3 vVE;
+in vec2 fTexCoor;
+in mat3 TBNMatrix;
 
 out vec4 fragColor;
 

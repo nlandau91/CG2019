@@ -16,6 +16,7 @@ async function main() {
     const planoGeometryData = await parse( '/models/plano.obj' )
     const tractorGeometryData = await parse( '/models/tractor.obj' )
     const siloGeometryData = await parse( '/models/silo.obj' )
+    const skyGeometryData = await parse( '/models/skydome7.obj' )
 
     const phongVertexShaderSource = await getFileContentsAsText( '/shaders/phong.vert.glsl' )
     const phongFragmentShaderSource = await getFileContentsAsText( '/shaders/phong.frag.glsl' )
@@ -28,6 +29,9 @@ async function main() {
 
     const phong2TNVertexShaderSource = await getFileContentsAsText( '/shaders/phong2TN.vert.glsl' )
     const phong2TNFragmentShaderSource = await getFileContentsAsText( '/shaders/phong2TN.frag.glsl' )
+
+    const cooktorrance2TNVertexShaderSource = await getFileContentsAsText( '/shaders/cooktorrance2TN.vert.glsl' )
+    const cooktorrance2TNFragmentShaderSource = await getFileContentsAsText( '/shaders/cooktorrance2TN.frag.glsl' )
 
     // #️⃣ Configuracion base de WebGL
 
@@ -48,7 +52,7 @@ async function main() {
     planoTexture.image.onload = function () {
         handleLoadedTexture( planoTexture )
     }
-    planoTexture.image.src = 'textures/pastopixelado.png'
+    planoTexture.image.src = 'textures/grass1.jpg'
 
     const graneroTexture = gl.createTexture()
     graneroTexture.image = new Image()
@@ -106,6 +110,13 @@ async function main() {
     }
     ufoTexture4.image.src = 'textures/ufo_diffuse_glow_fixed.png'
 
+    const skyTexture = gl.createTexture()
+    skyTexture.image = new Image()
+    skyTexture.image.onload = function() {
+        handleLoadedTexture( skyTexture )
+    }
+    skyTexture.image.src = 'textures/12700.jpg'
+
     // #️⃣ Geometrias disponibles
 
     const graneroGeometry = new Geometry( gl, graneroGeometryData )
@@ -114,6 +125,7 @@ async function main() {
     const planoGeometry = new Geometry( gl, planoGeometryData )
     const tractorGeometry = new Geometry( gl, tractorGeometryData )
     const siloGeometry = new Geometry( gl, siloGeometryData )
+    const skyGeometry = new Geometry( gl, skyGeometryData )
 
     // #️⃣ Programas de shaders disponibles
 
@@ -121,6 +133,7 @@ async function main() {
     const phongTProgram = new Program( gl, phongTVertexShaderSource, phongTFragmentShaderSource )
     const phong2TProgram = new Program( gl, phong2TVertexShaderSource, phong2TFragmentShaderSource )
     const phong2TNProgram = new Program( gl, phong2TNVertexShaderSource, phong2TNFragmentShaderSource )
+    const cooktorrance2TNProgram = new Program( gl, cooktorrance2TNVertexShaderSource, cooktorrance2TNFragmentShaderSource )
 
     // #️⃣ Creamos materiales combinando programas con distintas propiedades
 
@@ -130,7 +143,11 @@ async function main() {
     const tractorMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 27.0} )
     const siloMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 35.0} )
     const ufoMaterial = new Material( phong2TNProgram, true, true, { texture0: 0, texture1: 1, texture2: 2, texture3 : 3, shininess: 50.0} )
+    const ufoCookMaterial = new Material( cooktorrance2TNProgram, true, true, { texture0: 0, texture1: 1, texture2: 2, texture3 : 3, m: 0.2, f0: 0.9} )
     const alienMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 0.0} )
+    const skyMaterial = new Material( phongTProgram, false, true, { texture0: 0, shininess: 0.0} )
+
+
 
     // #️⃣ Creamos los objetos de la escena
 
@@ -138,10 +155,12 @@ async function main() {
     const tractor = new SceneObject( gl, tractorGeometry, tractorMaterial, [tractorTexture], false )
     const silo = new SceneObject( gl, siloGeometry, siloMaterial, [siloTexture], false )
     const ufo = new SceneObject( gl, ufoGeometry, ufoMaterial, [ufoTexture, ufoTexture2, ufoTexture3, ufoTexture4], false )
+    const ufoCook = new SceneObject( gl, ufoGeometry, ufoCookMaterial, [ufoTexture, ufoTexture2, ufoTexture3, ufoTexture4], false )
+    const sky = new SceneObject( gl, skyGeometry, skyMaterial, [skyTexture], false )
     const alien = new SceneObject( gl, alienGeometry, alienMaterial, [alienTexture], false )
     const plano = new SceneObject( gl, planoGeometry, planoMaterial, [planoTexture], false )
 
-    const sceneObjects = [alien, ufo, plano, granero, tractor, silo ]
+    const sceneObjects = [alien, ufoCook, plano, granero, tractor, silo, sky ]
 
 
     const lightUfo1 = new SceneLight( [0.0, 5.0, 0.0, 1.0], [1.0, 0.0, 0.0], [0.0, -1.0, 0.2, 0.0], Math.cos(toRadians(15)), ufo )
@@ -345,8 +364,9 @@ async function main() {
         gl.bindTexture( gl.TEXTURE_2D, texture )
         gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true )
         gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image )
-        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR )
-        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR )
+        gl.generateMipmap(gl.TEXTURE_2D)
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST_MIPMAP_LINEAR)
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR)
         gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT )
         gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT )
         gl.bindTexture( gl.TEXTURE_2D, null )
