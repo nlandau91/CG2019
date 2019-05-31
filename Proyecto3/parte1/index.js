@@ -12,6 +12,7 @@ async function main() {
 
     const planoGeometryData      = await parse("/models/plano.obj")
     const esferaGeometryData      = await parse("/models/esfera.obj")
+    const esferaGolfGeometryData  = await parse("/models/esferaGolf.obj")
 
     const diffuseVertexShaderSource   = await getFileContentsAsText("/shaders/diffuse.vert.glsl")
     const diffuseFragmentShaderSource = await getFileContentsAsText("/shaders/diffuse.frag.glsl")
@@ -49,11 +50,27 @@ async function main() {
     }
     esferaTexture.image.src = "textures/TexturesCom_Plastic_SpaceBlanketFolds_512_albedo.jpg"
 
+    const esferaTexture1 = gl.createTexture() //crear objeto textura
+    esferaTexture1.image = new Image() // cargar imagen
+    esferaTexture1.image.onload = function () {
+        handleLoadedTexture(esferaTexture1)
+    }
+    esferaTexture1.image.src = "textures/basketball_diffuse.png"
+
+    const esferaGolfTexture = gl.createTexture() //crear objeto textura
+    esferaGolfTexture.image = new Image() // cargar imagen
+    esferaGolfTexture.image.onload = function () {
+        handleLoadedTexture(esferaGolfTexture)
+    }
+    esferaGolfTexture.image.src = "textures/texturaGolf.jpg"
+
+
+
     // #️⃣ Geometrias disponibles
 
     const planoGeometry  = new Geometry(gl, planoGeometryData)
     const esferaGeometry  = new Geometry(gl, esferaGeometryData)
-    
+    const esferaGolfGeometry = new Geometry(gl, esferaGolfGeometryData)
 
     // #️⃣ Programas de shaders disponibles
 
@@ -68,12 +85,12 @@ async function main() {
     const phongMaterial = new Material(phongProgram, true, false, { Ka: [0.1,0.1,0.1], Kd: [0.4,0.4,0.4], Ks: [0.8,0.8,0.8], shininess: 50})
     const planoMaterial = new Material(phongTProgram, true, true, { texture0: 0, shininess: 50})
     const esferaMaterial = new Material(phongTProgram, true, true, { texture0: 0, shininess: 100})
+    const esferaGolfMaterial = new Material(phongTProgram,true,true, { texture0: 0, shininess: 100})
     
 
     // #️⃣ Creamos los objetos de la escena
 
     const plano = new SceneObject(gl, planoGeometry, planoMaterial, [planoTexture], false)
-    const esfera = new SceneObject(gl, esferaGeometry, esferaMaterial, [esferaTexture], false)
     const sceneObjects= []
     crearEsferas()
 
@@ -196,9 +213,21 @@ async function main() {
         let j
         for(i=0 ;i<4;i++){
             for(j=0; j<6;j++){
-                sceneObjects[i*6+j]=new SceneObject(gl, esferaGeometry, esferaMaterial, [esferaTexture], false)
-                sceneObjects[i*6+j].setPosition(3*i-4.0,0.0,3*j-6.0)
-                sceneObjects[i*6+j].updateModelMatrix() 
+                if(i==0){
+                    sceneObjects[i*6+j]=new SceneObject(gl, esferaGolfGeometry, esferaGolfMaterial, [esferaGolfTexture], false)
+                    sceneObjects[i*6+j].setPosition(3*i-4.0,0.0,3*j-6.0)
+                    sceneObjects[i*6+j].updateModelMatrix()
+                }
+                if(i==1){
+                        sceneObjects[i*6+j]=new SceneObject(gl, esferaGeometry, esferaMaterial, [esferaTexture1], false)
+                        sceneObjects[i*6+j].setPosition(3*i-4.0,0.0,3*j-6.0)
+                        sceneObjects[i*6+j].updateModelMatrix()
+                }
+                if(i==2 || i==3){
+                        sceneObjects[i*6+j]=new SceneObject(gl, esferaGeometry, esferaMaterial, [esferaTexture], false)
+                        sceneObjects[i*6+j].setPosition(3*i-4.0,0.0,3*j-6.0)
+                        sceneObjects[i*6+j].updateModelMatrix()       
+                }
             }
         }
 
