@@ -11,12 +11,13 @@ async function main() {
     // #️⃣ Cargamos assets a usar (modelos, codigo de shaders, etc)
 
     const planoGeometryData      = await parse("/models/plano.obj")
-    const esferaGeometryData      = await parse("/models/esfera2.obj")
+    const esferaGeometryData      = await parse("/models/esfera.obj")
 
     const diffuseVertexShaderSource   = await getFileContentsAsText("/shaders/diffuse.vert.glsl")
     const diffuseFragmentShaderSource = await getFileContentsAsText("/shaders/diffuse.frag.glsl")
     const phongVertexShaderSource   = await getFileContentsAsText("/shaders/phong.vert.glsl")
     const phongFragmentShaderSource = await getFileContentsAsText("/shaders/phong.frag.glsl")
+    
     const phongTVertexShaderSource   = await getFileContentsAsText("/shaders/phongT.vert.glsl")
     const phongTFragmentShaderSource = await getFileContentsAsText("/shaders/phongT.frag.glsl")
 
@@ -73,9 +74,11 @@ async function main() {
 
     const plano = new SceneObject(gl, planoGeometry, planoMaterial, [planoTexture], false)
     const esfera = new SceneObject(gl, esferaGeometry, esferaMaterial, [esferaTexture], false)
+    const sceneObjects= []
+    crearEsferas()
 
-   // const sceneObjects = [granero, platoVolador, alien, plano]
-    const sceneObjects = [plano, esfera]
+    // const sceneObjects = [granero, platoVolador, alien, plano]
+    sceneObjects.push(plano)
 
     const lightPosition0 = [-5, 5, 5, 1]
     const lightColor0 = [1, 1, 1]
@@ -93,11 +96,7 @@ async function main() {
 
     // #️⃣ Posicion inicial de cada objeto
 
-    esfera.setPosition(0, 0.5, 0)
-    esfera.updateModelMatrix()
-
     
-
     // #️⃣ Iniciamos el render-loop 🎬
 
     requestAnimationFrame(render)
@@ -151,14 +150,15 @@ async function main() {
                     }
                     let lightPosEye = vec4.create();
                     vec4.transformMat4( lightPosEye, light.position, camera.viewMatrix )
-                    object.material.program.setUniformValue( 'light'+ i.toString() + '.position', lightPosEye )
-                    object.material.program.setUniformValue( 'light'+ i.toString() + '.color', light.color )                                   
+                    object.material.program.setUniformValue( 'allLights['+ i.toString() + '].position', lightPosEye )
+                    object.material.program.setUniformValue( 'allLights['+ i.toString() + '].color', light.color )                                   
                     let spotDirEye = vec4.create()
                     vec4.transformMat4( spotDirEye, light.spot_direction, camera.viewMatrix )
-                    object.material.program.setUniformValue( 'light'+ i.toString() + '.spot_direction', spotDirEye )   
-                    object.material.program.setUniformValue( 'light'+ i.toString() + '.spot_cutoff', light.spot_cutoff )
+                    object.material.program.setUniformValue( 'allLights['+ i.toString() + '].spot_direction', spotDirEye )   
+                    object.material.program.setUniformValue( 'allLights['+ i.toString() + '].spot_cutoff', light.spot_cutoff )
                     i++                    
                 }
+                object.material.program.setUniformValue('numLights',i)
             }                 
 
             // Seteamos info de su geometria
@@ -190,4 +190,20 @@ async function main() {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
         gl.bindTexture(gl.TEXTURE_2D, null)
     }
+    
+    function crearEsferas(){
+        let i
+        let j
+        for(i=0 ;i<4;i++){
+            for(j=0; j<6;j++){
+                sceneObjects[i*6+j]=new SceneObject(gl, esferaGeometry, esferaMaterial, [esferaTexture], false)
+                sceneObjects[i*6+j].setPosition(3*i-4.0,0.0,3*j-6.0)
+                sceneObjects[i*6+j].updateModelMatrix() 
+            }
+        }
+
+    }   
+
+
 }
+
