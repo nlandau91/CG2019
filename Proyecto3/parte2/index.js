@@ -1,5 +1,5 @@
 // 📥 Imports
-import { mat4, vec4, vec3 } from '/libs/gl-matrix/index.js'
+import { mat4, vec4 } from '/libs/gl-matrix/index.js'
 import { getFileContentsAsText, toRadians, toDegrees } from '/libs/utils.js'
 import { Program, Material, Geometry, SceneObject, SceneLight, Camera, CameraMouseControls } from '/libs/gl-engine/index.js'
 import { parse } from '/libs/gl-engine/parsers/obj-parser.js'
@@ -18,20 +18,14 @@ async function main() {
     const siloGeometryData = await parse( '/models/silo.obj' )
     const skyGeometryData = await parse( '/models/skydome7.obj' )
 
-    const phongVertexShaderSource = await getFileContentsAsText( '/shaders/phong.vert.glsl' )
-    const phongFragmentShaderSource = await getFileContentsAsText( '/shaders/phong.frag.glsl' )
-
     const phongTVertexShaderSource = await getFileContentsAsText( '/shaders/phongT.vert.glsl' )
     const phongTFragmentShaderSource = await getFileContentsAsText( '/shaders/phongT.frag.glsl' )
 
-    const phong2TVertexShaderSource = await getFileContentsAsText( '/shaders/phong2T.vert.glsl' )
-    const phong2TFragmentShaderSource = await getFileContentsAsText( '/shaders/phong2T.frag.glsl' )
+    const phongTNVertexShaderSource = await getFileContentsAsText( '/shaders/phongTN.vert.glsl' )
+    const phongTNFragmentShaderSource = await getFileContentsAsText( '/shaders/phongTN.frag.glsl' )
 
-    const phong2TNVertexShaderSource = await getFileContentsAsText( '/shaders/phong2TN.vert.glsl' )
-    const phong2TNFragmentShaderSource = await getFileContentsAsText( '/shaders/phong2TN.frag.glsl' )
-
-    const cooktorrance2TNVertexShaderSource = await getFileContentsAsText( '/shaders/cooktorrance2TN.vert.glsl' )
-    const cooktorrance2TNFragmentShaderSource = await getFileContentsAsText( '/shaders/cooktorrance2TN.frag.glsl' )
+    const cooktorrance3TNVertexShaderSource = await getFileContentsAsText( '/shaders/cooktorrance3TN.vert.glsl' )
+    const cooktorrance3TNFragmentShaderSource = await getFileContentsAsText( '/shaders/cooktorrance3TN.frag.glsl' )
 
     // #️⃣ Configuracion base de WebGL
 
@@ -80,35 +74,49 @@ async function main() {
     alienTexture.image.onload = function() {
         handleLoadedTexture( alienTexture )
     }
-    alienTexture.image.src = 'textures/alien_monster1_color.jpeg'
+    alienTexture.image.src = 'textures/alien_monster1_color.jpg'
+
+    const alienTexture2 = gl.createTexture()
+    alienTexture2.image = new Image()
+    alienTexture2.image.onload = function() {
+        handleLoadedTexture( alienTexture2 )
+    }
+    alienTexture2.image.src = 'textures/alien_monster1_ambient.jpg'
+
+    const alienTexture3 = gl.createTexture()
+    alienTexture3.image = new Image()
+    alienTexture3.image.onload = function() {
+        handleLoadedTexture( alienTexture3 )
+    }
+    alienTexture3.image.src = 'textures/alien_monster1_normal.jpg'
 
     const ufoTexture = gl.createTexture()
     ufoTexture.image = new Image()
     ufoTexture.image.onload = function() {
         handleLoadedTexture( ufoTexture )
     }
-    ufoTexture.image.src = 'textures/ufo_diffuse_fixed.png'
+    ufoTexture.image.src = 'textures/ufo_diffuse_fixed.jpg'
 
     const ufoTexture2 = gl.createTexture()
     ufoTexture2.image = new Image()
     ufoTexture2.image.onload = function() {
         handleLoadedTexture( ufoTexture2 )
     }
-    ufoTexture2.image.src = 'textures/ufo_spec.png'
+    ufoTexture2.image.src = 'textures/ufo_spec.jpg'
 
     const ufoTexture3 = gl.createTexture()
     ufoTexture3.image = new Image()
     ufoTexture3.image.onload = function() {
         handleLoadedTexture( ufoTexture3 )
     }
-    ufoTexture3.image.src = 'textures/ufo_normal.png'
+    ufoTexture3.image.src = 'textures/ufo_normal.jpg'
 
     const ufoTexture4 = gl.createTexture()
     ufoTexture4.image = new Image()
     ufoTexture4.image.onload = function() {
         handleLoadedTexture( ufoTexture4 )
     }
-    ufoTexture4.image.src = 'textures/ufo_diffuse_glow_fixed.png'
+    ufoTexture4.image.src = 'textures/ufo_diffuse_glow_fixed.jpg'
 
     const skyTexture = gl.createTexture()
     skyTexture.image = new Image()
@@ -129,25 +137,19 @@ async function main() {
 
     // #️⃣ Programas de shaders disponibles
 
-    const phongProgram = new Program( gl, phongVertexShaderSource, phongFragmentShaderSource )
     const phongTProgram = new Program( gl, phongTVertexShaderSource, phongTFragmentShaderSource )
-    const phong2TProgram = new Program( gl, phong2TVertexShaderSource, phong2TFragmentShaderSource )
-    const phong2TNProgram = new Program( gl, phong2TNVertexShaderSource, phong2TNFragmentShaderSource )
-    const cooktorrance2TNProgram = new Program( gl, cooktorrance2TNVertexShaderSource, cooktorrance2TNFragmentShaderSource )
+    const phongTNProgram = new Program( gl, phongTNVertexShaderSource, phongTNFragmentShaderSource )
+    const cooktorrance3TNProgram = new Program( gl, cooktorrance3TNVertexShaderSource, cooktorrance3TNFragmentShaderSource )
 
     // #️⃣ Creamos materiales combinando programas con distintas propiedades
 
-    const phongMaterial = new Material( phongProgram, true, false, { Ka: [0.1, 0.1, 0.1], Kd: [0.4, 0.4, 0.4], Ks: [0.8, 0.8, 0.8], shininess: 50.0} )
     const planoMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 0.0} )
     const graneroMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 0.0} )
     const tractorMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 27.0} )
     const siloMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 35.0} )
-    const ufoMaterial = new Material( phong2TNProgram, true, true, { texture0: 0, texture1: 1, texture2: 2, texture3 : 3, shininess: 50.0} )
-    const ufoCookMaterial = new Material( cooktorrance2TNProgram, true, true, { texture0: 0, texture1: 1, texture2: 2, texture3 : 3, m: 0.2, f0: 0.9} )
-    const alienMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 0.0} )
+    const ufoMaterial = new Material( cooktorrance3TNProgram, true, true, { texture0: 0, texture1: 1, texture2: 2, texture3 : 3, m: 0.2, f0: 0.9} )
+    const alienMaterial = new Material( phongTNProgram, true, true, { texture0: 0, texture1: 1, texture2 : 2, shininess: 96.078431} )
     const skyMaterial = new Material( phongTProgram, false, true, { texture0: 0, shininess: 0.0} )
-
-
 
     // #️⃣ Creamos los objetos de la escena
 
@@ -155,12 +157,11 @@ async function main() {
     const tractor = new SceneObject( gl, tractorGeometry, tractorMaterial, [tractorTexture], false )
     const silo = new SceneObject( gl, siloGeometry, siloMaterial, [siloTexture], false )
     const ufo = new SceneObject( gl, ufoGeometry, ufoMaterial, [ufoTexture, ufoTexture2, ufoTexture3, ufoTexture4], false )
-    const ufoCook = new SceneObject( gl, ufoGeometry, ufoCookMaterial, [ufoTexture, ufoTexture2, ufoTexture3, ufoTexture4], false )
     const sky = new SceneObject( gl, skyGeometry, skyMaterial, [skyTexture], false )
-    const alien = new SceneObject( gl, alienGeometry, alienMaterial, [alienTexture], false )
+    const alien = new SceneObject( gl, alienGeometry, alienMaterial, [alienTexture, alienTexture2, alienTexture3], false )
     const plano = new SceneObject( gl, planoGeometry, planoMaterial, [planoTexture], false )
 
-    const sceneObjects = [alien, ufoCook, plano, granero, tractor, silo, sky ]
+    const sceneObjects = [alien, ufo, plano, granero, tractor, silo, sky ]
 
 
     const lightUfo1 = new SceneLight( [0.0, 5.0, 0.0, 1.0], [1.0, 0.0, 0.0], [0.0, -1.0, 0.2, 0.0], Math.cos(toRadians(15)), ufo )
@@ -365,8 +366,8 @@ async function main() {
         gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true )
         gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image )
         gl.generateMipmap(gl.TEXTURE_2D)
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST_MIPMAP_LINEAR)
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_LINEAR)
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
         gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT )
         gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT )
         gl.bindTexture( gl.TEXTURE_2D, null )
