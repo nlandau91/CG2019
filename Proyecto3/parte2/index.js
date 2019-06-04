@@ -118,33 +118,33 @@ async function main() {
     }
     alienTextureNormal.image.src = 'textures/alien_monster1_normal.jpg'
 
-    const ufoTexture = gl.createTexture()
-    ufoTexture.image = new Image()
-    ufoTexture.image.onload = function() {
-        handleLoadedTexture( ufoTexture )
+    const ufoTextureDiffuse = gl.createTexture()
+    ufoTextureDiffuse.image = new Image()
+    ufoTextureDiffuse.image.onload = function() {
+        handleLoadedTexture( ufoTextureDiffuse )
     }
-    ufoTexture.image.src = 'textures/ufo_diffuse_fixed.jpg'
+    ufoTextureDiffuse.image.src = 'textures/ufo_diffuse_fixed.jpg'
 
-    const ufoTexture2 = gl.createTexture()
-    ufoTexture2.image = new Image()
-    ufoTexture2.image.onload = function() {
-        handleLoadedTexture( ufoTexture2 )
+    const ufoTextureSpecular = gl.createTexture()
+    ufoTextureSpecular.image = new Image()
+    ufoTextureSpecular.image.onload = function() {
+        handleLoadedTexture( ufoTextureSpecular )
     }
-    ufoTexture2.image.src = 'textures/ufo_spec.jpg'
+    ufoTextureSpecular.image.src = 'textures/ufo_spec.jpg'
 
-    const ufoTexture3 = gl.createTexture()
-    ufoTexture3.image = new Image()
-    ufoTexture3.image.onload = function() {
-        handleLoadedTexture( ufoTexture3 )
+    const ufoTextureNormal = gl.createTexture()
+    ufoTextureNormal.image = new Image()
+    ufoTextureNormal.image.onload = function() {
+        handleLoadedTexture( ufoTextureNormal )
     }
-    ufoTexture3.image.src = 'textures/ufo_normal.jpg'
+    ufoTextureNormal.image.src = 'textures/ufo_normal.jpg'
 
-    const ufoTexture4 = gl.createTexture()
-    ufoTexture4.image = new Image()
-    ufoTexture4.image.onload = function() {
-        handleLoadedTexture( ufoTexture4 )
+    const ufoTextureGlow = gl.createTexture()
+    ufoTextureGlow.image = new Image()
+    ufoTextureGlow.image.onload = function() {
+        handleLoadedTexture( ufoTextureGlow )
     }
-    ufoTexture4.image.src = 'textures/ufo_diffuse_glow_fixed.jpg'
+    ufoTextureGlow.image.src = 'textures/ufo_diffuse_glow_fixed.jpg'
 
     const skyTexture = gl.createTexture()
     skyTexture.image = new Image()
@@ -153,19 +153,33 @@ async function main() {
     }
     skyTexture.image.src = 'textures/soleado.jpg'
 
-    const lanternTextureColor = gl.createTexture()
-    lanternTextureColor.image = new Image()
-    lanternTextureColor.image.onload = function() {
-        handleLoadedTexture( lanternTextureColor )
+    const lanternTextureDiffuse = gl.createTexture()
+    lanternTextureDiffuse.image = new Image()
+    lanternTextureDiffuse.image.onload = function() {
+        handleLoadedTexture( lanternTextureDiffuse )
     }
-    lanternTextureColor.image.src = 'textures/lantern_color.jpg'
+    lanternTextureDiffuse.image.src = 'textures/lantern_color.jpg'
 
-    const lanternNormalMap = gl.createTexture()
-    lanternNormalMap.image = new Image()
-    lanternNormalMap.image.onload = function() {
-        handleLoadedTexture( lanternNormalMap )
+    const lanternTextureNormal = gl.createTexture()
+    lanternTextureNormal.image = new Image()
+    lanternTextureNormal.image.onload = function() {
+        handleLoadedTexture( lanternTextureNormal )
     }
-    lanternNormalMap.image.src = 'textures/lantern_normal.jpg'
+    lanternTextureNormal.image.src = 'textures/lantern_normal.jpg'
+
+    const lanternTextureGlow = gl.createTexture()
+    lanternTextureGlow.image = new Image()
+    lanternTextureGlow.image.onload = function() {
+        handleLoadedTexture( lanternTextureGlow )
+    }
+    lanternTextureGlow.image.src = 'textures/lantern_ambient.jpg'
+
+    const lanternTextureSpecular = gl.createTexture()
+    lanternTextureSpecular.image = new Image()
+    lanternTextureSpecular.image.onload = function() {
+        handleLoadedTexture( lanternTextureSpecular )
+    }
+    lanternTextureSpecular.image.src = 'textures/lantern_specular.jpg'
 
     // #️⃣ Geometrias disponibles
 
@@ -195,25 +209,25 @@ async function main() {
     const ufoMaterial = new Material( ufoProgram, true, true, { texture0: 0, texture1: 1, texture2: 2, texture3 : 3, m: 0.2, f0: 0.9} )
     const alienMaterial = new Material( alienProgram, true, true, { texture0: 0, texture1: 1, texture2 : 2, shininess: 96.078431} )
     const skyMaterial = new Material( TexturaProgram, false, true, { texture0: 0} )
-    const lanternMaterial = new Material( phongTNProgram, true, true, {texture0: 0, texture1: 1, shininess: 21})
+    const lanternMaterial = new Material( ufoProgram, true, true, {texture0: 0, texture1: 1, texture2: 2, texture3 : 3, m: 0.2, f0: 0.9})
 
     // #️⃣ Creamos los objetos de la escena
 
     const granero = new SceneObject( gl, graneroGeometry, graneroMaterial, [graneroTexture, graneroNormalMap], false )
     const tractor = new SceneObject( gl, tractorGeometry, tractorMaterial, [tractorTexture, tractorNormalMap], false )
     const silo = new SceneObject( gl, siloGeometry, siloMaterial, [siloTexture, siloNormalMap], false )
-    const ufo = new SceneObject( gl, ufoGeometry, ufoMaterial, [ufoTexture, ufoTexture2, ufoTexture3, ufoTexture4], false )
+    const ufo = new SceneObject( gl, ufoGeometry, ufoMaterial, [ufoTextureDiffuse, ufoTextureSpecular, ufoTextureNormal, ufoTextureGlow], false )
     const sky = new SceneObject( gl, skyGeometry, skyMaterial, [skyTexture], false )
     const alien = new SceneObject( gl, alienGeometry, alienMaterial, [alienTextureColor, alienTextureAmbient, alienTextureNormal], false )
     const plano = new SceneObject( gl, planoGeometry, planoMaterial, [planoTexture], false )
-    const lantern = new SceneObject( gl, lanternGeometry, lanternMaterial, [lanternTextureColor, lanternNormalMap], false )
+    const lantern = new SceneObject( gl, lanternGeometry, lanternMaterial, [lanternTextureDiffuse, lanternTextureSpecular, lanternTextureNormal, lanternTextureGlow], false )
 
     const sceneObjects = [alien, ufo, plano, granero, tractor, silo, sky, lantern ]
 
 
     const lightUfo = new SceneLight( [0.0, 5.0, 0.0, 1.0], [0.0, 0.3, 0.0], [0.0, -1.0, 0.0, 0.0], Math.cos(toRadians(25)), ufo )
     lightUfo.quadratic_attenuation = 0.02
-    const lightLantern = new SceneLight( [0.0, 1.75, 1.35, 1.0], [1.0, 0.0, 0.0], [-0.2, -1.0, 0.0, 0.0],  -1.0, lantern )
+    const lightLantern = new SceneLight( [0.0, 1.75, 1.35, 1.0], [255/255, 132/255, 0/255], [-0.2, -1.0, 0.0, 0.0],  -1.0, lantern ) //1900k luz de vela
     lightLantern.linear_attenuation = 1.0
     const lightDirectional = new SceneLight( [0.5, -1.0, -1.0, 0.0], [0.5*255/255,0.5*236/255,0.5*219/255], [0.5, -1.0, 0.0, 0.0], -1.0 )
 
