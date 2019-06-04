@@ -1,6 +1,7 @@
 var fragmentShaderBlinnPhong = `#version 300 es
 //Modelo de iluminacion de Blinn-Phong
 //Implementado en los fragmentos (sombreado de Phong)
+#define EPSILON 0.00001
 precision highp float;
 
 struct Material{
@@ -50,7 +51,7 @@ vec3 calcBlinnPhong(Light luz,vec3 N,vec3 V){
         if((luz.spot_angle != -1.0 && dot(S, -L) > luz.spot_angle) //si es spot y esta dentro del cono
                 ||  luz.spot_angle == -1.0 //o si es puntual
                 ||  luz.pos.w < 0.00001){ //o si es direccional
-            if(dotLN > 0.0 && dotVN > 0.0){       
+            if(dotLN > EPSILON && dotVN > EPSILON){       
                 float attenuation = 1.0/(1.0+luz.attenuation_a*dist+luz.attenuation_b*dist*dist);
                 float spec = pow(dotHN,material.exp_spec);
                 toReturn =  attenuation*luz.intensity*dotLN*( material.k_diffuse + material.k_spec*spec );

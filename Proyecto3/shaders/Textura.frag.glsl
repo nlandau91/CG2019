@@ -2,7 +2,7 @@
 #define MAX_LIGHTS 10
 //Shader de fragmentos
 //Una textura siempre iluminada
-
+#define EPSILON 0.00001
 precision highp float;
 
 struct Material {

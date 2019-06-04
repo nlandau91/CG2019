@@ -130,7 +130,7 @@ async function main() {
     skyTexture.image.onload = function() {
         handleLoadedTexture( skyTexture )
     }
-    skyTexture.image.src = 'textures/nightdome.jpg'
+    skyTexture.image.src = 'textures/noche1.jpg'
 
     const lanternTextureColor = gl.createTexture()
     lanternTextureColor.image = new Image()
@@ -194,7 +194,6 @@ async function main() {
     lightUfo.quadratic_attenuation = 0.02
     const lightLantern = new SceneLight( [0.0, 1.75, 1.35, 1.0], [1.0, 0.0, 0.0], [-0.2, -1.0, 0.0, 0.0],  -1.0, lantern )
     lightLantern.linear_attenuation = 1.0
-    const lightUfo3 = new SceneLight( [0.0, 5.0, 0.0, 1.0], [0.0, 0.0, 1.0], [0.2, -1.0, 0.0, 0.0],  Math.cos(toRadians(15)), ufo )
     const lightDirectional = new SceneLight( [-1.0, -1.0, -1.0, 0.0], [0.5, 0.5, 0.5], [0.5, -1.0, 0.0, 0.0], -1.0 )
 
     const sceneLights = [lightUfo, lightLantern, lightDirectional]
@@ -220,6 +219,31 @@ async function main() {
     const btnFocoCentro = document.getElementById( 'btnFocoCentro')
     const btnFocoAlien = document.getElementById( 'btnFocoAlien')
     const btnFocoUfo= document.getElementById( 'btnFocoUfo')
+    const btnDiaSoleado = document.getElementById( 'btnDiaSoleado' )
+    const btnDiaNublado = document.getElementById( 'btnDiaNublado' )
+    const btnAtardecer = document.getElementById( 'btnAtardecer' )
+    const btnNoche = document.getElementById( 'btnNoche' )
+
+    btnDiaSoleado.addEventListener( 'click' ,() => {
+        skyTexture.image.src = 'textures/soleado.jpg'
+        lightDirectional.position = [0.5, -0.3, -1.0, 0.0]
+        lightDirectional.color = [0.5*255/255,0.5*236/255,0.5*219/255] //5400k
+    })
+    btnDiaNublado.addEventListener( 'click' ,() => {
+        skyTexture.image.src = 'textures/nublado.jpg'
+        lightDirectional.position = [0.0, -1.0, 0.0, 0.0]
+        lightDirectional.color = [0.5*230/255,0.5*235/255,0.5*255/255] //7500k 
+    })
+    btnAtardecer.addEventListener( 'click' ,() => {
+        skyTexture.image.src = 'textures/atardecer2.jpg'
+        lightDirectional.position = [0.5, -0.1, -1.0, 0.0]
+        lightDirectional.color = [0.5*255/255,0.5*177/255,0.5*110/255] //3000k
+    })
+    btnNoche.addEventListener( 'click' ,() => {
+        skyTexture.image.src = 'textures/noche2.jpg'
+        lightDirectional.position = [0.0, -1.0, 0.0, 0.0]
+        lightDirectional.color = [0.01*210/255,0.01*223/255,0.01*255/255] //9000k
+    })
 
     btnFocoCentro.addEventListener( 'click', () => {camera.setTarget([0,0,0])})
     btnFocoAlien.addEventListener( 'click', () => {camera.setTarget(alien.position)})

@@ -2,6 +2,7 @@ var fragmentShaderSource = `#version 300 es
 //Modelo de iluminacion de Phong
 //Implementado en los fragmentos (sombreado de Phong)
 //No implementa factor de atenuacion ni intencidad de la luz
+#define EPSILON 0.00001
 precision highp float;
 
 uniform vec3 k_ambient; //Componente de ambiente

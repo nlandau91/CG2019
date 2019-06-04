@@ -1,5 +1,6 @@
 var fragmentShaderOrenNayar = `#version 300 es
 //BRDF de Oren-Nayar
+#define EPSILON 0.00001
 precision highp float;
 #define PI 3.14159265
 
@@ -46,7 +47,7 @@ vec3 orenNayarDiffuse(Light luz, float dotVN, vec3 N, vec3 V){
         if((luz.spot_angle != -1.0 && dot(S, -L) > luz.spot_angle) //si es spot y esta dentro del cono
                 ||  luz.spot_angle == -1.0 //o si es puntual
                 ||  luz.pos.w < 0.00001){ //o si es direccional
-            if(dotLN > 0.0 && dotVN > 0.0){
+            if(dotLN > EPSILON && dotVN > EPSILON){
         
                 float alpha = max(thetaI,thetaR);
                 float beta = min(thetaI,thetaR);
