@@ -1,6 +1,6 @@
 // 📥 Imports
 import { mat4, vec4 } from '/libs/gl-matrix/index.js'
-import { getFileContentsAsText, toRadians, toDegrees } from '/libs/utils.js'
+import { getFileContentsAsText, toRadians, toDegrees, loadImage } from '/libs/utils.js'
 import { Program, Material, Geometry, SceneObject, SceneLight, Camera, CameraMouseControls } from '/libs/gl-engine/index.js'
 import { parse } from '/libs/gl-engine/parsers/obj-parser.js'
 
@@ -47,139 +47,68 @@ async function main() {
     const camera = new Camera()
     const cameraMouseControls = new CameraMouseControls( camera, canvas )
 
-    //creo las texturas
-    const planoTexture = gl.createTexture() //crear objeto textura
-    planoTexture.image = new Image() // cargar imagen
-    planoTexture.image.onload = function () {
-        handleLoadedTexture( planoTexture )
-    }
-    planoTexture.image.src = 'textures/grass1.jpg'
-
+    //Cargamos las imagenes y creamos las texturas
+    const planoTextureImage = await loadImage('textures/grass1.jpg')
+    const graneroTextureImage = await loadImage('textures/granero.jpeg')
+    const graneroNormalMapImage = await loadImage('textures/granero_normal.jpg')
+    const tractorTextureImage = await loadImage('textures/tractor.jpeg')
+    const tractorNormalMapImage = await loadImage('textures/tractor_normal.jpg')
+    const siloTextureImage = await loadImage('textures/silo.jpeg')
+    const siloNormalMapImage = await loadImage('textures/silo_normal.jpg')
+    const alienTextureColorImage = await loadImage('textures/alien_monster1_color.jpg')
+    const alienTextureAmbientImage = await loadImage('textures/alien_monster1_ambient.jpg')
+    const alienTextureNormalImage = await loadImage('textures/alien_monster1_normal.jpg')
+    const ufoTextureDiffuseImage = await loadImage('textures/ufo_diffuse_fixed.jpg')
+    const ufoTextureSpecularImage = await loadImage('textures/ufo_spec.jpg')
+    const ufoTextureNormalImage = await loadImage('textures/ufo_normal.jpg')
+    const ufoTextureGlowImage = await loadImage('textures/ufo_diffuse_glow_fixed.jpg')
+    const skyTextureImage = await loadImage('textures/soleado.jpg')
+    const lanternTextureDiffuseImage = await loadImage('textures/lantern_color.jpg')
+    const lanternTextureNormalImage = await loadImage('textures/lantern_normal.jpg')
+    const lanternTextureGlowImage = await loadImage('textures/lantern_ambient.jpg')
+    const lanternTextureSpecularImage = await loadImage('textures/lantern_specular.jpg')
+    
+    const planoTexture = gl.createTexture()
     const graneroTexture = gl.createTexture()
-    graneroTexture.image = new Image()
-    graneroTexture.image.onload = function() {
-        handleLoadedTexture( graneroTexture )
-    }
-    graneroTexture.image.src = 'textures/granero.jpeg'
-
     const graneroNormalMap = gl.createTexture()
-    graneroNormalMap.image = new Image()
-    graneroNormalMap.image.onload = function() {
-        handleLoadedTexture( graneroNormalMap )
-    }
-    graneroNormalMap.image.src = 'textures/granero_normal.jpg'
-
     const tractorTexture = gl.createTexture()
-    tractorTexture.image = new Image()
-    tractorTexture.image.onload = function() {
-        handleLoadedTexture( tractorTexture )
-    }
-    tractorTexture.image.src = 'textures/tractor.jpeg'
-
     const tractorNormalMap = gl.createTexture()
-    tractorNormalMap.image = new Image()
-    tractorNormalMap.image.onload = function() {
-        handleLoadedTexture( tractorNormalMap )
-    }
-    tractorNormalMap.image.src = 'textures/tractor_normal.jpg'
-
     const siloTexture = gl.createTexture()
-    siloTexture.image = new Image()
-    siloTexture.image.onload = function() {
-        handleLoadedTexture( siloTexture )
-    }
-    siloTexture.image.src = 'textures/silo.jpeg'
-
     const siloNormalMap = gl.createTexture()
-    siloNormalMap.image = new Image()
-    siloNormalMap.image.onload = function() {
-        handleLoadedTexture( siloNormalMap )
-    }
-    siloNormalMap.image.src = 'textures/silo_normal.jpg'
-
     const alienTextureColor = gl.createTexture()
-    alienTextureColor.image = new Image()
-    alienTextureColor.image.onload = function() {
-        handleLoadedTexture( alienTextureColor )
-    }
-    alienTextureColor.image.src = 'textures/alien_monster1_color.jpg'
-
     const alienTextureAmbient = gl.createTexture()
-    alienTextureAmbient.image = new Image()
-    alienTextureAmbient.image.onload = function() {
-        handleLoadedTexture( alienTextureAmbient )
-    }
-    alienTextureAmbient.image.src = 'textures/alien_monster1_ambient.jpg'
-
     const alienTextureNormal = gl.createTexture()
-    alienTextureNormal.image = new Image()
-    alienTextureNormal.image.onload = function() {
-        handleLoadedTexture( alienTextureNormal )
-    }
-    alienTextureNormal.image.src = 'textures/alien_monster1_normal.jpg'
-
     const ufoTextureDiffuse = gl.createTexture()
-    ufoTextureDiffuse.image = new Image()
-    ufoTextureDiffuse.image.onload = function() {
-        handleLoadedTexture( ufoTextureDiffuse )
-    }
-    ufoTextureDiffuse.image.src = 'textures/ufo_diffuse_fixed.jpg'
-
     const ufoTextureSpecular = gl.createTexture()
-    ufoTextureSpecular.image = new Image()
-    ufoTextureSpecular.image.onload = function() {
-        handleLoadedTexture( ufoTextureSpecular )
-    }
-    ufoTextureSpecular.image.src = 'textures/ufo_spec.jpg'
-
     const ufoTextureNormal = gl.createTexture()
-    ufoTextureNormal.image = new Image()
-    ufoTextureNormal.image.onload = function() {
-        handleLoadedTexture( ufoTextureNormal )
-    }
-    ufoTextureNormal.image.src = 'textures/ufo_normal.jpg'
-
     const ufoTextureGlow = gl.createTexture()
-    ufoTextureGlow.image = new Image()
-    ufoTextureGlow.image.onload = function() {
-        handleLoadedTexture( ufoTextureGlow )
-    }
-    ufoTextureGlow.image.src = 'textures/ufo_diffuse_glow_fixed.jpg'
-
     const skyTexture = gl.createTexture()
-    skyTexture.image = new Image()
-    skyTexture.image.onload = function() {
-        handleLoadedTexture( skyTexture )
-    }
-    skyTexture.image.src = 'textures/soleado.jpg'
-
     const lanternTextureDiffuse = gl.createTexture()
-    lanternTextureDiffuse.image = new Image()
-    lanternTextureDiffuse.image.onload = function() {
-        handleLoadedTexture( lanternTextureDiffuse )
-    }
-    lanternTextureDiffuse.image.src = 'textures/lantern_color.jpg'
-
     const lanternTextureNormal = gl.createTexture()
-    lanternTextureNormal.image = new Image()
-    lanternTextureNormal.image.onload = function() {
-        handleLoadedTexture( lanternTextureNormal )
-    }
-    lanternTextureNormal.image.src = 'textures/lantern_normal.jpg'
-
     const lanternTextureGlow = gl.createTexture()
-    lanternTextureGlow.image = new Image()
-    lanternTextureGlow.image.onload = function() {
-        handleLoadedTexture( lanternTextureGlow )
-    }
-    lanternTextureGlow.image.src = 'textures/lantern_ambient.jpg'
-
     const lanternTextureSpecular = gl.createTexture()
-    lanternTextureSpecular.image = new Image()
-    lanternTextureSpecular.image.onload = function() {
-        handleLoadedTexture( lanternTextureSpecular )
-    }
-    lanternTextureSpecular.image.src = 'textures/lantern_specular.jpg'
+
+    armarTextura(planoTexture, planoTextureImage)
+    armarTextura(graneroTexture, graneroTextureImage)
+    armarTextura(graneroNormalMap, graneroNormalMapImage)
+    armarTextura(tractorTexture, tractorTextureImage)
+    armarTextura(tractorNormalMap, tractorNormalMapImage)
+    armarTextura(siloTexture, siloTextureImage)
+    armarTextura(siloNormalMap, siloNormalMapImage)
+    armarTextura(alienTextureColor, alienTextureColorImage)
+    armarTextura(alienTextureAmbient, alienTextureAmbientImage)
+    armarTextura(alienTextureNormal, alienTextureNormalImage)
+    armarTextura(ufoTextureDiffuse, ufoTextureDiffuseImage)
+    armarTextura(ufoTextureSpecular, ufoTextureSpecularImage)
+    armarTextura(ufoTextureNormal, ufoTextureNormalImage)
+    armarTextura(ufoTextureGlow, ufoTextureGlowImage)
+    armarTextura(skyTexture, skyTextureImage)
+    armarTextura(lanternTextureDiffuse, lanternTextureDiffuseImage)
+    armarTextura(lanternTextureNormal, lanternTextureNormalImage)
+    armarTextura(lanternTextureGlow, lanternTextureGlowImage)
+    armarTextura(lanternTextureSpecular, lanternTextureSpecularImage)
+
+  
 
     // #️⃣ Geometrias disponibles
 
@@ -469,17 +398,18 @@ async function main() {
         updateLightSliders()
         requestAnimationFrame( render )
     }
-    
-    function handleLoadedTexture( texture ) {
-        gl.bindTexture( gl.TEXTURE_2D, texture )
+
+    function armarTextura( texture, image ) {
+
+        gl.bindTexture(gl.TEXTURE_2D, texture)
         gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true )
-        gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image )
+        gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image )
         gl.generateMipmap(gl.TEXTURE_2D)
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
         gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT )
         gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT )
-        gl.bindTexture( gl.TEXTURE_2D, null )
+        gl.bindTexture(gl.TEXTURE_2D, null)
     }
 
 }

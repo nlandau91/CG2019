@@ -32,3 +32,14 @@ export async function getFileContentsAsText(url) {
 
     return text
 }
+
+export function loadImage(url) {
+    // Retorna una "promesa" (Promise) que se cumple (o resuelve) una vez cargada la imagen
+    const promise = new Promise( resolve => {
+        const image = new Image()
+        image.onload = () => resolve(image)
+        image.src = url
+    } )
+
+    return promise
+}
