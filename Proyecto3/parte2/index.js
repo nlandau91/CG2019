@@ -11,12 +11,13 @@ async function main() {
     // #️⃣ Cargamos assets a usar ( modelos, codigo de shaders, etc )
 
     const graneroGeometryData = await parse( '/models/granero.obj' )
-    const ufoGeometryData = await parse( '/models/ufofixed.obj' )
+    const ufoGeometryData = await parse( '/models/ufo.obj' )
     const alienGeometryData = await parse( '/models/alien_demon.obj' )
     const planoGeometryData = await parse( '/models/plano.obj' )
     const tractorGeometryData = await parse( '/models/tractor.obj' )
     const siloGeometryData = await parse( '/models/silo.obj' )
-    const skyGeometryData = await parse( '/models/skydome7.obj' )
+    const skyGeometryData = await parse( '/models/dome.obj' )
+    const lanternGeometryData = await parse( '/models/lantern.obj' )
 
     const phongTVertexShaderSource = await getFileContentsAsText( '/shaders/phongT.vert.glsl' )
     const phongTFragmentShaderSource = await getFileContentsAsText( '/shaders/phongT.frag.glsl' )
@@ -24,8 +25,14 @@ async function main() {
     const phongTNVertexShaderSource = await getFileContentsAsText( '/shaders/phongTN.vert.glsl' )
     const phongTNFragmentShaderSource = await getFileContentsAsText( '/shaders/phongTN.frag.glsl' )
 
-    const cooktorrance3TNVertexShaderSource = await getFileContentsAsText( '/shaders/cooktorrance3TN.vert.glsl' )
-    const cooktorrance3TNFragmentShaderSource = await getFileContentsAsText( '/shaders/cooktorrance3TN.frag.glsl' )
+    const ufoVertexShaderSource = await getFileContentsAsText( '/shaders/ufo.vert.glsl' )
+    const ufoFragmentShaderSource = await getFileContentsAsText( '/shaders/ufo.frag.glsl' )
+
+    const TexturaVertexShaderSource = await getFileContentsAsText( '/shaders/Textura.vert.glsl' )
+    const TexturaFragmentShaderSource = await getFileContentsAsText( '/shaders/Textura.frag.glsl' )
+
+    const alienVertexShaderSource = await getFileContentsAsText( '/shaders/alien.vert.glsl' )
+    const alienFragmentShaderSource = await getFileContentsAsText( '/shaders/alien.frag.glsl' )
 
     // #️⃣ Configuracion base de WebGL
 
@@ -69,26 +76,26 @@ async function main() {
     }
     siloTexture.image.src = 'textures/silo.jpeg'
 
-    const alienTexture = gl.createTexture()
-    alienTexture.image = new Image()
-    alienTexture.image.onload = function() {
-        handleLoadedTexture( alienTexture )
+    const alienTextureColor = gl.createTexture()
+    alienTextureColor.image = new Image()
+    alienTextureColor.image.onload = function() {
+        handleLoadedTexture( alienTextureColor )
     }
-    alienTexture.image.src = 'textures/alien_monster1_color.jpg'
+    alienTextureColor.image.src = 'textures/alien_monster1_color.jpg'
 
-    const alienTexture2 = gl.createTexture()
-    alienTexture2.image = new Image()
-    alienTexture2.image.onload = function() {
-        handleLoadedTexture( alienTexture2 )
+    const alienTextureAmbient = gl.createTexture()
+    alienTextureAmbient.image = new Image()
+    alienTextureAmbient.image.onload = function() {
+        handleLoadedTexture( alienTextureAmbient )
     }
-    alienTexture2.image.src = 'textures/alien_monster1_ambient.jpg'
+    alienTextureAmbient.image.src = 'textures/alien_monster1_ambient.jpg'
 
-    const alienTexture3 = gl.createTexture()
-    alienTexture3.image = new Image()
-    alienTexture3.image.onload = function() {
-        handleLoadedTexture( alienTexture3 )
+    const alienTextureNormal = gl.createTexture()
+    alienTextureNormal.image = new Image()
+    alienTextureNormal.image.onload = function() {
+        handleLoadedTexture( alienTextureNormal )
     }
-    alienTexture3.image.src = 'textures/alien_monster1_normal.jpg'
+    alienTextureNormal.image.src = 'textures/alien_monster1_normal.jpg'
 
     const ufoTexture = gl.createTexture()
     ufoTexture.image = new Image()
@@ -123,7 +130,21 @@ async function main() {
     skyTexture.image.onload = function() {
         handleLoadedTexture( skyTexture )
     }
-    skyTexture.image.src = 'textures/12700.jpg'
+    skyTexture.image.src = 'textures/nightdome.jpg'
+
+    const lanternTextureColor = gl.createTexture()
+    lanternTextureColor.image = new Image()
+    lanternTextureColor.image.onload = function() {
+        handleLoadedTexture( lanternTextureColor )
+    }
+    lanternTextureColor.image.src = 'textures/lantern_color.jpg'
+
+    const lanternTextureNormal = gl.createTexture()
+    lanternTextureNormal.image = new Image()
+    lanternTextureNormal.image.onload = function() {
+        handleLoadedTexture( lanternTextureNormal )
+    }
+    lanternTextureNormal.image.src = 'textures/lantern_normal.jpg'
 
     // #️⃣ Geometrias disponibles
 
@@ -134,12 +155,15 @@ async function main() {
     const tractorGeometry = new Geometry( gl, tractorGeometryData )
     const siloGeometry = new Geometry( gl, siloGeometryData )
     const skyGeometry = new Geometry( gl, skyGeometryData )
+    const lanternGeometry = new Geometry( gl, lanternGeometryData)
 
     // #️⃣ Programas de shaders disponibles
 
     const phongTProgram = new Program( gl, phongTVertexShaderSource, phongTFragmentShaderSource )
     const phongTNProgram = new Program( gl, phongTNVertexShaderSource, phongTNFragmentShaderSource )
-    const cooktorrance3TNProgram = new Program( gl, cooktorrance3TNVertexShaderSource, cooktorrance3TNFragmentShaderSource )
+    const ufoProgram = new Program( gl, ufoVertexShaderSource, ufoFragmentShaderSource )
+    const TexturaProgram = new Program( gl, TexturaVertexShaderSource, TexturaFragmentShaderSource )
+    const alienProgram = new Program( gl, alienVertexShaderSource, alienFragmentShaderSource )
 
     // #️⃣ Creamos materiales combinando programas con distintas propiedades
 
@@ -147,9 +171,10 @@ async function main() {
     const graneroMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 0.0} )
     const tractorMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 27.0} )
     const siloMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 35.0} )
-    const ufoMaterial = new Material( cooktorrance3TNProgram, true, true, { texture0: 0, texture1: 1, texture2: 2, texture3 : 3, m: 0.2, f0: 0.9} )
-    const alienMaterial = new Material( phongTNProgram, true, true, { texture0: 0, texture1: 1, texture2 : 2, shininess: 96.078431} )
-    const skyMaterial = new Material( phongTProgram, false, true, { texture0: 0, shininess: 0.0} )
+    const ufoMaterial = new Material( ufoProgram, true, true, { texture0: 0, texture1: 1, texture2: 2, texture3 : 3, m: 0.2, f0: 0.9} )
+    const alienMaterial = new Material( alienProgram, true, true, { texture0: 0, texture1: 1, texture2 : 2, shininess: 96.078431} )
+    const skyMaterial = new Material( TexturaProgram, false, true, { texture0: 0} )
+    const lanternMaterial = new Material( phongTNProgram, true, true, {texture0: 0, texture1: 1, shininess: 0})
 
     // #️⃣ Creamos los objetos de la escena
 
@@ -158,18 +183,21 @@ async function main() {
     const silo = new SceneObject( gl, siloGeometry, siloMaterial, [siloTexture], false )
     const ufo = new SceneObject( gl, ufoGeometry, ufoMaterial, [ufoTexture, ufoTexture2, ufoTexture3, ufoTexture4], false )
     const sky = new SceneObject( gl, skyGeometry, skyMaterial, [skyTexture], false )
-    const alien = new SceneObject( gl, alienGeometry, alienMaterial, [alienTexture, alienTexture2, alienTexture3], false )
+    const alien = new SceneObject( gl, alienGeometry, alienMaterial, [alienTextureColor, alienTextureAmbient, alienTextureNormal], false )
     const plano = new SceneObject( gl, planoGeometry, planoMaterial, [planoTexture], false )
+    const lantern = new SceneObject( gl, lanternGeometry, lanternMaterial, [lanternTextureColor, lanternTextureNormal], false )
 
-    const sceneObjects = [alien, ufo, plano, granero, tractor, silo, sky ]
+    const sceneObjects = [alien, ufo, plano, granero, tractor, silo, sky, lantern ]
 
 
-    const lightUfo1 = new SceneLight( [0.0, 5.0, 0.0, 1.0], [1.0, 0.0, 0.0], [0.0, -1.0, 0.2, 0.0], Math.cos(toRadians(15)), ufo )
-    const lightUfo2 = new SceneLight( [0.0, 5.0, 0.0, 1.0], [0.0, 1.0, 0.0], [-0.2, -1.0, 0.0, 0.0],  Math.cos(toRadians(15)), ufo )
+    const lightUfo = new SceneLight( [0.0, 5.0, 0.0, 1.0], [0.0, 0.3, 0.0], [0.0, -1.0, 0.0, 0.0], Math.cos(toRadians(25)), ufo )
+    lightUfo.quadratic_attenuation = 0.02
+    const lightLantern = new SceneLight( [0.0, 1.75, 1.35, 1.0], [1.0, 0.0, 0.0], [-0.2, -1.0, 0.0, 0.0],  -1.0, lantern )
+    lightLantern.linear_attenuation = 1.0
     const lightUfo3 = new SceneLight( [0.0, 5.0, 0.0, 1.0], [0.0, 0.0, 1.0], [0.2, -1.0, 0.0, 0.0],  Math.cos(toRadians(15)), ufo )
     const lightDirectional = new SceneLight( [-1.0, -1.0, -1.0, 0.0], [0.5, 0.5, 0.5], [0.5, -1.0, 0.0, 0.0], -1.0 )
 
-    const sceneLights = [lightUfo1, lightUfo2, lightUfo3, lightDirectional]
+    const sceneLights = [lightUfo, lightLantern, lightDirectional]
 
     // 🎛 Setup de sliders
 
@@ -189,6 +217,13 @@ async function main() {
     const lightRedSlider = document.getElementById( 'slider10')
     const lightGreenSlider = document.getElementById( 'slider11')
     const lightBlueSlider = document.getElementById( 'slider12')
+    const btnFocoCentro = document.getElementById( 'btnFocoCentro')
+    const btnFocoAlien = document.getElementById( 'btnFocoAlien')
+    const btnFocoUfo= document.getElementById( 'btnFocoUfo')
+
+    btnFocoCentro.addEventListener( 'click', () => {camera.setTarget([0,0,0])})
+    btnFocoAlien.addEventListener( 'click', () => {camera.setTarget(alien.position)})
+    btnFocoUfo.addEventListener( 'click', () => {camera.setTarget(ufo.position)})
 
     selectedObject.addEventListener( 'input', updateObjectSliders )
 
@@ -275,6 +310,10 @@ async function main() {
     alien.setPosition( 0.0, 0.0, 2.0 )
     alien.updateModelMatrix()
 
+    lantern.setPosition (0.0, 1.75, 1.35)
+    lantern.setRotation(0,90,0)
+    lantern.updateModelMatrix()
+
     // #️⃣ Iniciamos el render-loop 🎬
 
     requestAnimationFrame( render )
@@ -334,10 +373,13 @@ async function main() {
                     vec4.transformMat4( spotDirEye, light.spot_direction, camera.viewMatrix )
                     object.material.program.setUniformValue( 'allLights['+ i.toString() + '].spot_direction', spotDirEye )   
                     object.material.program.setUniformValue( 'allLights['+ i.toString() + '].spot_cutoff', light.spot_cutoff )
+                    object.material.program.setUniformValue( 'allLights['+ i.toString() + '].linear_attenuation', light.linear_attenuation )   
+                    object.material.program.setUniformValue( 'allLights['+ i.toString() + '].quadratic_attenuation', light.quadratic_attenuation )
                     i++                    
                 }
                 object.material.program.setUniformValue( 'numLights', i )
-            }          
+            }        
+
 
             // Seteamos info de su geometria
             object.vertexArray.bind()

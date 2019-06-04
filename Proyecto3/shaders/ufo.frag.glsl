@@ -13,6 +13,8 @@ uniform struct Light {
     vec4 position; // Light position in eye coordinates. If w==0.0, it is a directional light and [w,y,z] is the incident direction
     vec4 spot_direction; //spot direction in eye coordinates
     float spot_cutoff; //cosine of the angle, point lights have a spot_cutoff set to -1.0
+    float linear_attenuation;
+    float quadratic_attenuation;
 } allLights[MAX_LIGHTS];
 
 struct Material {
@@ -79,11 +81,12 @@ vec3 color_cook_torrance(Light light, vec3 diffuseColor, vec3 specularColor, vec
                 ||  light.spot_cutoff == -1.0 //o si es puntual
                 ||  light.position.w < 0.00001){ //o si es direccional
             if(dotLN > 0.0 && dotVN > 0.0){
+                float attenuation = 1.0/(1.0 + dist * light.linear_attenuation + dist*dist * light.quadratic_attenuation );  
                 float F = fresnelSchlick(dotHN);
                 float D = D_beckman(dotHN);
                 float G = calcularG(dotHN,dotVN,dotVH,dotLN);       
 
-                toReturn =  light.color*dotLN*( diffuseColor/PI + specularColor * (F*D*G)/(PI*dotVN*dotLN));
+                toReturn =  light.color*dotLN*attenuation*( diffuseColor/PI + specularColor * (F*D*G)/(PI*dotVN*dotLN));
         
             }
         }

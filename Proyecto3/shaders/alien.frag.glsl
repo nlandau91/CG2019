@@ -2,8 +2,8 @@
 #define MAX_LIGHTS 10
 //Shader de fragmentos que implementa iluminacion de phong con sombreado de phong
 //Hasta 10 luces de tipo puntual, spot y direccional
-//Una textura difusa, una textura especular, textura de emision y normal mapping
-//Pensado para ser usado solamente un el modelo de ufo
+//Una textura de color, un ambient map y un normal map
+//Pensado para ser usado con el alien
 
 precision highp float;
 
@@ -19,9 +19,8 @@ uniform struct Light {
 struct Material {
     float shininess;
     sampler2D texture0; //diffuse texture
-    sampler2D texture1; //specular texture
+    sampler2D texture1; //ambient map
     sampler2D texture2; //normal map
-    sampler2D texture3; //emission
 };
 
 uniform Material material;
@@ -59,8 +58,8 @@ vec3 calcPhong(Light light, vec3 diffuseColor, vec3 specularColor, vec3 N, vec3 
                 ||  light.position.w < 0.00001){ //o si es direccional
             if(dotLN > 0.0 && dotVN > 0.0){    
                 float attenuation = 1.0/(1.0 + dist * light.linear_attenuation + dist*dist * light.quadratic_attenuation );     
-                vec3 diffuse = diffuseColor * max(dot(L, N), 0.0);
-                vec3 specular = specularColor *  pow(max(dot(H,N),0.0),material.shininess);    
+                vec3 diffuse = diffuseColor  * max(dot(L, N), 0.0);
+                vec3 specular = specularColor * pow(max(dot(H,N),0.0),material.shininess);    
                 toReturn = light.color * attenuation * (diffuse + specular);   
             }
         }             
@@ -76,8 +75,8 @@ void main () {
     vec3 N = TBNMatrix * (sampledNormal * 2.0 - 1.0); //la transformamos usando la matrix del espacio tangente
 
     vec3 diffuseColorFromTexture = texture(material.texture0,fTexCoor).rgb;
-    vec3 specularColorFromTexture = texture(material.texture1,fTexCoor).rgb;
-    vec3 emission = texture(material.texture3,fTexCoor).rgb;
+    vec3 specularColorFromTexture = diffuseColorFromTexture;
+    vec3 AO = texture(material.texture1,fTexCoor).rgb;
 
     vec3 outputColor = vec3(0.0);
     for(int i = 0; i < numLights; i++){
@@ -86,5 +85,5 @@ void main () {
 
     vec3 ambient = diffuseColorFromTexture * 0.05;
 
-    fragmentColor = vec4(ambient + outputColor + emission, 1);
+    fragmentColor = vec4(AO*(ambient + outputColor), 1);
 }

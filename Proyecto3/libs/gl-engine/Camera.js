@@ -1,7 +1,7 @@
 import { mat4 } from "/libs/gl-matrix/index.js"
 import { toCartesian, toRadians, limitToRange } from "/libs/utils.js"
 
-const DEFAULT_RADIUS = 50                // distancia al origen
+const DEFAULT_RADIUS = 45                // distancia al origen
 const DEFAULT_THETA  = toRadians(0)   // angulo horizontal alrededor del eje y (partiendo del eje z positivo, en sentido anti-horario)
 const DEFAULT_PHI    = toRadians(60)    // angulo vertical desde el eje y positivo
 
@@ -9,7 +9,7 @@ export class Camera {
 
     constructor() {
         this.sphericalPosition = { radius: DEFAULT_RADIUS, theta: DEFAULT_THETA, phi: DEFAULT_PHI }
-        this.target = [0, 0, 0]
+        this.target = [0,0,0]
         this.up     = [0, 1, 0]
         this.fov    = toRadians(45)
         this.aspect = 1
@@ -26,6 +26,15 @@ export class Camera {
     }
 
     // Setters & Getters
+
+    setTarget(value) {
+        this.target = value
+        this.updateViewMatrix()
+    }
+
+    getTarget() {
+        return this.target
+    }
 
     set radius(value) {
         this.sphericalPosition.radius = limitToRange(value, this.near, this.far) // radius: [near, far]

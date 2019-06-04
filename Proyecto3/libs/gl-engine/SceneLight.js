@@ -6,5 +6,7 @@ export class SceneLight {
         this.spot_cutoff = spot_cutoff
         this.model = model
         this.default_spot_direction = spot_direction
+        this.linear_attenuation = 0.0
+        this.quadratic_attenuation = 0.0
     }
 }

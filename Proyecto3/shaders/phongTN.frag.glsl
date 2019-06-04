@@ -12,6 +12,8 @@ uniform struct Light {
     vec4 position; // Light position in eye coordinates. If w==0.0, it is a directional light and [w,y,z] is the incident direction
     vec4 spot_direction; //spot direction in eye coordinates
     float spot_cutoff; //cosine of the angle, point lights have a spot_cutoff set to -1.0
+    float linear_attenuation;
+    float quadratic_attenuation;
 } allLights[MAX_LIGHTS];
 
 struct Material {
@@ -34,10 +36,12 @@ vec3 calcPhong(Light light, vec3 diffuseColor, vec3 specularColor, vec3 N, vec3 
     vec3 toReturn = vec3(0.0);
     if(length(light.color) > 0.0){//si la luz no esta apagada
         vec3 vLE = vec3(0.0);
+        float dist = 0.0;
         if(light.position.w < 0.00001){ //si es luz direccional
             vLE = -light.position.xyz;
         }else{ //no es luz direccional
             vLE = light.position.xyz + vVE;
+            dist = length(vLE);
         }
         vec3 vSD = light.spot_direction.xyz;
         vec3 L = normalize(vLE);
@@ -52,9 +56,10 @@ vec3 calcPhong(Light light, vec3 diffuseColor, vec3 specularColor, vec3 N, vec3 
                 ||  light.spot_cutoff == -1.0 //o si es puntual
                 ||  light.position.w < 0.00001){ //o si es direccional
             if(dotLN > 0.0 && dotVN > 0.0){       
-                vec3 diffuse = diffuseColor * light.color * max(dot(L, N), 0.0);
-                vec3 specular = specularColor * light.color * pow(max(dot(H,N),0.0),material.shininess);    
-                toReturn = diffuse + specular;   
+                float attenuation = 1.0/(1.0 + dist * light.linear_attenuation + dist*dist * light.quadratic_attenuation );  
+                vec3 diffuse = diffuseColor * max(dot(L, N), 0.0);
+                vec3 specular = specularColor * pow(max(dot(H,N),0.0),material.shininess);    
+                toReturn = attenuation * light.color * (diffuse + specular);   
             }
         }             
     }
@@ -76,7 +81,7 @@ void main () {
         outputColor += calcPhong(allLights[i],diffuseColorFromTexture,specularColorFromTexture,N,V);
     }
 
-    vec3 ambient = diffuseColorFromTexture * 0.05;
+    vec3 ambient = diffuseColorFromTexture * 0.15;
 
     fragmentColor = vec4(ambient + outputColor, 1);
 }
