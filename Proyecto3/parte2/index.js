@@ -62,6 +62,13 @@ async function main() {
     }
     graneroTexture.image.src = 'textures/granero.jpeg'
 
+    const graneroNormalMap = gl.createTexture()
+    graneroNormalMap.image = new Image()
+    graneroNormalMap.image.onload = function() {
+        handleLoadedTexture( graneroNormalMap )
+    }
+    graneroNormalMap.image.src = 'textures/granero_normal.jpg'
+
     const tractorTexture = gl.createTexture()
     tractorTexture.image = new Image()
     tractorTexture.image.onload = function() {
@@ -69,12 +76,26 @@ async function main() {
     }
     tractorTexture.image.src = 'textures/tractor.jpeg'
 
+    const tractorNormalMap = gl.createTexture()
+    tractorNormalMap.image = new Image()
+    tractorNormalMap.image.onload = function() {
+        handleLoadedTexture( tractorNormalMap )
+    }
+    tractorNormalMap.image.src = 'textures/tractor_normal.jpg'
+
     const siloTexture = gl.createTexture()
     siloTexture.image = new Image()
     siloTexture.image.onload = function() {
         handleLoadedTexture( siloTexture )
     }
     siloTexture.image.src = 'textures/silo.jpeg'
+
+    const siloNormalMap = gl.createTexture()
+    siloNormalMap.image = new Image()
+    siloNormalMap.image.onload = function() {
+        handleLoadedTexture( siloNormalMap )
+    }
+    siloNormalMap.image.src = 'textures/silo_normal.jpg'
 
     const alienTextureColor = gl.createTexture()
     alienTextureColor.image = new Image()
@@ -130,7 +151,7 @@ async function main() {
     skyTexture.image.onload = function() {
         handleLoadedTexture( skyTexture )
     }
-    skyTexture.image.src = 'textures/noche1.jpg'
+    skyTexture.image.src = 'textures/soleado.jpg'
 
     const lanternTextureColor = gl.createTexture()
     lanternTextureColor.image = new Image()
@@ -139,12 +160,12 @@ async function main() {
     }
     lanternTextureColor.image.src = 'textures/lantern_color.jpg'
 
-    const lanternTextureNormal = gl.createTexture()
-    lanternTextureNormal.image = new Image()
-    lanternTextureNormal.image.onload = function() {
-        handleLoadedTexture( lanternTextureNormal )
+    const lanternNormalMap = gl.createTexture()
+    lanternNormalMap.image = new Image()
+    lanternNormalMap.image.onload = function() {
+        handleLoadedTexture( lanternNormalMap )
     }
-    lanternTextureNormal.image.src = 'textures/lantern_normal.jpg'
+    lanternNormalMap.image.src = 'textures/lantern_normal.jpg'
 
     // #️⃣ Geometrias disponibles
 
@@ -168,24 +189,24 @@ async function main() {
     // #️⃣ Creamos materiales combinando programas con distintas propiedades
 
     const planoMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 0.0} )
-    const graneroMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 0.0} )
-    const tractorMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 27.0} )
-    const siloMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 35.0} )
+    const graneroMaterial = new Material( phongTNProgram, true, true, { texture0: 0, texture1: 1, shininess: 0.0} )
+    const tractorMaterial = new Material( phongTNProgram, true, true, { texture0: 0, texture1: 1, shininess: 27.0} )
+    const siloMaterial = new Material( phongTNProgram, true, true, { texture0: 0, texture1: 1, shininess: 35.0} )
     const ufoMaterial = new Material( ufoProgram, true, true, { texture0: 0, texture1: 1, texture2: 2, texture3 : 3, m: 0.2, f0: 0.9} )
     const alienMaterial = new Material( alienProgram, true, true, { texture0: 0, texture1: 1, texture2 : 2, shininess: 96.078431} )
     const skyMaterial = new Material( TexturaProgram, false, true, { texture0: 0} )
-    const lanternMaterial = new Material( phongTNProgram, true, true, {texture0: 0, texture1: 1, shininess: 0})
+    const lanternMaterial = new Material( phongTNProgram, true, true, {texture0: 0, texture1: 1, shininess: 21})
 
     // #️⃣ Creamos los objetos de la escena
 
-    const granero = new SceneObject( gl, graneroGeometry, graneroMaterial, [graneroTexture], false )
-    const tractor = new SceneObject( gl, tractorGeometry, tractorMaterial, [tractorTexture], false )
-    const silo = new SceneObject( gl, siloGeometry, siloMaterial, [siloTexture], false )
+    const granero = new SceneObject( gl, graneroGeometry, graneroMaterial, [graneroTexture, graneroNormalMap], false )
+    const tractor = new SceneObject( gl, tractorGeometry, tractorMaterial, [tractorTexture, tractorNormalMap], false )
+    const silo = new SceneObject( gl, siloGeometry, siloMaterial, [siloTexture, siloNormalMap], false )
     const ufo = new SceneObject( gl, ufoGeometry, ufoMaterial, [ufoTexture, ufoTexture2, ufoTexture3, ufoTexture4], false )
     const sky = new SceneObject( gl, skyGeometry, skyMaterial, [skyTexture], false )
     const alien = new SceneObject( gl, alienGeometry, alienMaterial, [alienTextureColor, alienTextureAmbient, alienTextureNormal], false )
     const plano = new SceneObject( gl, planoGeometry, planoMaterial, [planoTexture], false )
-    const lantern = new SceneObject( gl, lanternGeometry, lanternMaterial, [lanternTextureColor, lanternTextureNormal], false )
+    const lantern = new SceneObject( gl, lanternGeometry, lanternMaterial, [lanternTextureColor, lanternNormalMap], false )
 
     const sceneObjects = [alien, ufo, plano, granero, tractor, silo, sky, lantern ]
 
@@ -194,7 +215,7 @@ async function main() {
     lightUfo.quadratic_attenuation = 0.02
     const lightLantern = new SceneLight( [0.0, 1.75, 1.35, 1.0], [1.0, 0.0, 0.0], [-0.2, -1.0, 0.0, 0.0],  -1.0, lantern )
     lightLantern.linear_attenuation = 1.0
-    const lightDirectional = new SceneLight( [-1.0, -1.0, -1.0, 0.0], [0.5, 0.5, 0.5], [0.5, -1.0, 0.0, 0.0], -1.0 )
+    const lightDirectional = new SceneLight( [0.5, -1.0, -1.0, 0.0], [0.5*255/255,0.5*236/255,0.5*219/255], [0.5, -1.0, 0.0, 0.0], -1.0 )
 
     const sceneLights = [lightUfo, lightLantern, lightDirectional]
 
@@ -226,21 +247,21 @@ async function main() {
 
     btnDiaSoleado.addEventListener( 'click' ,() => {
         skyTexture.image.src = 'textures/soleado.jpg'
-        lightDirectional.position = [0.5, -0.3, -1.0, 0.0]
+        lightDirectional.position = [0.5, -1.0, -1.0, 0.0]
         lightDirectional.color = [0.5*255/255,0.5*236/255,0.5*219/255] //5400k
     })
     btnDiaNublado.addEventListener( 'click' ,() => {
         skyTexture.image.src = 'textures/nublado.jpg'
-        lightDirectional.position = [0.0, -1.0, 0.0, 0.0]
+        lightDirectional.position = [0.5, -1.0, -1.0, 0.0]
         lightDirectional.color = [0.5*230/255,0.5*235/255,0.5*255/255] //7500k 
     })
     btnAtardecer.addEventListener( 'click' ,() => {
-        skyTexture.image.src = 'textures/atardecer2.jpg'
+        skyTexture.image.src = 'textures/atardecer.jpg'
         lightDirectional.position = [0.5, -0.1, -1.0, 0.0]
         lightDirectional.color = [0.5*255/255,0.5*177/255,0.5*110/255] //3000k
     })
     btnNoche.addEventListener( 'click' ,() => {
-        skyTexture.image.src = 'textures/noche2.jpg'
+        skyTexture.image.src = 'textures/noche.jpg'
         lightDirectional.position = [0.0, -1.0, 0.0, 0.0]
         lightDirectional.color = [0.01*210/255,0.01*223/255,0.01*255/255] //9000k
     })

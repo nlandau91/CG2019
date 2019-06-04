@@ -3,7 +3,7 @@
 //Shader de fragmentos que implementa iluminacion de phong con sombreado de phong
 //Hasta 10 luces de tipo puntual, spot y direccional
 //Una textura de color y un normal map
-//Pensado para ser usado con el alien
+
 #define EPSILON 0.00001
 precision highp float;
 
@@ -19,7 +19,7 @@ uniform struct Light {
 struct Material {
     float shininess;
     sampler2D texture0; //diffuse texture
-    sampler2D texture2; //normal map
+    sampler2D texture1; //normal map
 };
 
 uniform Material material;
@@ -70,7 +70,7 @@ void main () {
     //vec3 N = normalize(vNE); //no vamos a usar esta normal, vamos a calcular una nueva a partir del normal map
     vec3 V = normalize(vVE);
 
-    vec3 sampledNormal = vec3(texture(material.texture2, fTexCoor)); //obtenemos la nueva del mapa de normales
+    vec3 sampledNormal = vec3(texture(material.texture1, fTexCoor)); //obtenemos la nueva del mapa de normales
     vec3 N = TBNMatrix * (sampledNormal * 2.0 - 1.0); //la transformamos usando la matrix del espacio tangente
 
     vec3 diffuseColorFromTexture = texture(material.texture0,fTexCoor).rgb;
