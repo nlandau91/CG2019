@@ -372,12 +372,20 @@ async function main() {
     lantern.setPosition (0.0, 1.75, 1.35)
     lantern.setRotation(0,90,0)
     lantern.updateModelMatrix()
+    //contador de frames
+    const fpsElem = document.getElementById( 'fps' )
+    let then = 0
 
     // #️⃣ Iniciamos el render-loop 🎬
 
     requestAnimationFrame( render )
 
-    function render() {
+    function render(now) {
+        now *= 0.001;                          // convert to seconds
+        const deltaTime = now - then;          // compute time since last frame
+        then = now;                            // remember time for next frame
+        const fps = 1 / deltaTime;             // compute frames per second
+        fpsElem.value = fps.toFixed(1);  // update fps display
         // Actualizacion de matrices de cada objeto
         for ( let object of sceneObjects ) {
             mat4.multiply( object.modelViewMatrix, camera.viewMatrix, object.modelMatrix )
