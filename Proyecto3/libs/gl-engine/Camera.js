@@ -1,5 +1,5 @@
-import { mat4, quat } from "/libs/gl-matrix/index.js"
-import { toCartesian, toRadians, limitToRange, toDegrees } from "/libs/utils.js"
+import { mat4, vec3 } from "/libs/gl-matrix/index.js"
+import { toCartesian, toRadians, limitToRange } from "/libs/utils.js"
 
 const DEFAULT_RADIUS = 45                // distancia al origen
 const DEFAULT_THETA  = toRadians(0)   // angulo horizontal alrededor del eje y (partiendo del eje z positivo, en sentido anti-horario)
@@ -29,7 +29,9 @@ export class Camera {
 
     setTarget(value) {
         this.target = value
-        this.updateViewMatrix()
+        let { x, y, z } = toCartesian(this.sphericalPosition)
+        let r = vec3.distance(this.target,[x,y,z])
+        this.radius = r
     }
 
     getTarget() {
@@ -74,30 +76,8 @@ export class Camera {
     // Actualizacion de matrices
 
     updateViewMatrix() {
-         const { x, y, z } = toCartesian(this.sphericalPosition)
-         mat4.lookAt(this.viewMatrix, [x, y, z], this.target, this.up)
-
-
-        // //transformacion para alejarnos del objetivo en R
-        // let t0 = mat4.create();
-        // mat4.fromTranslation(t0,[0,0,this.sphericalPosition.radius]); 
-
-        // //transformacion para rotar alrededor del objetivo
-        // let R = mat4.create();
-        // let rotQuat = quat.create();
-        // quat.fromEuler(rotQuat, -toDegrees(this.sphericalPosition.phi)+DEFAULT_PHI,toDegrees(this.sphericalPosition.theta),0);
-        // mat4.fromQuat(R,rotQuat);
-
-        // //transformacion para apuntar al objetivo
-        // let t1 = mat4.create();
-        // mat4.fromTranslation(t1,this.target);
-
-        // //aplicamos las transformaciones e invertimos para obtener la view matrix
-        // mat4.multiply(this.viewMatrix,t1,R);
-        // mat4.multiply(this.viewMatrix,this.viewMatrix,t0);
-        // mat4.invert(this.viewMatrix,this.viewMatrix);
-        
-        //return this.viewMatrix;
+        const { x, y, z } = toCartesian(this.sphericalPosition)
+        mat4.lookAt(this.viewMatrix, [x+this.target[0], y+this.target[1], z+this.target[2]], this.target, this.up)
     }
 
     updateProjectionMatrix() {
