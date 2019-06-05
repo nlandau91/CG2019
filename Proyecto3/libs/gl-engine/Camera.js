@@ -74,28 +74,28 @@ export class Camera {
     // Actualizacion de matrices
 
     updateViewMatrix() {
-        // const { x, y, z } = toCartesian(this.sphericalPosition)
-        // mat4.lookAt(this.viewMatrix, [x, y, z], this.target, this.up)
+         const { x, y, z } = toCartesian(this.sphericalPosition)
+         mat4.lookAt(this.viewMatrix, [x, y, z], this.target, this.up)
 
 
-        //transformacion para alejarnos del objetivo en R
-        let t0 = mat4.create();
-        mat4.fromTranslation(t0,[0,0,this.sphericalPosition.radius]); 
+        // //transformacion para alejarnos del objetivo en R
+        // let t0 = mat4.create();
+        // mat4.fromTranslation(t0,[0,0,this.sphericalPosition.radius]); 
 
-        //transformacion para rotar alrededor del objetivo
-        let R = mat4.create();
-        let rotQuat = quat.create();
-        quat.fromEuler(rotQuat, -toDegrees(this.sphericalPosition.phi)+DEFAULT_PHI,toDegrees(this.sphericalPosition.theta),0);
-        mat4.fromQuat(R,rotQuat);
+        // //transformacion para rotar alrededor del objetivo
+        // let R = mat4.create();
+        // let rotQuat = quat.create();
+        // quat.fromEuler(rotQuat, -toDegrees(this.sphericalPosition.phi)+DEFAULT_PHI,toDegrees(this.sphericalPosition.theta),0);
+        // mat4.fromQuat(R,rotQuat);
 
-        //transformacion para apuntar al objetivo
-        let t1 = mat4.create();
-        mat4.fromTranslation(t1,this.target);
+        // //transformacion para apuntar al objetivo
+        // let t1 = mat4.create();
+        // mat4.fromTranslation(t1,this.target);
 
-        //aplicamos las transformaciones e invertimos para obtener la view matrix
-        mat4.multiply(this.viewMatrix,t1,R);
-        mat4.multiply(this.viewMatrix,this.viewMatrix,t0);
-        mat4.invert(this.viewMatrix,this.viewMatrix);
+        // //aplicamos las transformaciones e invertimos para obtener la view matrix
+        // mat4.multiply(this.viewMatrix,t1,R);
+        // mat4.multiply(this.viewMatrix,this.viewMatrix,t0);
+        // mat4.invert(this.viewMatrix,this.viewMatrix);
         
         //return this.viewMatrix;
     }
