@@ -167,25 +167,32 @@ async function main() {
     const btnDiaNublado = document.getElementById( 'btnDiaNublado' )
     const btnAtardecer = document.getElementById( 'btnAtardecer' )
     const btnNoche = document.getElementById( 'btnNoche' )
+    const btnCamaraAutomatica = document.getElementById( 'btnCamaraAutomatica' )
+
+    btnCamaraAutomatica.addEventListener ('click', () => {
+
+        
+
+    })
 
     //Estos listeners cambian la textura del domo y las propiedades de la luz direccional
     btnDiaSoleado.addEventListener( 'click' ,async () => {
-        armarTextura(skyTexture,await loadImage('textures/soleado.jpg'))
+        armarTextura(skyTexture,await loadImage('/textures/soleado.jpg'))
         lightDirectional.position = [0.5, -1.0, -1.0, 0.0]
         lightDirectional.color = [0.5*255/255,0.5*236/255,0.5*219/255] //5400k
     })
     btnDiaNublado.addEventListener( 'click' ,async () => {
-        armarTextura(skyTexture,await loadImage('textures/nublado.jpg'))
+        armarTextura(skyTexture,await loadImage('/textures/nublado.jpg'))
         lightDirectional.position = [0.5, -1.0, -1.0, 0.0]
         lightDirectional.color = [0.5*230/255,0.5*235/255,0.5*255/255] //7500k 
     })
     btnAtardecer.addEventListener( 'click' ,async() => {
-        armarTextura(skyTexture,await loadImage('textures/atardecer.jpg'))
+        armarTextura(skyTexture,await loadImage('/textures/atardecer.jpg'))
         lightDirectional.position = [0.5, -0.1, -1.0, 0.0]
         lightDirectional.color = [0.5*255/255,0.5*177/255,0.5*110/255] //3000k
     })
     btnNoche.addEventListener( 'click' ,async () => {
-        armarTextura(skyTexture,await loadImage('textures/noche.jpg'))
+        armarTextura(skyTexture,await loadImage('/textures/noche.jpg'))
         lightDirectional.position = [0.0, -1.0, 0.0, 0.0]
         lightDirectional.color = [0.01*210/255,0.01*223/255,0.01*255/255] //9000k
     })
