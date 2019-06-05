@@ -1,4 +1,4 @@
-import { mat4, vec3 } from "/libs/gl-matrix/index.js"
+import { mat4, vec3, quat } from "/libs/gl-matrix/index.js"
 import { toCartesian, toRadians, limitToRange } from "/libs/utils.js"
 
 const DEFAULT_RADIUS = 45                // distancia al origen
@@ -29,13 +29,18 @@ export class Camera {
 
     setTarget(value) {
         this.target = value
-        let { x, y, z } = toCartesian(this.sphericalPosition)
-        let r = vec3.distance(this.target,[x,y,z])
-        this.radius = r
+        //let { x, y, z } = toCartesian(this.sphericalPosition)
+        //let r = vec3.distance(this.target,[x,y,z])
+        //this.radius = r
+        this.updateViewMatrix()
     }
 
-    getTarget() {
-        return this.target
+    getForward(){
+        let q = quat.create()
+        mat4.getRotation(q,this.viewMatrix)
+        let forward = vec3.fromValues(0,0,1);
+        vec3.transformQuat(forward,forward,q)
+        return forward
     }
 
     set radius(value) {

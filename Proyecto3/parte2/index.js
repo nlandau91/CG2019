@@ -34,6 +34,9 @@ async function main() {
     const alienVertexShaderSource = await getFileContentsAsText( '/shaders/alien.vert.glsl' )
     const alienFragmentShaderSource = await getFileContentsAsText( '/shaders/alien.frag.glsl' )
 
+    const cookTorranceTNVertexShaderSource = await getFileContentsAsText( '/shaders/cooktorranceTN.vert.glsl' )
+    const cookTorranceTNFragmentShaderSource = await getFileContentsAsText( '/shaders/cooktorranceTN.frag.glsl' )
+
     // #️⃣ Configuracion base de WebGL
 
     const canvas = document.getElementById( 'webgl-canvas' )
@@ -109,13 +112,14 @@ async function main() {
     const ufoProgram = new Program( gl, ufoVertexShaderSource, ufoFragmentShaderSource )
     const TexturaProgram = new Program( gl, TexturaVertexShaderSource, TexturaFragmentShaderSource )
     const alienProgram = new Program( gl, alienVertexShaderSource, alienFragmentShaderSource )
+    const cookTorranceTN = new Program( gl, cookTorranceTNVertexShaderSource, cookTorranceTNFragmentShaderSource )
 
     // #️⃣ Creamos materiales combinando programas con distintas propiedades
 
     const planoMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 0.0} )
     const graneroMaterial = new Material( phongTNProgram, true, true, { texture0: 0, texture1: 1, shininess: 0.0} )
-    const tractorMaterial = new Material( phongTNProgram, true, true, { texture0: 0, texture1: 1, shininess: 27.0} )
-    const siloMaterial = new Material( phongTNProgram, true, true, { texture0: 0, texture1: 1, shininess: 35.0} )
+    const tractorMaterial = new Material( phongTNProgram, true, true, { texture0: 0, texture1: 1, shininess: 27} )
+    const siloMaterial = new Material( cookTorranceTN, true, true, { texture0: 0, texture1: 1, m: 0.14, f0: 0.99, sigma: 0.2} )
     const ufoMaterial = new Material( ufoProgram, true, true, { texture0: 0, texture1: 1, texture2: 2, texture3 : 3, m: 0.2, f0: 0.9} )
     const alienMaterial = new Material( alienProgram, true, true, { texture0: 0, texture1: 1, texture2 : 2, shininess: 96.078431} )
     const skyMaterial = new Material( TexturaProgram, false, true, { texture0: 0} )
@@ -161,14 +165,12 @@ async function main() {
     const lightRedSlider = document.getElementById( 'slider10')
     const lightGreenSlider = document.getElementById( 'slider11')
     const lightBlueSlider = document.getElementById( 'slider12')
-    const btnFocoCentro = document.getElementById( 'btnFocoCentro')
-    const btnFocoAlien = document.getElementById( 'btnFocoAlien')
-    const btnFocoUfo= document.getElementById( 'btnFocoUfo')
     const btnDiaSoleado = document.getElementById( 'btnDiaSoleado' )
     const btnDiaNublado = document.getElementById( 'btnDiaNublado' )
     const btnAtardecer = document.getElementById( 'btnAtardecer' )
     const btnNoche = document.getElementById( 'btnNoche' )
     const btnCamaraAutomatica = document.getElementById( 'btnCamaraAutomatica' )
+    const selectedTarget = document.getElementById('select3')
 
     btnCamaraAutomatica.addEventListener ('click', () => { camaraAutomatica = !camaraAutomatica })
 
@@ -193,11 +195,6 @@ async function main() {
         lightDirectional.position = [0.0, -1.0, 0.0, 0.0]
         lightDirectional.color = [0.01*210/255,0.01*223/255,0.01*255/255] //9000k
     })
-
-    // enfocan la camara en un punto
-    btnFocoCentro.addEventListener( 'click', () => {camera.setTarget([0,0,0])})
-    btnFocoAlien.addEventListener( 'click', () => {camera.setTarget(alien.position)})
-    btnFocoUfo.addEventListener( 'click', () => {camera.setTarget(ufo.position)})
 
     //cuando cambio el objeto seleccionado actualizo los sliders
     selectedObject.addEventListener( 'input', updateObjectSliders )
@@ -323,6 +320,16 @@ async function main() {
         if(camaraAutomatica){
             camera.arcHorizontally(deltaTime)
         }
+
+        if(selectedTarget.value == 'centro'){
+            camera.setTarget([0,0,0])        
+        }
+        if(selectedTarget.value == 'alien'){
+            camera.setTarget(alien.position)        
+        }
+        if(selectedTarget.value == 'ufo'){
+            camera.setTarget(ufo.position)        
+        }       
 
         // Limpiamos buffers de color y profundidad del canvas antes de empezar a dibujar los objetos de la escena
         gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT )
