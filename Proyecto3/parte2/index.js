@@ -133,7 +133,7 @@ async function main() {
 
     const sceneObjects = [alien, ufo, plano, granero, tractor, silo, sky, lantern ]
 
-
+    // #️⃣ Creamos las luces de la escena
     const lightUfo = new SceneLight( [0.0, 5.0, 0.0, 1.0], [0.0, 0.3, 0.0], [0.0, -1.0, 0.0, 0.0], Math.cos(toRadians(25)), ufo )
     lightUfo.quadratic_attenuation = 0.02
     const lightLantern = new SceneLight( [0.0, 1.75, 1.35, 1.0], [255/255, 132/255, 0/255], [-0.2, -1.0, 0.0, 0.0],  -1.0, lantern ) //1900k luz de vela
@@ -142,7 +142,7 @@ async function main() {
 
     const sceneLights = [lightUfo, lightLantern, lightDirectional]
 
-    // 🎛 Setup de sliders
+    // 🎛 Setup de sliders y botones
 
     // Buscamos elementos en el DOM
     const selectedObject = document.getElementById( 'select0' )
@@ -168,6 +168,7 @@ async function main() {
     const btnAtardecer = document.getElementById( 'btnAtardecer' )
     const btnNoche = document.getElementById( 'btnNoche' )
 
+    //Estos listeners cambian la textura del domo y las propiedades de la luz direccional
     btnDiaSoleado.addEventListener( 'click' ,async () => {
         armarTextura(skyTexture,await loadImage('textures/soleado.jpg'))
         lightDirectional.position = [0.5, -1.0, -1.0, 0.0]
@@ -189,44 +190,14 @@ async function main() {
         lightDirectional.color = [0.01*210/255,0.01*223/255,0.01*255/255] //9000k
     })
 
+    // enfocan la camara en un punto
     btnFocoCentro.addEventListener( 'click', () => {camera.setTarget([0,0,0])})
     btnFocoAlien.addEventListener( 'click', () => {camera.setTarget(alien.position)})
     btnFocoUfo.addEventListener( 'click', () => {camera.setTarget(ufo.position)})
 
+    //cuando cambio el objeto seleccionado actualizo los sliders
     selectedObject.addEventListener( 'input', updateObjectSliders )
-
-    transSliderX.addEventListener( 'input', updateTranslation )
-    transSliderY.addEventListener( 'input', updateTranslation )
-    transSliderZ.addEventListener( 'input', updateTranslation )
-    
-    rotSliderX.addEventListener( 'input', updateRotation )
-    rotSliderY.addEventListener( 'input', updateRotation )
-    rotSliderZ.addEventListener( 'input', updateRotation )
-
-    camPhiSlider.addEventListener( 'input', ( event ) => { camera.phi = toRadians( event.target.valueAsNumber ) } )
-    camThetaSlider.addEventListener( 'input', ( event ) => { camera.theta = toRadians( event.target.valueAsNumber ) } )
-    camRadiusSlider.addEventListener( 'input', ( event ) => { camera.radius = event.target.valueAsNumber } )
-    camFovSlider.addEventListener( 'input', ( event ) => { camera.setFov( toRadians( event.target.valueAsNumber ) ) } )
-
-    selectedLight.addEventListener( 'input', updateLightSliders )
-
-    lightRedSlider.addEventListener( 'input', updateLightColor )
-    lightGreenSlider.addEventListener( 'input', updateLightColor )
-    lightBlueSlider.addEventListener( 'input', updateLightColor )
-
-    function updateLightColor() {
-        sceneLights[parseFloat(selectedLight.value)].color = [parseFloat(lightRedSlider.value),
-                                                                parseFloat(lightGreenSlider.value),
-                                                                parseFloat(lightBlueSlider.value)]
-    }
-       
-    function updateLightSliders() {
-        let luz = sceneLights[parseFloat( selectedLight.value )]
-        lightRedSlider.value = luz.color[0]
-        lightGreenSlider.value = luz.color[1]
-        lightBlueSlider.value = luz.color[2]
-    }
-
+    //actualizo los sliders del objeto con los valores del objeto seleccionado
     function updateObjectSliders() {
         let objeto = sceneObjects[parseFloat( selectedObject.value )]
         rotSliderX.value = objeto.rotation[0]
@@ -237,12 +208,21 @@ async function main() {
         transSliderZ.value = objeto.position[2]
     }
 
+    //estos listeners controlan la traslacion y la rotacion del objeto seleccionado
+    transSliderX.addEventListener( 'input', updateTranslation )
+    transSliderY.addEventListener( 'input', updateTranslation )
+    transSliderZ.addEventListener( 'input', updateTranslation )  
+    rotSliderX.addEventListener( 'input', updateRotation )
+    rotSliderY.addEventListener( 'input', updateRotation )
+    rotSliderZ.addEventListener( 'input', updateRotation )
+    //leo los valores de los sliders de traslacion y los uso para settear la traslacion del objeto seleccionado
     function updateTranslation() {
         sceneObjects[parseFloat( selectedObject.value )].setPosition( parseFloat( transSliderX.value ), 
                                                                         parseFloat( transSliderY.value ), 
                                                                         parseFloat( transSliderZ.value ) )
         sceneObjects[parseFloat( selectedObject.value )].updateModelMatrix()
     }
+    //leo los valores de los sliders de rotacion y los uso para settear la rotacion del objeto seleccionado
     function updateRotation() {
         sceneObjects[parseFloat( selectedObject.value )].setRotation( parseFloat( rotSliderX.value ), 
                                                                         parseFloat( rotSliderY.value ), 
@@ -250,6 +230,34 @@ async function main() {
         sceneObjects[parseFloat( selectedObject.value )].updateModelMatrix()
     }
 
+    //control de la camara
+    camPhiSlider.addEventListener( 'input', ( event ) => { camera.phi = toRadians( event.target.valueAsNumber ) } )
+    camThetaSlider.addEventListener( 'input', ( event ) => { camera.theta = toRadians( event.target.valueAsNumber ) } )
+    camRadiusSlider.addEventListener( 'input', ( event ) => { camera.radius = event.target.valueAsNumber } )
+    camFovSlider.addEventListener( 'input', ( event ) => { camera.setFov( toRadians( event.target.valueAsNumber ) ) } )
+
+    //selecciono una luz y actualizo los sliders
+    selectedLight.addEventListener( 'input', updateLightSliders )
+    //actualizo los sliders de la luz con los valores de la luz seleccionada
+    function updateLightSliders() {
+        let luz = sceneLights[parseFloat( selectedLight.value )]
+        lightRedSlider.value = luz.color[0]
+        lightGreenSlider.value = luz.color[1]
+        lightBlueSlider.value = luz.color[2]
+    }
+
+    //controlo los colores de la luz seleccionada
+    lightRedSlider.addEventListener( 'input', updateLightColor )
+    lightGreenSlider.addEventListener( 'input', updateLightColor )
+    lightBlueSlider.addEventListener( 'input', updateLightColor )
+    //leo los valores de los sliders de color y los uso para settear el color de la luz seleccionada
+    function updateLightColor() {
+        sceneLights[parseFloat(selectedLight.value)].color = [parseFloat(lightRedSlider.value),
+                                                                parseFloat(lightGreenSlider.value),
+                                                                parseFloat(lightBlueSlider.value)]
+    }
+    
+    //actualizo los sliders de la camara con los valores de la camara
     function updateCamSliders() {
         camPhiSlider.value = toDegrees( camera.phi )
         camThetaSlider.value = toDegrees( camera.theta )
@@ -257,6 +265,7 @@ async function main() {
         camFovSlider.value = toDegrees( camera.getFov() )
     }
 
+    //le doy la posicion inicial a los sliders
     updateObjectSliders()
     updateCamSliders()
     updateLightSliders()
