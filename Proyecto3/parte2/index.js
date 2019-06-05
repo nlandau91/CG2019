@@ -46,6 +46,7 @@ async function main() {
 
     const camera = new Camera()
     const cameraMouseControls = new CameraMouseControls( camera, canvas )
+    var camaraAutomatica = 0
 
     //Cargamos las imagenes y creamos las texturas
 
@@ -169,11 +170,7 @@ async function main() {
     const btnNoche = document.getElementById( 'btnNoche' )
     const btnCamaraAutomatica = document.getElementById( 'btnCamaraAutomatica' )
 
-    btnCamaraAutomatica.addEventListener ('click', () => {
-
-        
-
-    })
+    btnCamaraAutomatica.addEventListener ('click', () => { camaraAutomatica = !camaraAutomatica })
 
     //Estos listeners cambian la textura del domo y las propiedades de la luz direccional
     btnDiaSoleado.addEventListener( 'click' ,async () => {
@@ -321,6 +318,10 @@ async function main() {
              Si ademas de la camara, los objetos tambien tuviesen algun tipo de movimiento ( o animacion ), tambien tendriamos
              que actualizar la 'modelMatrix' de cada uno.
              */
+        }
+        
+        if(camaraAutomatica){
+            camera.arcHorizontally(deltaTime)
         }
 
         // Limpiamos buffers de color y profundidad del canvas antes de empezar a dibujar los objetos de la escena
