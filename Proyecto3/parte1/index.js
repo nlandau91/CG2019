@@ -1,6 +1,6 @@
 // 📥 Imports
 import { mat4, vec4 } from "/libs/gl-matrix/index.js"
-import { getFileContentsAsText,loadImage } from "/libs/utils.js"
+import { getFileContentsAsText,loadImage,toRadians } from "/libs/utils.js"
 import { Program, Material, Geometry, SceneObject, SceneLight, Camera, CameraMouseControls } from "/libs/gl-engine/index.js"
 import { parse } from "/libs/gl-engine/parsers/obj-parser.js"
 
@@ -16,6 +16,9 @@ async function main() {
     
     const phongTVertexShaderSource   = await getFileContentsAsText("/shaders/phongT.vert.glsl")
     const phongTFragmentShaderSource = await getFileContentsAsText("/shaders/phongT.frag.glsl")
+    
+    const phongTNVertexShaderSource   = await getFileContentsAsText("/shaders/phongTN.vert.glsl")
+    const phongTNFragmentShaderSource = await getFileContentsAsText("/shaders/phongTN.frag.glsl")
 
     // #️⃣ Configuracion base de WebGL
 
@@ -32,14 +35,19 @@ async function main() {
 
     //creo las texturas
     const planoTexture = gl.createTexture()
-    const esferaTexture = gl.createTexture()
+    const esferaMercurio = gl.createTexture()
+    const esferaMercurioNormal=gl.createTexture()
+
     const esferaTexture1 = gl.createTexture()
     const esferaGolfTexture = gl.createTexture()
+    const esferaGolfNormal= gl.createTexture()
 
     armarTextura(planoTexture, await loadImage('/textures/grass1.jpg'))
-    armarTextura(esferaTexture, await loadImage('/textures/TexturesCom_Plastic_SpaceBlanketFolds_512_albedo.jpg'))
-    armarTextura(esferaTexture1, await loadImage('/textures/basketball_diffuse.png'))
+    armarTextura(esferaMercurio, await loadImage('/textures/mercury.jpg'))
+    armarTextura(esferaMercurioNormal, await loadImage('/textures/mercury_normal.jpg'))
+
     armarTextura(esferaGolfTexture, await loadImage('/textures/texturaGolf.jpg'))
+    armarTextura(esferaGolfNormal, await loadImage('/textures/golf_normal.jpg'))
     
 
     // #️⃣ Geometrias disponibles
@@ -51,13 +59,16 @@ async function main() {
     // #️⃣ Programas de shaders disponibles
 
     const phongTProgram = new Program(gl, phongTVertexShaderSource, phongTFragmentShaderSource)
+    const phongTNProgram = new Program(gl, phongTNVertexShaderSource, phongTNFragmentShaderSource)
+
 
     // #️⃣ Creamos materiales combinando programas con distintas propiedades
 
 
-    const planoMaterial = new Material(phongTProgram, true, true, { texture0: 0, shininess: 50})
-    const esferaMaterial = new Material(phongTProgram, true, true, { texture0: 0, shininess: 100})
-    const esferaGolfMaterial = new Material(phongTProgram,true,true, { texture0: 0, shininess: 100})
+    const planoMaterial = new Material(phongTProgram, true, true, { texture0: 0, shininess: 0})
+    
+    const esferaMercurioMaterial = new Material(phongTNProgram, true, true, { texture0: 0,texture1: 1, shininess: 4})
+    const esferaGolfMaterial = new Material(phongTNProgram,true,true, { texture0: 0, texture1: 1, shininess: 100})
     
 
     // #️⃣ Creamos los objetos de la escena
@@ -68,18 +79,10 @@ async function main() {
 
     // const sceneObjects = [granero, platoVolador, alien, plano]
     sceneObjects.push(plano)
-
-    const lightPosition0 = [-5, 5, 5, 1]
-    const lightColor0 = [1, 1, 1]
-    const lightSpotDirection0 = [0,-1,0]
-    const lightSpotCutoff0 = -1
-    const light0 = new SceneLight(lightPosition0, lightColor0, lightSpotDirection0, lightSpotCutoff0)
-
-    const ligthPosition1 = [5, -5, -5, 1]
-    const lightColor1 = [1, 1, 1]
-    const lightSpotDirection1 = [0,-1,0]
-    const lightSpotCutoff1 = -1
-    const light1 = new SceneLight(ligthPosition1, lightColor1, lightSpotDirection1, lightSpotCutoff1)
+    //direccional cuarta componente en 1
+    
+    const light0 = new SceneLight([-5.0, 5.0, 5.0, 1.0], [1.0, 1.0, 1.0], [0.0,-1.0,0.0,0.0], 0.3)
+    const light1 = new SceneLight([5.0, 5.0, -5.0, 1.0], [1.0, 1.0, 1.0], [0.0,-1.0,0.0,0.0], 0.3)
 
     const sceneLights = [light0,light1]
 
@@ -190,17 +193,17 @@ async function main() {
         for(i=0 ;i<4;i++){
             for(j=0; j<6;j++){
                 if(i==0){
-                    sceneObjects[i*6+j]=new SceneObject(gl, esferaGolfGeometry, esferaGolfMaterial, [esferaGolfTexture], false)
+                    sceneObjects[i*6+j]=new SceneObject(gl, esferaGolfGeometry, esferaGolfMaterial, [esferaGolfTexture,esferaGolfNormal], false)
                     sceneObjects[i*6+j].setPosition(3*i-4.0,0.0,3*j-6.0)
                     sceneObjects[i*6+j].updateModelMatrix()
                 }
                 if(i==1){
-                        sceneObjects[i*6+j]=new SceneObject(gl, esferaGeometry, esferaMaterial, [esferaTexture1], false)
+                        sceneObjects[i*6+j]=new SceneObject(gl, esferaGeometry, esferaMercurioMaterial, [esferaMercurio,esferaMercurioNormal], false)
                         sceneObjects[i*6+j].setPosition(3*i-4.0,0.0,3*j-6.0)
                         sceneObjects[i*6+j].updateModelMatrix()
                 }
                 if(i==2 || i==3){
-                        sceneObjects[i*6+j]=new SceneObject(gl, esferaGeometry, esferaMaterial, [esferaTexture], false)
+                        sceneObjects[i*6+j]=new SceneObject(gl, esferaGeometry, esferaMercurioMaterial, [esferaMercurio,esferaMercurioNormal], false)
                         sceneObjects[i*6+j].setPosition(3*i-4.0,0.0,3*j-6.0)
                         sceneObjects[i*6+j].updateModelMatrix()       
                 }
