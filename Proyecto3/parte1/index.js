@@ -1,6 +1,6 @@
 // 📥 Imports
 import { mat4, vec4 } from "/libs/gl-matrix/index.js"
-import { getFileContentsAsText } from "/libs/utils.js"
+import { getFileContentsAsText,loadImage } from "/libs/utils.js"
 import { Program, Material, Geometry, SceneObject, SceneLight, Camera, CameraMouseControls } from "/libs/gl-engine/index.js"
 import { parse } from "/libs/gl-engine/parsers/obj-parser.js"
 
@@ -13,11 +13,6 @@ async function main() {
     const planoGeometryData      = await parse("/models/plano.obj")
     const esferaGeometryData      = await parse("/models/esfera.obj")
     const esferaGolfGeometryData  = await parse("/models/esferaGolf.obj")
-
-    const diffuseVertexShaderSource   = await getFileContentsAsText("/shaders/diffuse.vert.glsl")
-    const diffuseFragmentShaderSource = await getFileContentsAsText("/shaders/diffuse.frag.glsl")
-    const phongVertexShaderSource   = await getFileContentsAsText("/shaders/phong.vert.glsl")
-    const phongFragmentShaderSource = await getFileContentsAsText("/shaders/phong.frag.glsl")
     
     const phongTVertexShaderSource   = await getFileContentsAsText("/shaders/phongT.vert.glsl")
     const phongTFragmentShaderSource = await getFileContentsAsText("/shaders/phongT.frag.glsl")
@@ -36,35 +31,16 @@ async function main() {
     const cameraMouseControls = new CameraMouseControls(camera, canvas)
 
     //creo las texturas
-    const planoTexture = gl.createTexture() //crear objeto textura
-    planoTexture.image = new Image() // cargar imagen
-    planoTexture.image.onload = function () {
-        handleLoadedTexture(planoTexture)
-    }
-    planoTexture.image.src = "textures/plano.jpeg"
+    const planoTexture = gl.createTexture()
+    const esferaTexture = gl.createTexture()
+    const esferaTexture1 = gl.createTexture()
+    const esferaGolfTexture = gl.createTexture()
 
-    const esferaTexture = gl.createTexture() //crear objeto textura
-    esferaTexture.image = new Image() // cargar imagen
-    esferaTexture.image.onload = function () {
-        handleLoadedTexture(esferaTexture)
-    }
-    esferaTexture.image.src = "textures/TexturesCom_Plastic_SpaceBlanketFolds_512_albedo.jpg"
-
-    const esferaTexture1 = gl.createTexture() //crear objeto textura
-    esferaTexture1.image = new Image() // cargar imagen
-    esferaTexture1.image.onload = function () {
-        handleLoadedTexture(esferaTexture1)
-    }
-    esferaTexture1.image.src = "textures/basketball_diffuse.png"
-
-    const esferaGolfTexture = gl.createTexture() //crear objeto textura
-    esferaGolfTexture.image = new Image() // cargar imagen
-    esferaGolfTexture.image.onload = function () {
-        handleLoadedTexture(esferaGolfTexture)
-    }
-    esferaGolfTexture.image.src = "textures/texturaGolf.jpg"
-
-
+    armarTextura(planoTexture, await loadImage('/textures/grass1.jpg'))
+    armarTextura(esferaTexture, await loadImage('/textures/TexturesCom_Plastic_SpaceBlanketFolds_512_albedo.jpg'))
+    armarTextura(esferaTexture1, await loadImage('/textures/basketball_diffuse.png'))
+    armarTextura(esferaGolfTexture, await loadImage('/textures/texturaGolf.jpg'))
+    
 
     // #️⃣ Geometrias disponibles
 
@@ -74,15 +50,11 @@ async function main() {
 
     // #️⃣ Programas de shaders disponibles
 
-    const diffuseProgram = new Program(gl, diffuseVertexShaderSource, diffuseFragmentShaderSource)
-    const phongProgram = new Program(gl, phongVertexShaderSource, phongFragmentShaderSource)
     const phongTProgram = new Program(gl, phongTVertexShaderSource, phongTFragmentShaderSource)
 
     // #️⃣ Creamos materiales combinando programas con distintas propiedades
 
 
-    const whiteDiffuseMaterial = new Material(diffuseProgram, true, { Ka: [0.1, 0.1, 0.1], Kd: [1, 1, 1] })
-    const phongMaterial = new Material(phongProgram, true, false, { Ka: [0.1,0.1,0.1], Kd: [0.4,0.4,0.4], Ks: [0.8,0.8,0.8], shininess: 50})
     const planoMaterial = new Material(phongTProgram, true, true, { texture0: 0, shininess: 50})
     const esferaMaterial = new Material(phongTProgram, true, true, { texture0: 0, shininess: 100})
     const esferaGolfMaterial = new Material(phongTProgram,true,true, { texture0: 0, shininess: 100})
@@ -173,6 +145,8 @@ async function main() {
                     vec4.transformMat4( spotDirEye, light.spot_direction, camera.viewMatrix )
                     object.material.program.setUniformValue( 'allLights['+ i.toString() + '].spot_direction', spotDirEye )   
                     object.material.program.setUniformValue( 'allLights['+ i.toString() + '].spot_cutoff', light.spot_cutoff )
+                    object.material.program.setUniformValue( 'allLights['+ i.toString() + '].linear_attenuation', light.linear_attenuation )   
+                    object.material.program.setUniformValue( 'allLights['+ i.toString() + '].quadratic_attenuation', light.quadratic_attenuation )
                     i++                    
                 }
                 object.material.program.setUniformValue('numLights',i)
@@ -197,14 +171,16 @@ async function main() {
         requestAnimationFrame(render)
     }
     
-    function handleLoadedTexture(texture) {
+    function armarTextura( texture, image ) {
+
         gl.bindTexture(gl.TEXTURE_2D, texture)
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true)
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE,texture.image)
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+        gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true )
+        gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image )
+        gl.generateMipmap(gl.TEXTURE_2D)
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
+        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT )
+        gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT )
         gl.bindTexture(gl.TEXTURE_2D, null)
     }
     
