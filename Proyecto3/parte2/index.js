@@ -48,26 +48,7 @@ async function main() {
     const cameraMouseControls = new CameraMouseControls( camera, canvas )
 
     //Cargamos las imagenes y creamos las texturas
-    const planoTextureImage = await loadImage('textures/grass1.jpg')
-    const graneroTextureImage = await loadImage('textures/granero.jpeg')
-    const graneroNormalMapImage = await loadImage('textures/granero_normal.jpg')
-    const tractorTextureImage = await loadImage('textures/tractor.jpeg')
-    const tractorNormalMapImage = await loadImage('textures/tractor_normal.jpg')
-    const siloTextureImage = await loadImage('textures/silo.jpeg')
-    const siloNormalMapImage = await loadImage('textures/silo_normal.jpg')
-    const alienTextureColorImage = await loadImage('textures/alien_monster1_color.jpg')
-    const alienTextureAmbientImage = await loadImage('textures/alien_monster1_ambient.jpg')
-    const alienTextureNormalImage = await loadImage('textures/alien_monster1_normal.jpg')
-    const ufoTextureDiffuseImage = await loadImage('textures/ufo_diffuse_fixed.jpg')
-    const ufoTextureSpecularImage = await loadImage('textures/ufo_spec.jpg')
-    const ufoTextureNormalImage = await loadImage('textures/ufo_normal.jpg')
-    const ufoTextureGlowImage = await loadImage('textures/ufo_diffuse_glow_fixed.jpg')
-    const skyTextureImage = await loadImage('textures/soleado.jpg')
-    const lanternTextureDiffuseImage = await loadImage('textures/lantern_color.jpg')
-    const lanternTextureNormalImage = await loadImage('textures/lantern_normal.jpg')
-    const lanternTextureGlowImage = await loadImage('textures/lantern_ambient.jpg')
-    const lanternTextureSpecularImage = await loadImage('textures/lantern_specular.jpg')
-    
+
     const planoTexture = gl.createTexture()
     const graneroTexture = gl.createTexture()
     const graneroNormalMap = gl.createTexture()
@@ -87,28 +68,27 @@ async function main() {
     const lanternTextureNormal = gl.createTexture()
     const lanternTextureGlow = gl.createTexture()
     const lanternTextureSpecular = gl.createTexture()
+    
+    armarTextura(planoTexture, await loadImage('textures/grass1.jpg'))
+    armarTextura(graneroTexture, await loadImage('textures/granero.jpeg'))
+    armarTextura(graneroNormalMap, await loadImage('textures/granero_normal.jpg'))
+    armarTextura(tractorTexture, await loadImage('textures/tractor.jpeg'))
+    armarTextura(tractorNormalMap, await loadImage('textures/tractor_normal.jpg'))
+    armarTextura(siloTexture, await loadImage('textures/silo.jpeg'))
+    armarTextura(siloNormalMap, await loadImage('textures/silo_normal.jpg'))
+    armarTextura(alienTextureColor, await loadImage('textures/alien_monster1_color.jpg'))
+    armarTextura(alienTextureAmbient, await loadImage('textures/alien_monster1_ambient.jpg'))
+    armarTextura(alienTextureNormal, await loadImage('textures/alien_monster1_normal.jpg'))
+    armarTextura(ufoTextureDiffuse, await loadImage('textures/ufo_diffuse_fixed.jpg'))
+    armarTextura(ufoTextureSpecular, await loadImage('textures/ufo_spec.jpg'))
+    armarTextura(ufoTextureNormal, await loadImage('textures/ufo_normal.jpg'))
+    armarTextura(ufoTextureGlow, await loadImage('textures/ufo_diffuse_glow_fixed.jpg'))
+    armarTextura(skyTexture, await loadImage('textures/soleado.jpg'))
+    armarTextura(lanternTextureDiffuse, await loadImage('textures/lantern_color.jpg'))
+    armarTextura(lanternTextureNormal, await loadImage('textures/lantern_normal.jpg'))
+    armarTextura(lanternTextureGlow,  await loadImage('textures/lantern_ambient.jpg'))
+    armarTextura(lanternTextureSpecular, await loadImage('textures/lantern_specular.jpg'))
 
-    armarTextura(planoTexture, planoTextureImage)
-    armarTextura(graneroTexture, graneroTextureImage)
-    armarTextura(graneroNormalMap, graneroNormalMapImage)
-    armarTextura(tractorTexture, tractorTextureImage)
-    armarTextura(tractorNormalMap, tractorNormalMapImage)
-    armarTextura(siloTexture, siloTextureImage)
-    armarTextura(siloNormalMap, siloNormalMapImage)
-    armarTextura(alienTextureColor, alienTextureColorImage)
-    armarTextura(alienTextureAmbient, alienTextureAmbientImage)
-    armarTextura(alienTextureNormal, alienTextureNormalImage)
-    armarTextura(ufoTextureDiffuse, ufoTextureDiffuseImage)
-    armarTextura(ufoTextureSpecular, ufoTextureSpecularImage)
-    armarTextura(ufoTextureNormal, ufoTextureNormalImage)
-    armarTextura(ufoTextureGlow, ufoTextureGlowImage)
-    armarTextura(skyTexture, skyTextureImage)
-    armarTextura(lanternTextureDiffuse, lanternTextureDiffuseImage)
-    armarTextura(lanternTextureNormal, lanternTextureNormalImage)
-    armarTextura(lanternTextureGlow, lanternTextureGlowImage)
-    armarTextura(lanternTextureSpecular, lanternTextureSpecularImage)
-
-  
 
     // #️⃣ Geometrias disponibles
 
@@ -188,23 +168,23 @@ async function main() {
     const btnAtardecer = document.getElementById( 'btnAtardecer' )
     const btnNoche = document.getElementById( 'btnNoche' )
 
-    btnDiaSoleado.addEventListener( 'click' ,() => {
-        skyTexture.image.src = 'textures/soleado.jpg'
+    btnDiaSoleado.addEventListener( 'click' ,async () => {
+        armarTextura(skyTexture,await loadImage('textures/soleado.jpg'))
         lightDirectional.position = [0.5, -1.0, -1.0, 0.0]
         lightDirectional.color = [0.5*255/255,0.5*236/255,0.5*219/255] //5400k
     })
-    btnDiaNublado.addEventListener( 'click' ,() => {
-        skyTexture.image.src = 'textures/nublado.jpg'
+    btnDiaNublado.addEventListener( 'click' ,async () => {
+        armarTextura(skyTexture,await loadImage('textures/nublado.jpg'))
         lightDirectional.position = [0.5, -1.0, -1.0, 0.0]
         lightDirectional.color = [0.5*230/255,0.5*235/255,0.5*255/255] //7500k 
     })
-    btnAtardecer.addEventListener( 'click' ,() => {
-        skyTexture.image.src = 'textures/atardecer.jpg'
+    btnAtardecer.addEventListener( 'click' ,async() => {
+        armarTextura(skyTexture,await loadImage('textures/atardecer.jpg'))
         lightDirectional.position = [0.5, -0.1, -1.0, 0.0]
         lightDirectional.color = [0.5*255/255,0.5*177/255,0.5*110/255] //3000k
     })
-    btnNoche.addEventListener( 'click' ,() => {
-        skyTexture.image.src = 'textures/noche.jpg'
+    btnNoche.addEventListener( 'click' ,async () => {
+        armarTextura(skyTexture,await loadImage('textures/noche.jpg'))
         lightDirectional.position = [0.0, -1.0, 0.0, 0.0]
         lightDirectional.color = [0.01*210/255,0.01*223/255,0.01*255/255] //9000k
     })
