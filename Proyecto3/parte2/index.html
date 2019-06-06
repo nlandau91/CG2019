@@ -142,56 +142,63 @@
                     <option value='centro'>Centro</option>
                     <option value='alien'>Alien</option>
                     <option value='ufo'>Ufo</option>
-                    <option value='libre'>Libre</option>
                 </select>
             </td>
-           
-
+            
+                <th>
+                    Texturas Ufo
+                    
+                </th>
         </tr>
         <tr>
 
-            <th colspan=2>
-                Luces
-            </th>
-
-        </tr>
-
-        <tr>
-            <td>Seleccionar luz </td>
-            <td>
+            <th>
+                Luz
                 <select id='select1'>
                     <option value='0'>Ufo</option>
                     <option value='1'>Farol </option>
                     <option value='2'>Sol</option>
                 </select>
+            </th>
+            <td>
+                    <select id='select4' value='4'>
+                            <option value='4'>All ON</option>
+                            <option value='0'>Diffuse off</option>
+                            <option value='1'>Specular off</option>
+                            <option value='2'>Normal off</option>
+                            <option value='3'>Emission off</option>
+                        </select>
             </td>
+           
+            
+           
+
         </tr>
+
+       
         <tr>
             <td>
                 Intensidad Red
-            </td>
-            <td>
                 <input type='range' step='0.01' id='slider10' min='0' max='1' value='1'>
                 </button>
             </td>
+            
         </tr>
         <tr>
             <td>
                 Intensidad Green
-            </td>
-            <td>
                 <input type='range' step='0.01' id='slider11' min='0' max='1' value='0'>
                 </button>
             </td>
+           
         </tr>
         <tr>
             <td>
                 Intensidad Blue
-            </td>
-            <td>
                 <input type='range' step='0.01' id='slider12' min='0' max='1' value='0'>
                 </button>
             </td>
+            
         </tr>
     </table>
     <script type='module' src='index.js'></script>

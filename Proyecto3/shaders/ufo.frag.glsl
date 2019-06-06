@@ -22,6 +22,7 @@ struct Material {
     sampler2D texture1; //specular texture
     sampler2D texture2; //normal map
     sampler2D texture3; //emission (ambient)
+    int mode; //usado para activar o desactivar partes del shader, el valor selecciones que textura se desactiva
 };
 
 uniform Material material;
@@ -95,22 +96,35 @@ vec3 color_cook_torrance(Light light, vec3 diffuseColor, vec3 specularColor, vec
 }
 
 void main () {
-    //vec3 N = normalize(vNE); //no vamos a usar esta normal, vamos a calcular una nueva a partir del normal map
+
+    
+    vec3 diffuseColor = vec3(0.0);  
+    if(material.mode != 0){ // activa o desactiva la textura difusa
+        diffuseColor = texture(material.texture0,fTexCoor).rgb;
+    }
+
+    vec3 specularColor = vec3(1.0,1.0,1.0);
+    if(material.mode != 1){ // activa o desactiva la textura especular
+        specularColor = texture(material.texture1,fTexCoor).rgb;
+    }
+
+    vec3 N = normalize(vNE); 
+    if(material.mode != 2){ // activa o desactiva el normal map
+       vec3 sampledNormal = vec3(texture(material.texture2, fTexCoor)); //obtenemos la nueva del mapa de normales
+        N = TBNMatrix * (sampledNormal * 2.0 - 1.0); //la transformamos usando la matrix del espacio tangente
+    }
+
+    vec3 ambient = diffuseColor * 0.05;
+    if(material.mode != 3){ //activa o desactiva la textura ambiental (emision de las luces)
+        ambient = texture(material.texture3,fTexCoor).rgb;
+    } 
+
     vec3 V = normalize(vVE);
-
-    vec3 sampledNormal = vec3(texture(material.texture2, fTexCoor)); //obtenemos la nueva del mapa de normales
-    vec3 N = TBNMatrix * (sampledNormal * 2.0 - 1.0); //la transformamos usando la matrix del espacio tangente
-
-    vec3 diffuseColorFromTexture = texture(material.texture0,fTexCoor).rgb;
-    vec3 specularColorFromTexture = texture(material.texture1,fTexCoor).rgb;
-    vec3 emission = texture(material.texture3,fTexCoor).rgb;
 
     vec3 outputColor = vec3(0.0);
     for(int i = 0; i < numLights; i++){
-        outputColor += color_cook_torrance(allLights[i],diffuseColorFromTexture,specularColorFromTexture,N,V);
+        outputColor += color_cook_torrance(allLights[i],diffuseColor,specularColor,N,V);
     }
-
-    vec3 ambient = emission;
 
     fragmentColor = vec4(ambient + outputColor, 1);
 }
