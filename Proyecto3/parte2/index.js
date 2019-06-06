@@ -31,8 +31,8 @@ async function main() {
     const TexturaVertexShaderSource = await getFileContentsAsText( '/shaders/Textura.vert.glsl' )
     const TexturaFragmentShaderSource = await getFileContentsAsText( '/shaders/Textura.frag.glsl' )
 
-    const alienVertexShaderSource = await getFileContentsAsText( '/shaders/alien.vert.glsl' )
-    const alienFragmentShaderSource = await getFileContentsAsText( '/shaders/alien.frag.glsl' )
+    const cookTorrance2TNVertexShaderSource = await getFileContentsAsText( '/shaders/cooktorrance2TN.vert.glsl' )
+    const cookTorrance2TNFragmentShaderSource = await getFileContentsAsText( '/shaders/cooktorrance2TN.frag.glsl' )
 
     const cookTorranceTNVertexShaderSource = await getFileContentsAsText( '/shaders/cooktorranceTN.vert.glsl' )
     const cookTorranceTNFragmentShaderSource = await getFileContentsAsText( '/shaders/cooktorranceTN.frag.glsl' )
@@ -61,7 +61,6 @@ async function main() {
     const siloTexture = gl.createTexture()
     const siloNormalMap = gl.createTexture()
     const alienTextureColor = gl.createTexture()
-    const alienTextureAmbient = gl.createTexture()
     const alienTextureNormal = gl.createTexture()
     const ufoTextureDiffuse = gl.createTexture()
     const ufoTextureSpecular = gl.createTexture()
@@ -81,7 +80,6 @@ async function main() {
     armarTextura(siloTexture, await loadImage('/textures/silo.jpg'))
     armarTextura(siloNormalMap, await loadImage('/textures/silo_normal.jpg'))
     armarTextura(alienTextureColor, await loadImage('/textures/alien_monster1_color.jpg'))
-    armarTextura(alienTextureAmbient, await loadImage('/textures/alien_monster1_ambient.jpg'))
     armarTextura(alienTextureNormal, await loadImage('/textures/alien_monster1_normal.jpg'))
     armarTextura(ufoTextureDiffuse, await loadImage('/textures/ufo_diffuse_fixed.jpg'))
     armarTextura(ufoTextureSpecular, await loadImage('/textures/ufo_spec.jpg'))
@@ -111,17 +109,17 @@ async function main() {
     const phongTNProgram = new Program( gl, phongTNVertexShaderSource, phongTNFragmentShaderSource )
     const ufoProgram = new Program( gl, ufoVertexShaderSource, ufoFragmentShaderSource )
     const TexturaProgram = new Program( gl, TexturaVertexShaderSource, TexturaFragmentShaderSource )
-    const alienProgram = new Program( gl, alienVertexShaderSource, alienFragmentShaderSource )
-    const cookTorranceTN = new Program( gl, cookTorranceTNVertexShaderSource, cookTorranceTNFragmentShaderSource )
+    const cookTorrance2TNProgram = new Program( gl, cookTorrance2TNVertexShaderSource, cookTorrance2TNFragmentShaderSource )
+    const cookTorranceTNProgram = new Program( gl, cookTorranceTNVertexShaderSource, cookTorranceTNFragmentShaderSource )
 
     // #️⃣ Creamos materiales combinando programas con distintas propiedades
 
     const planoMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 0.0} )
     const graneroMaterial = new Material( phongTNProgram, true, true, { texture0: 0, texture1: 1, shininess: 50.0} )
-    const tractorMaterial = new Material( cookTorranceTN, true, true, { texture0: 0, texture1: 1, m: 0.3, f0: 0.99, sigma: 0.1} )
-    const siloMaterial = new Material( cookTorranceTN, true, true, { texture0: 0, texture1: 1, m: 0.3, f0: 0.99, sigma: 0.3} )
+    const tractorMaterial = new Material( cookTorranceTNProgram, true, true, { texture0: 0, texture1: 1, m: 0.3, f0: 0.99, sigma: 0.1} )
+    const siloMaterial = new Material( cookTorranceTNProgram, true, true, { texture0: 0, texture1: 1, m: 0.3, f0: 0.99, sigma: 0.3} )
     const ufoMaterial = new Material( ufoProgram, true, true, { texture0: 0, texture1: 1, texture2: 2, texture3 : 3, m: 0.2, f0: 0.9} )
-    const alienMaterial = new Material( alienProgram, true, true, { texture0: 0, texture1: 1, texture2 : 2, shininess: 96.078431} )
+    const alienMaterial = new Material( cookTorranceTNProgram, true, true, { texture0: 0, texture1: 1, m: 0.1, f0: 0.9, sigma: 1.0} )
     const skyMaterial = new Material( TexturaProgram, false, true, { texture0: 0} )
     const lanternMaterial = new Material( ufoProgram, true, true, {texture0: 0, texture1: 1, texture2: 2, texture3 : 3, m: 0.2, f0: 0.9})
 
@@ -132,7 +130,7 @@ async function main() {
     const silo = new SceneObject( gl, siloGeometry, siloMaterial, [siloTexture, siloNormalMap], false )
     const ufo = new SceneObject( gl, ufoGeometry, ufoMaterial, [ufoTextureDiffuse, ufoTextureSpecular, ufoTextureNormal, ufoTextureGlow], false )
     const sky = new SceneObject( gl, skyGeometry, skyMaterial, [skyTexture], false )
-    const alien = new SceneObject( gl, alienGeometry, alienMaterial, [alienTextureColor, alienTextureAmbient, alienTextureNormal], false )
+    const alien = new SceneObject( gl, alienGeometry, alienMaterial, [alienTextureColor, alienTextureNormal], false )
     const plano = new SceneObject( gl, planoGeometry, planoMaterial, [planoTexture], false )
     const lantern = new SceneObject( gl, lanternGeometry, lanternMaterial, [lanternTextureDiffuse, lanternTextureSpecular, lanternTextureNormal, lanternTextureGlow], false )
 
@@ -283,7 +281,7 @@ async function main() {
     tractor.setRotation(0,90,0)
     tractor.updateModelMatrix()
 
-    ufo.setPosition( 0.0, 5.0, 0.0 )
+    ufo.setPosition( 0.0, 6.0, 2.0 )
     ufo.updateModelMatrix()
 
     alien.setPosition( 0.0, 0.0, 2.0 )

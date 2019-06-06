@@ -18,8 +18,9 @@ uniform struct Light {
 } allLights[MAX_LIGHTS];
 
 struct Material {
-    float m; //rugosidad
+    float m; //rugosidad de cook torrance
     float f0; //fresnel
+    float sigma; //rugosidad de oren nayar
     sampler2D texture0; //diffuse texture
     sampler2D texture1; //specular texture
     sampler2D texture2; //normal map
@@ -34,6 +35,23 @@ in vec2 fTexCoor;
 in mat3 TBNMatrix;
 
 out vec4 fragmentColor;
+
+float orenNayarDiffuse(Light luz, vec3 N, vec3 V, vec3 L, float dotLN, float dotVN){
+    
+    float thetaI = acos(dotLN);
+    float thetaR = acos(dotVN);
+    float alpha = max(thetaI,thetaR);
+    float beta = min(thetaI,thetaR);
+
+    float sigma2 = pow(material.sigma,2.0);
+
+    float A = 1.0 - 0.5*sigma2/(sigma2+0.33);
+    float B = 0.45*sigma2/(sigma2 + 0.09);
+
+    float cosPHI = dot( normalize(V-N*(dotVN)), normalize(L - N*(dotLN)) );
+    return(A+(B*max(0.0,cosPHI))*sin(alpha)*tan(beta));
+
+}
 
 float fresnelSchlick(float cosVH){//Aproximacion de schlick
     float fresnel = material.f0 + (1.0 - material.f0) * pow(1.0 - cosVH,5.0);
@@ -71,23 +89,24 @@ vec3 color_cook_torrance(Light light, vec3 diffuseColor, vec3 specularColor, vec
         vec3 H = normalize(L+V);
         vec3 S = normalize(vSD);
 
-        float dotLN = max(dot(L,N),0.0); //cos theta i
-        float dotVN = max(dot(V,N),0.0); //cos theta r
+        float dotLN = dot(L,N); //cos theta i
+        float dotVN = dot(V,N); //cos theta r
         float dotHN = max(dot(H,N),0.0); //cos theta h
         float dotVH = max(dot(V,H),0.0);
-
+    
         if((light.spot_cutoff != -1.0 && dot(S, -L) > light.spot_cutoff) //si es spot y esta dentro del cono
                 ||  light.spot_cutoff == -1.0 //o si es puntual
                 ||  light.position.w < 0.00001){ //o si es direccional
-            if(dotLN > EPSILON && dotVN > EPSILON){
-                float attenuation = 1.0/(1.0 + dist * light.linear_attenuation + dist*dist * light.quadratic_attenuation );  
+            float diffuse = orenNayarDiffuse(light,N,V,L,max(dotLN,0.0),max(dotVN,0.0));
+            float specular = 0.0;
+            if(dotLN > 0.0 && dotVN > 0.0){
                 float F = fresnelSchlick(dotHN);
                 float D = D_beckman(dotHN);
-                float G = calcularG(dotHN,dotVN,dotVH,dotLN);       
-
-                toReturn =  light.color*attenuation*dotLN*( diffuseColor/PI + specularColor * (F*D*G)/(PI*dotVN*dotLN));
-        
+                float G = calcularG(dotHN,dotVN,dotVH,dotLN);   
+                specular = (F*D*G)/(4.0*dotVN*dotLN);
             }
+            float attenuation = 1.0/(1.0 + dist * light.linear_attenuation + dist*dist * light.quadratic_attenuation );  
+            toReturn = light.color * attenuation * dotLN * (diffuseColor * diffuse + specularColor * specular);
         }
     }
     return toReturn;

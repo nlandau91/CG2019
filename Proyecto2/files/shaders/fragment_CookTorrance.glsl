@@ -77,7 +77,7 @@ vec3 color_cook_torrance(Light luz,vec3 N,vec3 V){
         if((luz.spot_angle != -1.0 && dot(S, -L) > luz.spot_angle) //si es spot y esta dentro del cono
                 ||  luz.spot_angle == -1.0 //o si es puntual
                 ||  luz.pos.w < 0.00001){ //o si es direccional
-            if(dotLN > EPSILON && dotVN > EPSILON){
+            if(dotLN > 0.0 && dotVN > 0.0){
                 float F = fresnelSchlick(dotHN);
                 float D = D_beckman(dotHN);
                 float G = calcularG(dotHN,dotVN,dotVH,dotLN);       

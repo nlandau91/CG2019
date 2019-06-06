@@ -52,7 +52,7 @@ vec3 calcPhong(Light light, vec3 fColor, vec3 N, vec3 V){
         if((light.spot_cutoff != -1.0 && dot(S, -L) > light.spot_cutoff) //si es spot y esta dentro del cono
                 ||  light.spot_cutoff == -1.0 //o si es puntual
                 ||  light.position.w < 0.00001){ //o si es direccional
-            if(dotLN > EPSILON && dotVN > EPSILON){                      
+            if(dotLN > 0.0 && dotVN > 0.0){                      
                 float attenuation = 1.0/(1.0 + dist * light.linear_attenuation + dist*dist * light.quadratic_attenuation );        
                 float diffuse = max(dot(L, N), 0.0);
                 float specular = pow(max(dot(H,N),0.0),material.shininess);    

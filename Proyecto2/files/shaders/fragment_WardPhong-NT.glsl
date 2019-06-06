@@ -55,7 +55,7 @@ vec3 color_ward(Light luz,vec3 N,vec3 V,vec3 T,vec3 B){
         if((luz.spot_angle != -1.0 && dot(S, -L) > luz.spot_angle) //si es spot y esta dentro del cono
                 ||  luz.spot_angle == -1.0 //o si es puntual
                 ||  luz.pos.w < 0.00001){ //o si es direccional
-            if(dotLN > EPSILON && dotVN > EPSILON){
+            if(dotLN > 0.0 && dotVN > 0.0){
                 float ax = material.alphaX;
                 float ay = material.alphaY;
                 //vec3 X = vec3(1.0,0.0,0.0);
