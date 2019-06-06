@@ -42,9 +42,15 @@ async function main() {
     const esferaGolfTexture = gl.createTexture()
     const esferaGolfNormal= gl.createTexture()
 
+    const esferaGoldTexture=gl.createTexture()
+    const esferaGoldTextureNormal=gl.createTexture()
+
     armarTextura(planoTexture, await loadImage('/textures/grass1.jpg'))
     armarTextura(esferaMercurio, await loadImage('/textures/mercury.jpg'))
     armarTextura(esferaMercurioNormal, await loadImage('/textures/mercury_normal.jpg'))
+
+    armarTextura(esferaGoldTexture, await loadImage('/textures/gold.jpg'))
+    armarTextura(esferaGoldTextureNormal, await loadImage('/textures/gold_normal.jpg'))
 
     armarTextura(esferaGolfTexture, await loadImage('/textures/texturaGolf.jpg'))
     armarTextura(esferaGolfNormal, await loadImage('/textures/golf_normal.jpg'))
@@ -66,9 +72,10 @@ async function main() {
 
 
     const planoMaterial = new Material(phongTProgram, true, true, { texture0: 0, shininess: 0})
-    
     const esferaMercurioMaterial = new Material(phongTNProgram, true, true, { texture0: 0,texture1: 1, shininess: 4})
     const esferaGolfMaterial = new Material(phongTNProgram,true,true, { texture0: 0, texture1: 1, shininess: 100})
+    const esferaGoldMaterial = new Material(phongTNProgram,true,true, { texture0: 0, texture1: 1, shininess: 100})
+
     
 
     // #️⃣ Creamos los objetos de la escena
@@ -203,7 +210,7 @@ async function main() {
                         sceneObjects[i*6+j].updateModelMatrix()
                 }
                 if(i==2 || i==3){
-                        sceneObjects[i*6+j]=new SceneObject(gl, esferaGeometry, esferaMercurioMaterial, [esferaMercurio,esferaMercurioNormal], false)
+                        sceneObjects[i*6+j]=new SceneObject(gl, esferaGeometry, esferaGoldMaterial, [esferaGoldTexture,esferaGoldTextureNormal], false)
                         sceneObjects[i*6+j].setPosition(3*i-4.0,0.0,3*j-6.0)
                         sceneObjects[i*6+j].updateModelMatrix()       
                 }
