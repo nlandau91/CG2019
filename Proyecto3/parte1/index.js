@@ -1,6 +1,6 @@
 // 📥 Imports
 import { mat4, vec4 } from "/libs/gl-matrix/index.js"
-import { getFileContentsAsText,loadImage,toRadians } from "/libs/utils.js"
+import { getFileContentsAsText,loadImage,toRadians,toDegrees } from "/libs/utils.js"
 import { Program, Material, Geometry, SceneObject, SceneLight, Camera, CameraMouseControls } from "/libs/gl-engine/index.js"
 import { parse } from "/libs/gl-engine/parsers/obj-parser.js"
 
@@ -32,7 +32,7 @@ async function main() {
 
     const camera = new Camera()
     const cameraMouseControls = new CameraMouseControls(camera, canvas)
-
+    var camaraAutomatica= 0
     //creo las texturas
     const planoTexture = gl.createTexture()
     const esferaMercurio = gl.createTexture()
@@ -45,7 +45,7 @@ async function main() {
     const esferaGoldTexture=gl.createTexture()
     const esferaGoldTextureNormal=gl.createTexture()
 
-    armarTextura(planoTexture, await loadImage('/textures/grass1.jpg'))
+    armarTextura(planoTexture, await loadImage('/textures/TexturesCom_DishCloth2_1K_albedo.jpg'))
     armarTextura(esferaMercurio, await loadImage('/textures/mercury.jpg'))
     armarTextura(esferaMercurioNormal, await loadImage('/textures/mercury_normal.jpg'))
 
@@ -86,21 +86,154 @@ async function main() {
 
     // const sceneObjects = [granero, platoVolador, alien, plano]
     sceneObjects.push(plano)
-    //direccional cuarta componente en 1
+
+
+    const light0obj= new SceneObject(gl, esferaGeometry, esferaMercurioMaterial, [esferaMercurio,esferaMercurioNormal], false)
     
-    const light0 = new SceneLight([-5.0, 5.0, 5.0, 1.0], [1.0, 1.0, 1.0], [0.0,-1.0,0.0,0.0], 0.3)
-    const light1 = new SceneLight([5.0, 5.0, -5.0, 1.0], [1.0, 1.0, 1.0], [0.0,-1.0,0.0,0.0], 0.3)
+    const light1obj= new SceneObject(gl, esferaGeometry, esferaMercurioMaterial, [esferaMercurio,esferaMercurioNormal], false)
+    
 
-    const sceneLights = [light0,light1]
+    sceneObjects.push(light0obj)
+    sceneObjects.push(light1obj)
+    
+    const light0 = new SceneLight([-5.0, 5.0, 5.0, 1.0], [0.5, 0.5, 0.5], [0.0,-1.0,0.0,0.0], 0.3,light0obj)
+    const light1 = new SceneLight([5.0, 5.0, -5.0, 1.0], [0.5, 0.5, 0.5], [0.0,-1.0,0.0,0.0], 0.3,light1obj)
+    const lightDirectional = new SceneLight( [0.5, -1.0, -1.0, 0.0], [0.5*255/255,0.5*236/255,0.5*219/255], [0.5, -1.0, 0.0, 0.0], -1.0 )
 
-    // #️⃣ Posicion inicial de cada objeto
+    const sceneLights = [light0,light1,lightDirectional]
+
+    //Setup sliders y botones
+    // Buscamos elementos en el DOM
+    const selectedObject = document.getElementById( 'select0' )
+    const rotSliderX = document.getElementById( 'slider0' )
+    const rotSliderY = document.getElementById( 'slider1' )
+    const rotSliderZ = document.getElementById( 'slider2' )
+    const transSliderX = document.getElementById( 'slider3' )
+    const transSliderY = document.getElementById( 'slider4' )
+    const transSliderZ = document.getElementById( 'slider5' )
+    const camPhiSlider = document.getElementById( 'slider6' )
+    const camThetaSlider = document.getElementById( 'slider7' )
+    const camRadiusSlider = document.getElementById( 'slider8' )
+    const camFovSlider = document.getElementById( 'slider9' )
+    const lightRedSlider = document.getElementById( 'slider10')
+    const lightGreenSlider = document.getElementById( 'slider11')
+    const lightBlueSlider = document.getElementById( 'slider12')
+    const btnDiaSoleado = document.getElementById( 'btnDiaSoleado' )
+    const btnDiaNublado = document.getElementById( 'btnDiaNublado' )
+    const btnAtardecer = document.getElementById( 'btnAtardecer' )
+    const btnNoche = document.getElementById( 'btnNoche' )
+    const btnCamaraAutomatica = document.getElementById( 'btnCamaraAutomatica' )
+    const selectedTarget = document.getElementById('select3')
+
+    btnCamaraAutomatica.addEventListener ('click', () => { camaraAutomatica = !camaraAutomatica })
+
+    //las propiedades de la luz direccional
+    btnDiaSoleado.addEventListener( 'click' ,async () => {
+        lightDirectional.position = [0.5, -1.0, -1.0, 0.0]
+        lightDirectional.color = [0.5*255/255,0.5*236/255,0.5*219/255] //5400k
+    })
+    btnDiaNublado.addEventListener( 'click' ,async () => {
+        lightDirectional.position = [0.5, -1.0, -1.0, 0.0]
+        lightDirectional.color = [0.5*230/255,0.5*235/255,0.5*255/255] //7500k 
+    })
+    btnAtardecer.addEventListener( 'click' ,async() => {
+        lightDirectional.position = [0.5, -0.1, -1.0, 0.0]
+        lightDirectional.color = [0.5*255/255,0.5*177/255,0.5*110/255] //3000k
+    })
+    btnNoche.addEventListener( 'click' ,async () => {
+        lightDirectional.position = [0.0, -1.0, 0.0, 0.0]
+        lightDirectional.color = [0.01*210/255,0.01*223/255,0.01*255/255] //9000k
+    })
+
+    //cuando cambio el objeto seleccionado actualizo los sliders
+    selectedObject.addEventListener( 'input', updateObjectSliders )
+    //actualizo los sliders del objeto con los valores del objeto seleccionado
+    function updateObjectSliders() {
+        let objeto = sceneObjects[25+parseFloat( selectedObject.value )]
+        rotSliderX.value = objeto.rotation[0]
+        rotSliderY.value = objeto.rotation[1]
+        rotSliderZ.value = objeto.rotation[2]
+        transSliderX.value = objeto.position[0]
+        transSliderY.value = objeto.position[1]
+        transSliderZ.value = objeto.position[2]
+        let luz = sceneLights[parseFloat( selectedObject.value )]
+        lightRedSlider.value = luz.color[0]
+        lightGreenSlider.value = luz.color[1]
+        lightBlueSlider.value = luz.color[2]
+    }
+
+    //estos listeners controlan la traslacion y la rotacion del objeto seleccionado
+    transSliderX.addEventListener( 'input', updateTranslation )
+    transSliderY.addEventListener( 'input', updateTranslation )
+    transSliderZ.addEventListener( 'input', updateTranslation )  
+    rotSliderX.addEventListener( 'input', updateRotation )
+    rotSliderY.addEventListener( 'input', updateRotation )
+    rotSliderZ.addEventListener( 'input', updateRotation )
+    //leo los valores de los sliders de traslacion y los uso para settear la traslacion del objeto seleccionado
+    function updateTranslation() {
+        sceneObjects[25+parseFloat( selectedObject.value )].setPosition( parseFloat( transSliderX.value ), 
+                                                                        parseFloat( transSliderY.value ), 
+                                                                        parseFloat( transSliderZ.value ) )
+        sceneObjects[25+parseFloat( selectedObject.value )].updateModelMatrix()
+
+    }
+    //leo los valores de los sliders de rotacion y los uso para settear la rotacion del objeto seleccionado
+    function updateRotation() {
+        sceneObjects[25+parseFloat( selectedObject.value )].setRotation( parseFloat( rotSliderX.value ), 
+                                                                        parseFloat( rotSliderY.value ), 
+                                                                        parseFloat( rotSliderZ.value ) )
+        sceneObjects[25+parseFloat( selectedObject.value )].updateModelMatrix()
+    }
+
+    //control de la camara
+    camPhiSlider.addEventListener( 'input', ( event ) => { camera.phi = toRadians( event.target.valueAsNumber ) } )
+    camThetaSlider.addEventListener( 'input', ( event ) => { camera.theta = toRadians( event.target.valueAsNumber ) } )
+    camRadiusSlider.addEventListener( 'input', ( event ) => { camera.radius = event.target.valueAsNumber } )
+    camFovSlider.addEventListener( 'input', ( event ) => { camera.setFov( toRadians( event.target.valueAsNumber ) ) } )
+
+
+    //controlo los colores de la luz seleccionada
+    lightRedSlider.addEventListener( 'input', updateLightColor )
+    lightGreenSlider.addEventListener( 'input', updateLightColor )
+    lightBlueSlider.addEventListener( 'input', updateLightColor )
+    //leo los valores de los sliders de color y los uso para settear el color de la luz seleccionada
+    function updateLightColor() {
+        sceneLights[parseFloat(selectedObject.value)].color = [parseFloat(lightRedSlider.value),
+                                                                parseFloat(lightGreenSlider.value),
+                                                                parseFloat(lightBlueSlider.value)]
+    }
+    
+    //actualizo los sliders de la camara con los valores de la camara
+    function updateCamSliders() {
+        camPhiSlider.value = toDegrees( camera.phi )
+        camThetaSlider.value = toDegrees( camera.theta )
+        camRadiusSlider.value = camera.radius
+        camFovSlider.value = toDegrees( camera.getFov() )
+    }
+
+    //le doy la posicion inicial a los sliders
+    updateObjectSliders()
+    updateCamSliders()
+
+    //Posicion inicial de los objetos luz
+    light0obj.setPosition(-5.0,10.0,5.0)
+    light0obj.updateModelMatrix()
+    light1obj.setPosition(5.0,10.0,-5.0)
+    light1obj.updateModelMatrix()
 
     
     // #️⃣ Iniciamos el render-loop 🎬
-
+    //contador de frames
+    const fpsElem = document.getElementById( 'fps' )
+    let then = 0
     requestAnimationFrame(render)
 
-    function render() {
+    function render(now) {
+         now *= 0.001;                          // convert to seconds
+        const deltaTime = now - then;          // compute time since last frame
+        then = now;                            // remember time for next frame
+        const fps = 1 / deltaTime;             // compute frames per second
+        fpsElem.value = fps.toFixed(1);  // update fps display
         // Actualizacion de matrices de cada objeto
         for (let object of sceneObjects) {
             mat4.multiply(object.modelViewMatrix, camera.viewMatrix, object.modelMatrix)
@@ -112,6 +245,19 @@ async function main() {
              que actualizar la "modelMatrix" de cada uno.
              */
         }
+        if(camaraAutomatica){
+            camera.arcHorizontally(deltaTime)
+        }
+
+        if(selectedTarget.value == 'centro'){
+            camera.setTarget([0,0,0])        
+        }
+        if(selectedTarget.value == 'Luz1'){
+            camera.setTarget(light0obj.position)        
+        }
+        if(selectedTarget.value == 'Luz2'){
+            camera.setTarget(light1obj.position)        
+        }    
 
         // Limpiamos buffers de color y profundidad del canvas antes de empezar a dibujar los objetos de la escena
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
@@ -177,8 +323,10 @@ async function main() {
             gl.drawElements(object.drawMode, object.indexBuffer.size, object.indexBuffer.dataType, 0)
         }
 
-        // Solicitamos el proximo frame
-        requestAnimationFrame(render)
+        /// Solicitamos el proximo frame
+        updateObjectSliders()
+        updateCamSliders()
+        requestAnimationFrame( render )
     }
     
     function armarTextura( texture, image ) {
