@@ -1,14 +1,185 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title> Dibujando varios objetos </title>
-        <link rel="stylesheet" type="text/css" href="styles.css">
-    </head>
-    <body>
-        <canvas id="webgl-canvas" width="400" height="400">
-            Browser not supported
-        </canvas>
-        <script type="module" src="index.js"></script>
-    </body>
+
+<head>
+    <meta charset='utf-8'>
+    <title> Dibujando varios objetos </title>
+    <link rel='stylesheet' type='text/css' href='styles.css'>
+</head>
+
+<body>
+    fps: <output id="fps">0.0</output><br>
+    <canvas id='webgl-canvas' width='700' height='700' style='border: 1px solid black;' style='float:left;'>
+        Browser not supported
+    </canvas>
+
+    <table align='right' border='2'>
+        <tr>
+            <td>Seleccionar luz </td>
+            <td>
+                <select id='select0'>
+                    <option value='0'>Luz1</option>
+                    <option value='1'>Luz2</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Intensidad Red
+            </td>
+            <td>
+                <input type='range' step='0.01' id='slider10' min='0' max='1' value='1'>
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Intensidad Green
+            </td>
+            <td>
+                <input type='range' step='0.01' id='slider11' min='0' max='1' value='0'>
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Intensidad Blue
+            </td>
+            <td>
+                <input type='range' step='0.01' id='slider12' min='0' max='1' value='0'>
+                </button>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Rotar en X
+
+            </td>
+            <td>
+                <input type='range' step='0.01' id='slider0' min='-180' max='180' value='0'>
+
+            </td>
+
+        </tr>
+        <tr>
+            <td>Rotar en Y
+
+            </td>
+            <td>
+                <input type='range' step='0.01' id='slider1' min='-180' max='180' value='0'>
+
+            </td>
+        </tr>
+        <tr>
+            <td>Rotar en Z
+
+            </td>
+            <td>
+                <input type='range' step='0.01' id='slider2' min='-180' max='180' value='0'>
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>Trasladar en X
+
+            </td>
+            <td>
+                <input type='range' step='0.01' id='slider3' min='-25' max='25' value='0' step='0.1'>
+
+            </td>
+        </tr>
+        <tr>
+            <td>Trasladar en Y
+
+            </td>
+            <td>
+                <input type='range' step='0.01' id='slider4' min='0' max='50' value='0' step='0.1'>
+
+            </td>
+        </tr>
+        <tr>
+            <td>Trasladar en Z
+
+            </td>
+            <td>
+                <input type='range' step='0.01' id='slider5' min='-25' max='25' value='0' step='0.1'>
+
+            </td>
+        </tr>
+
+        <tr>
+            <th>Camara
+                <button id="btnCamaraAutomatica">Automatica</button>
+            </th>
+
+            <th> Ambiente </th>
+
+        </tr>
+        <tr>
+            <td>
+                Phi
+                <input type='range' id='slider6' step='0.01' min='0' max='360' value='45'>
+
+            </td>
+            <td>
+                <button id="btnDiaSoleado">Dia Soleado</button>
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                Theta
+                <input type='range' id='slider7' step='0.01' id min='-0' max='360' value='45'>
+
+            </td>
+            <td>
+                <button id="btnDiaNublado">Dia Nublado</button>
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                Distancia
+                <input type='range' id='slider8' step='0.01' min='1' max='100' value='20' step='0.1'>
+
+            </td>
+            <td>
+                <button id="btnAtardecer">Atardecer</button>
+            </td>
+
+        </tr>
+        <tr>
+
+            <td>
+                Fov
+                <input type='range' step='0.01' id='slider9' min='30' max='120' value='45'>
+
+            </td>
+            <td>
+                <button id="btnNoche">Noche</button>
+            </td>
+
+        </tr>
+
+        <tr>
+            <td>
+                Enfocar
+                <select id='select3'>
+                    <option value='centro'>Centro</option>
+                    <option value='Luz1'>Luz1</option>
+                    <option value='Luz2'>Luz2</option>
+                    <option value='libre'>Libre</option>
+                </select>
+            </td>
+           
+
+        </tr>
+        
+        
+    </table>
+    <script type='module' src='index.js'></script>
+
+</body>
+
 </html>
