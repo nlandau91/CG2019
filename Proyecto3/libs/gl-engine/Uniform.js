@@ -25,6 +25,8 @@ export class Uniform {
                 return (value) => { gl.uniform1i(location, value) }
             case(gl.INT):
                 return (value) => { gl.uniform1i(location, value) }
+            case (gl.FLOAT_VEC2):
+                return (value) => { gl.uniform2fv(location, value) }
             default:
                 console.error("Unsupported uniform type")
                 return () => {} // no-op

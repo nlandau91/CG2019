@@ -21,7 +21,7 @@ async function main() {
     const treeGeometryData = await parse( '/models/farm_tree_01.obj' )
     const stumpGeometryData = await parse( '/models/farm_stump_01.obj' )
     const rockGeometryData = await parse( '/models/farm_rocks_01.obj' )
-    
+    const woodpileGeometryData = await parse( '/models/woodpile.obj' )
 
     const phongTVertexShaderSource = await getFileContentsAsText( '/shaders/phongT.vert.glsl' )
     const phongTFragmentShaderSource = await getFileContentsAsText( '/shaders/phongT.frag.glsl' )
@@ -40,6 +40,9 @@ async function main() {
 
     const cookTorranceTVertexShaderSource = await getFileContentsAsText( '/shaders/cooktorranceT.vert.glsl' )
     const cookTorranceTFragmentShaderSource = await getFileContentsAsText( '/shaders/cooktorranceT.frag.glsl' )
+
+    const proceduralVertexShaderSource = await getFileContentsAsText( '/shaders/procedural.vert.glsl' )
+    const proceduralFragmentShaderSource = await getFileContentsAsText( '/shaders/procedural.frag.glsl' )
 
     // #️⃣ Configuracion base de WebGL
 
@@ -113,6 +116,7 @@ async function main() {
     const treeGeometry = new Geometry( gl, treeGeometryData )
     const stumpGeometry = new Geometry( gl, stumpGeometryData )
     const rockGeometry = new Geometry( gl, rockGeometryData)
+    const woodpileGeometry = new Geometry( gl, woodpileGeometryData)
 
     // #️⃣ Programas de shaders disponibles
 
@@ -122,6 +126,7 @@ async function main() {
     const TexturaProgram = new Program( gl, TexturaVertexShaderSource, TexturaFragmentShaderSource )
     const cookTorranceTNProgram = new Program( gl, cookTorranceTNVertexShaderSource, cookTorranceTNFragmentShaderSource )
     const cookTorranceTProgram = new Program( gl, cookTorranceTVertexShaderSource, cookTorranceTFragmentShaderSource )
+    const proceduralProgram = new Program( gl, proceduralVertexShaderSource, proceduralFragmentShaderSource )
 
     // #️⃣ Creamos materiales combinando programas con distintas propiedades
 
@@ -136,6 +141,7 @@ async function main() {
     const treeMaterial = new Material( cookTorranceTProgram, true, true, { texture0: 0, m: 0.8, f0: 0.1, sigma: 0.2} )
     const stumpMaterial = new Material( cookTorranceTProgram, true, true, { texture0: 0, m: 0.6, f0: 0.1, sigma: 0.2} )
     const rockMaterial = new Material( cookTorranceTProgram, true, true, { texture0: 0, m: 0.15, f0: 0.9, sigma: 0.0} )
+    const woodpileMaterial = new Material( proceduralProgram, true, false, { shininess: 1, resolution: [1.0,1.0]} )
 
 
     // #️⃣ Creamos los objetos de la escena
@@ -149,6 +155,7 @@ async function main() {
     const plano = new SceneObject( gl, planoGeometry, planoMaterial, [planoTexture], false )
     const lantern = new SceneObject( gl, lanternGeometry, lanternMaterial, [lanternTextureDiffuse, lanternTextureSpecular, lanternTextureNormal, lanternTextureGlow], false )
     const stump = new SceneObject( gl, stumpGeometry, stumpMaterial, [stumpTextureColor], false )
+    const woodpile = new SceneObject( gl, woodpileGeometry, woodpileMaterial, [],false )
     const trees = []
     const rocks = []
     let i
@@ -173,7 +180,7 @@ async function main() {
         }
     }
 
-    const sceneObjects = [alien, ufo, plano, granero, tractor, silo, sky, lantern, stump ]
+    const sceneObjects = [alien, ufo, plano, granero, tractor, silo, sky, lantern, stump, woodpile ]
     sceneObjects.push.apply(sceneObjects,trees)
     sceneObjects.push.apply(sceneObjects,rocks)
 
@@ -339,7 +346,10 @@ async function main() {
     lantern.setRotation(0,90,0)
     lantern.updateModelMatrix()
 
-    stump.setPosition(-2.0,0.0,1.0)
+    woodpile.setPosition(-2.0,0.0,0.0)
+    woodpile.updateModelMatrix()
+
+    stump.setPosition(-3.0,0.0,1.0)
     stump.updateModelMatrix()
 
     camera.radius = 35;
