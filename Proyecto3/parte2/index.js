@@ -31,9 +31,6 @@ async function main() {
     const TexturaVertexShaderSource = await getFileContentsAsText( '/shaders/Textura.vert.glsl' )
     const TexturaFragmentShaderSource = await getFileContentsAsText( '/shaders/Textura.frag.glsl' )
 
-    const cookTorrance2TNVertexShaderSource = await getFileContentsAsText( '/shaders/cooktorrance2TN.vert.glsl' )
-    const cookTorrance2TNFragmentShaderSource = await getFileContentsAsText( '/shaders/cooktorrance2TN.frag.glsl' )
-
     const cookTorranceTNVertexShaderSource = await getFileContentsAsText( '/shaders/cooktorranceTN.vert.glsl' )
     const cookTorranceTNFragmentShaderSource = await getFileContentsAsText( '/shaders/cooktorranceTN.frag.glsl' )
 
@@ -109,7 +106,6 @@ async function main() {
     const phongTNProgram = new Program( gl, phongTNVertexShaderSource, phongTNFragmentShaderSource )
     const ufoProgram = new Program( gl, ufoVertexShaderSource, ufoFragmentShaderSource )
     const TexturaProgram = new Program( gl, TexturaVertexShaderSource, TexturaFragmentShaderSource )
-    const cookTorrance2TNProgram = new Program( gl, cookTorrance2TNVertexShaderSource, cookTorrance2TNFragmentShaderSource )
     const cookTorranceTNProgram = new Program( gl, cookTorranceTNVertexShaderSource, cookTorranceTNFragmentShaderSource )
 
     // #️⃣ Creamos materiales combinando programas con distintas propiedades

@@ -46,19 +46,20 @@ vec3 calcPhong(Light light, vec3 diffuseColor, vec3 specularColor, vec3 N, vec3 
         vec3 H = normalize(L + V);
         vec3 S = normalize(vSD);
 
-        float dotLN = max(dot(L,N),0.0);
-        float dotVN = max(dot(V,N),0.0);
-        float dotHN = max(dot(H,N),0.0);
+        float dotLN = dot(L,N);
+        float dotVN = dot(V,N);
+        float dotHN = dot(H,N);
 
         if((light.spot_cutoff != -1.0 && dot(S, -L) > light.spot_cutoff) //si es spot y esta dentro del cono
                 ||  light.spot_cutoff == -1.0 //o si es puntual
                 ||  light.position.w < 0.00001){ //o si es direccional
-            if(dotLN > 0.0 && dotVN > 0.0){    
-                float attenuation = 1.0/(1.0 + dist * light.linear_attenuation + dist*dist * light.quadratic_attenuation );     
-                vec3 diffuse = diffuseColor  * max(dot(L, N), 0.0);
-                vec3 specular = specularColor * pow(max(dot(H,N),0.0),material.shininess);    
-                toReturn = light.color * attenuation * (diffuse + specular);   
+            vec3 diffuse = diffuseColor * (max(dotLN), 0.0);
+            vec3 specular = vec3(0.0);
+            if(dotLN > 0.0 && dotVN > 0.0){                       
+                specular = specularColor * pow(max(dotHN,0.0),material.shininess);                      
             }
+            float attenuation = 1.0/(1.0 + dist * light.linear_attenuation + dist*dist * light.quadratic_attenuation ); 
+            toReturn = light.color * attenuation * (diffuse + specular); 
         }             
     }
     return toReturn;
