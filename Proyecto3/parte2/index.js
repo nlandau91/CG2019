@@ -21,7 +21,7 @@ async function main() {
     const treeGeometryData = await parse( '/models/farm_tree_01.obj' )
     const stumpGeometryData = await parse( '/models/farm_stump_01.obj' )
     const rockGeometryData = await parse( '/models/farm_rocks_01.obj' )
-    const woodpileGeometryData = await parse( '/models/woodpile.obj' )
+    const woodpileGeometryData = await parse( '/models/maderas.obj' )
 
     const phongTVertexShaderSource = await getFileContentsAsText( '/shaders/phongT.vert.glsl' )
     const phongTFragmentShaderSource = await getFileContentsAsText( '/shaders/phongT.frag.glsl' )
