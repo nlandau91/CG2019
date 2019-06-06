@@ -18,6 +18,10 @@ async function main() {
     const siloGeometryData = await parse( '/models/silo.obj' )
     const skyGeometryData = await parse( '/models/dome.obj' )
     const lanternGeometryData = await parse( '/models/lantern.obj' )
+    const treeGeometryData = await parse( '/models/farm_tree_01.obj' )
+    const stumpGeometryData = await parse( '/models/farm_stump_01.obj' )
+    const rockGeometryData = await parse( '/models/farm_rocks_01.obj' )
+    
 
     const phongTVertexShaderSource = await getFileContentsAsText( '/shaders/phongT.vert.glsl' )
     const phongTFragmentShaderSource = await getFileContentsAsText( '/shaders/phongT.frag.glsl' )
@@ -33,6 +37,9 @@ async function main() {
 
     const cookTorranceTNVertexShaderSource = await getFileContentsAsText( '/shaders/cooktorranceTN.vert.glsl' )
     const cookTorranceTNFragmentShaderSource = await getFileContentsAsText( '/shaders/cooktorranceTN.frag.glsl' )
+
+    const cookTorranceTVertexShaderSource = await getFileContentsAsText( '/shaders/cooktorranceT.vert.glsl' )
+    const cookTorranceTFragmentShaderSource = await getFileContentsAsText( '/shaders/cooktorranceT.frag.glsl' )
 
     // #️⃣ Configuracion base de WebGL
 
@@ -68,6 +75,9 @@ async function main() {
     const lanternTextureNormal = gl.createTexture()
     const lanternTextureGlow = gl.createTexture()
     const lanternTextureSpecular = gl.createTexture()
+    const stumpTextureColor = gl.createTexture()
+    const treeRockTextureColor = gl.createTexture()
+
     
     armarTextura(planoTexture, await loadImage('/textures/grass1.jpg'))
     armarTextura(graneroTexture, await loadImage('/textures/granero.jpg'))
@@ -87,7 +97,8 @@ async function main() {
     armarTextura(lanternTextureNormal, await loadImage('/textures/lantern_normal.jpg'))
     armarTextura(lanternTextureGlow,  await loadImage('/textures/lantern_ambient.jpg'))
     armarTextura(lanternTextureSpecular, await loadImage('/textures/lantern_specular.jpg'))
-
+    armarTextura(stumpTextureColor,  await loadImage('/textures/farm_haybale_stump_shovel_wheelbarrow_rake_D.jpg'))
+    armarTextura(treeRockTextureColor, await loadImage('/textures/farm_trees_rocks_flowers_D.jpg'))
 
     // #️⃣ Geometrias disponibles
 
@@ -99,6 +110,9 @@ async function main() {
     const siloGeometry = new Geometry( gl, siloGeometryData )
     const skyGeometry = new Geometry( gl, skyGeometryData )
     const lanternGeometry = new Geometry( gl, lanternGeometryData)
+    const treeGeometry = new Geometry( gl, treeGeometryData )
+    const stumpGeometry = new Geometry( gl, stumpGeometryData )
+    const rockGeometry = new Geometry( gl, rockGeometryData)
 
     // #️⃣ Programas de shaders disponibles
 
@@ -107,6 +121,7 @@ async function main() {
     const ufoProgram = new Program( gl, ufoVertexShaderSource, ufoFragmentShaderSource )
     const TexturaProgram = new Program( gl, TexturaVertexShaderSource, TexturaFragmentShaderSource )
     const cookTorranceTNProgram = new Program( gl, cookTorranceTNVertexShaderSource, cookTorranceTNFragmentShaderSource )
+    const cookTorranceTProgram = new Program( gl, cookTorranceTVertexShaderSource, cookTorranceTFragmentShaderSource )
 
     // #️⃣ Creamos materiales combinando programas con distintas propiedades
 
@@ -118,6 +133,10 @@ async function main() {
     const alienMaterial = new Material( cookTorranceTNProgram, true, true, { texture0: 0, texture1: 1, m: 0.1, f0: 0.9, sigma: 1.0} )
     const skyMaterial = new Material( TexturaProgram, false, true, { texture0: 0} )
     const lanternMaterial = new Material( ufoProgram, true, true, {texture0: 0, texture1: 1, texture2: 2, texture3 : 3, m: 0.2, f0: 0.9})
+    const treeMaterial = new Material( cookTorranceTProgram, true, true, { texture0: 0, m: 0.8, f0: 0.1, sigma: 0.2} )
+    const stumpMaterial = new Material( cookTorranceTProgram, true, true, { texture0: 0, m: 0.6, f0: 0.1, sigma: 0.2} )
+    const rockMaterial = new Material( cookTorranceTProgram, true, true, { texture0: 0, m: 0.15, f0: 0.9, sigma: 0.0} )
+
 
     // #️⃣ Creamos los objetos de la escena
 
@@ -129,8 +148,35 @@ async function main() {
     const alien = new SceneObject( gl, alienGeometry, alienMaterial, [alienTextureColor, alienTextureNormal], false )
     const plano = new SceneObject( gl, planoGeometry, planoMaterial, [planoTexture], false )
     const lantern = new SceneObject( gl, lanternGeometry, lanternMaterial, [lanternTextureDiffuse, lanternTextureSpecular, lanternTextureNormal, lanternTextureGlow], false )
+    const stump = new SceneObject( gl, stumpGeometry, stumpMaterial, [stumpTextureColor], false )
+    const trees = []
+    const rocks = []
+    let i
+    for(i = 0; i<10; i++){
+        let j
+        for(j=0;j<10;j++){
+            let random = Math.random();
+            trees[i*10+j] = new SceneObject( gl, treeGeometry, treeMaterial, [treeRockTextureColor], false )
+            trees[i*10+j].setPosition( 10*(i+random)-50, 0.0, 10*(j+random)-40)
+            trees[i*10+j].setRotation(0.0,random*180,0.0)
+            trees[i*10+j].updateModelMatrix()
+        }
+    }
+    for(i = 0; i<5; i++){
+        let j
+        for(j=0;j<5;j++){
+            let random = Math.random();
+            rocks[i*5+j] = new SceneObject( gl, rockGeometry, rockMaterial, [treeRockTextureColor], false )
+            rocks[i*5+j].setPosition( 20*(i+random)-50, 0.0, 20*(j+random)-40)
+            rocks[i*5+j].setRotation(0.0,random*180,0.0)
+            rocks[i*5+j].updateModelMatrix()
+        }
+    }
 
-    const sceneObjects = [alien, ufo, plano, granero, tractor, silo, sky, lantern ]
+    const sceneObjects = [alien, ufo, plano, granero, tractor, silo, sky, lantern, stump ]
+    sceneObjects.push.apply(sceneObjects,trees)
+    sceneObjects.push.apply(sceneObjects,rocks)
+
 
     // #️⃣ Creamos las luces de la escena
     const lightUfo = new SceneLight( [0.0, 5.0, 0.0, 1.0], [0.0, 0.3, 0.0], [0.0, -1.0, 0.0, 0.0], Math.cos(toRadians(25)), ufo )
@@ -289,9 +335,15 @@ async function main() {
     alien.setRotation(0,180,0)
     alien.updateModelMatrix()
 
-    lantern.setPosition (0.0, 1.75, 1.35)
+    lantern.setPosition(0.0, 1.75, 1.35)
     lantern.setRotation(0,90,0)
     lantern.updateModelMatrix()
+
+    stump.setPosition(-2.0,0.0,1.0)
+    stump.updateModelMatrix()
+
+    camera.radius = 35;
+    camera.theta = toRadians(-35)
     //contador de frames
     const fpsElem = document.getElementById( 'fps' )
     let then = 0
