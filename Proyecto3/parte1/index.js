@@ -20,6 +20,15 @@ async function main() {
     const phongTNVertexShaderSource   = await getFileContentsAsText("/shaders/phongTN.vert.glsl")
     const phongTNFragmentShaderSource = await getFileContentsAsText("/shaders/phongTN.frag.glsl")
 
+    const proceduralMarbleVertexShaderSource = await getFileContentsAsText( '/shaders/marbleProcedural.vert.glsl' )
+    const proceduralMarbleFragmentShaderSource = await getFileContentsAsText( '/shaders/marbleProcedural.frag.glsl' )
+
+    const proceduralVertexShaderSource = await getFileContentsAsText( '/shaders/procedural.vert.glsl' )
+    const proceduralFragmentShaderSource = await getFileContentsAsText( '/shaders/procedural.frag.glsl' )
+
+    const cookTorrance2TNVertexShaderSource = await getFileContentsAsText( '/shaders/cooktorrance2TN.vert.glsl' )
+    const cookTorrance2TNFragmentShaderSource = await getFileContentsAsText( '/shaders/cooktorrance2TN.frag.glsl' )
+
     // #️⃣ Configuracion base de WebGL
 
     const canvas = document.getElementById("webgl-canvas")
@@ -44,6 +53,7 @@ async function main() {
 
     const esferaGoldTexture=gl.createTexture()
     const esferaGoldTextureNormal=gl.createTexture()
+    const esferaGoldRust=gl.createTexture()
 
     armarTextura(planoTexture, await loadImage('/textures/TexturesCom_DishCloth2_1K_albedo.jpg'))
     armarTextura(esferaMercurio, await loadImage('/textures/mercury.jpg'))
@@ -51,6 +61,7 @@ async function main() {
 
     armarTextura(esferaGoldTexture, await loadImage('/textures/gold.jpg'))
     armarTextura(esferaGoldTextureNormal, await loadImage('/textures/gold_normal.jpg'))
+    armarTextura(esferaGoldRust,await loadImage('/textures/gold_rust.jpg'))
 
     armarTextura(esferaGolfTexture, await loadImage('/textures/texturaGolf.jpg'))
     armarTextura(esferaGolfNormal, await loadImage('/textures/golf_normal.jpg'))
@@ -66,15 +77,19 @@ async function main() {
 
     const phongTProgram = new Program(gl, phongTVertexShaderSource, phongTFragmentShaderSource)
     const phongTNProgram = new Program(gl, phongTNVertexShaderSource, phongTNFragmentShaderSource)
+    const proceduralMarbleProgram = new Program( gl, proceduralMarbleVertexShaderSource, proceduralMarbleFragmentShaderSource )
+    const proceduralProgram = new Program( gl, proceduralVertexShaderSource, proceduralFragmentShaderSource )
+    const cookTorrance2TNProgram = new Program( gl, cookTorrance2TNVertexShaderSource, cookTorrance2TNFragmentShaderSource )
 
 
     // #️⃣ Creamos materiales combinando programas con distintas propiedades
 
 
-    const planoMaterial = new Material(phongTProgram, true, true, { texture0: 0, shininess: 0})
+    const planoMaterial = new Material( proceduralMarbleProgram, false, false, {} )
     const esferaMercurioMaterial = new Material(phongTNProgram, true, true, { texture0: 0,texture1: 1, shininess: 4})
     const esferaGolfMaterial = new Material(phongTNProgram,true,true, { texture0: 0, texture1: 1, shininess: 100})
-    const esferaGoldMaterial = new Material(phongTNProgram,true,true, { texture0: 0, texture1: 1, shininess: 100})
+    const esferaGoldMaterial = new Material(cookTorrance2TNProgram,true,true, { texture0: 0, texture1: 1, texture2: 2,m: 0.1, f0: 0.2, sigma: 1})
+    const woodMaterial = new Material( proceduralProgram, true, false, { shininess: 1, resolution: [1.0,0.5]} )
 
     
 
@@ -216,9 +231,9 @@ async function main() {
     updateCamSliders()
 
     //Posicion inicial de los objetos luz
-    light0obj.setPosition(-5.0,10.0,5.0)
+    light0obj.setPosition(-5.0,7.0,5.0)
     light0obj.updateModelMatrix()
-    light1obj.setPosition(5.0,10.0,-5.0)
+    light1obj.setPosition(5.0,7.0,-5.0)
     light1obj.updateModelMatrix()
 
     
@@ -348,19 +363,26 @@ async function main() {
         for(i=0 ;i<4;i++){
             for(j=0; j<6;j++){
                 if(i==0){
-                    sceneObjects[i*6+j]=new SceneObject(gl, esferaGolfGeometry, esferaGolfMaterial, [esferaGolfTexture,esferaGolfNormal], false)
-                    sceneObjects[i*6+j].setPosition(3*i-4.0,0.0,3*j-6.0)
-                    sceneObjects[i*6+j].updateModelMatrix()
-                }
-                if(i==1){
-                        sceneObjects[i*6+j]=new SceneObject(gl, esferaGeometry, esferaMercurioMaterial, [esferaMercurio,esferaMercurioNormal], false)
+                        sceneObjects[i*6+j]=new SceneObject(gl, esferaGolfGeometry, esferaGolfMaterial, [esferaGolfTexture,esferaGolfNormal], false)
                         sceneObjects[i*6+j].setPosition(3*i-4.0,0.0,3*j-6.0)
                         sceneObjects[i*6+j].updateModelMatrix()
                 }
-                if(i==2 || i==3){
-                        sceneObjects[i*6+j]=new SceneObject(gl, esferaGeometry, esferaGoldMaterial, [esferaGoldTexture,esferaGoldTextureNormal], false)
+                if(i==1){
+                        sceneObjects[i*6+j]=new SceneObject( gl, esferaGeometry, woodMaterial, [],false )
+                        sceneObjects[i*6+j].setPosition(3*i-4.0,0.0,3*j-6.0)
+                        sceneObjects[i*6+j].updateModelMatrix() 
+                        
+                }
+                if(i==2){
+                        sceneObjects[i*6+j]=new SceneObject(gl, esferaGeometry, esferaGoldMaterial, [esferaGoldTexture,esferaGoldRust,esferaGoldTextureNormal], false)
                         sceneObjects[i*6+j].setPosition(3*i-4.0,0.0,3*j-6.0)
                         sceneObjects[i*6+j].updateModelMatrix()       
+                }
+                if(i==3){
+                        sceneObjects[i*6+j]=new SceneObject(gl, esferaGeometry, esferaMercurioMaterial, [esferaMercurio,esferaMercurioNormal], false)
+                        sceneObjects[i*6+j].setPosition(3*i-4.0,0.0,3*j-6.0)
+                        sceneObjects[i*6+j].updateModelMatrix()
+
                 }
             }
         }
@@ -369,4 +391,4 @@ async function main() {
 
 
 }
-
+                        

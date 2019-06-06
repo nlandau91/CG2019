@@ -119,15 +119,19 @@ void main () {
     vec3 sampledNormal = vec3(texture(material.texture2, fTexCoor)); //obtenemos la nueva del mapa de normales
     vec3 N = TBNMatrix * (sampledNormal * 2.0 - 1.0); //la transformamos usando la matrix del espacio tangente
 
-    vec3 diffuseColorFromTexture = texture(material.texture0,fTexCoor).rgb;
-    vec3 specularColorFromTexture = texture(material.texture1,fTexCoor).rgb;
+    vec3 colorBase=texture(material.texture0,fTexCoor).rgb;
+    vec3 colorOxido=texture(material.texture1,fTexCoor).rgb;
 
     vec3 outputColor = vec3(0.0);
+    
+    if(length(colorOxido)>0.00)outputColor=colorOxido;
+    else outputColor=colorBase;
+
     for(int i = 0; i < numLights; i++){
-        outputColor += color_cook_torrance(allLights[i],diffuseColorFromTexture,specularColorFromTexture,N,V);
+        outputColor += color_cook_torrance(allLights[i],outputColor,outputColor,N,V);
     }
 
-    vec3 ambient = diffuseColorFromTexture * 0.05;
+    vec3 ambient = outputColor * 0.05;
 
     fragmentColor = vec4(ambient + outputColor, 1);
 }
