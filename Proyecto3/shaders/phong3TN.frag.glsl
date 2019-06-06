@@ -84,7 +84,7 @@ void main () {
         outputColor += calcPhong(allLights[i],diffuseColorFromTexture,specularColorFromTexture,N,V);
     }
 
-    vec3 ambient = diffuseColorFromTexture * 0.05;
+    vec3 ambient = emission;
 
-    fragmentColor = vec4(ambient + outputColor + emission, 1);
+    fragmentColor = vec4(ambient + outputColor, 1);
 }

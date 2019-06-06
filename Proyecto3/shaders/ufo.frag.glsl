@@ -72,10 +72,10 @@ vec3 color_cook_torrance(Light light, vec3 diffuseColor, vec3 specularColor, vec
         vec3 H = normalize(L+V);
         vec3 S = normalize(vSD);
 
-        float dotLN = max(dot(L,N),0.0); //cos theta i
-        float dotVN = max(dot(V,N),0.0); //cos theta r
-        float dotHN = max(dot(H,N),0.0); //cos theta h
-        float dotVH = max(dot(V,H),0.0);
+        float dotLN = dot(L,N); //cos theta i
+        float dotVN = dot(V,N); //cos theta r
+        float dotHN = dot(H,N); //cos theta h
+        float dotVH = dot(V,H);
 
         if((light.spot_cutoff != -1.0 && dot(S, -L) > light.spot_cutoff) //si es spot y esta dentro del cono
                 ||  light.spot_cutoff == -1.0 //o si es puntual
@@ -86,7 +86,7 @@ vec3 color_cook_torrance(Light light, vec3 diffuseColor, vec3 specularColor, vec
                 float D = D_beckman(dotHN);
                 float G = calcularG(dotHN,dotVN,dotVH,dotLN);       
 
-                toReturn =  light.color*dotLN*attenuation*( diffuseColor/PI + specularColor * (F*D*G)/(PI*dotVN*dotLN));
+                toReturn =  light.color*dotLN*attenuation*( diffuseColor + specularColor * (F*D*G)/(PI*dotVN*dotLN));
         
             }
         }
@@ -112,5 +112,5 @@ void main () {
 
     vec3 ambient = emission;
 
-    fragmentColor = vec4(ambient + outputColor + emission, 1);
+    fragmentColor = vec4(ambient + outputColor, 1);
 }
