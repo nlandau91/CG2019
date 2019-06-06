@@ -44,6 +44,9 @@ async function main() {
     const proceduralVertexShaderSource = await getFileContentsAsText( '/shaders/procedural.vert.glsl' )
     const proceduralFragmentShaderSource = await getFileContentsAsText( '/shaders/procedural.frag.glsl' )
 
+    //const proceduralMarbleVertexShaderSource = await getFileContentsAsText( '/shaders/marbleProcedural.vert.glsl' )
+    //const proceduralMarbleFragmentShaderSource = await getFileContentsAsText( '/shaders/marbleProcedural.frag.glsl' )
+
     // #️⃣ Configuracion base de WebGL
 
     const canvas = document.getElementById( 'webgl-canvas' )
@@ -127,10 +130,12 @@ async function main() {
     const cookTorranceTNProgram = new Program( gl, cookTorranceTNVertexShaderSource, cookTorranceTNFragmentShaderSource )
     const cookTorranceTProgram = new Program( gl, cookTorranceTVertexShaderSource, cookTorranceTFragmentShaderSource )
     const proceduralProgram = new Program( gl, proceduralVertexShaderSource, proceduralFragmentShaderSource )
+    //const proceduralMarbleProgram = new Program( gl, proceduralMarbleVertexShaderSource, proceduralMarbleFragmentShaderSource )
 
     // #️⃣ Creamos materiales combinando programas con distintas propiedades
 
     const planoMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 0.0} )
+    //const planoMaterial = new Material( proceduralMarbleProgram, false, false, {} )
     const graneroMaterial = new Material( phongTNProgram, true, true, { texture0: 0, texture1: 1, shininess: 50.0} )
     const tractorMaterial = new Material( cookTorranceTNProgram, true, true, { texture0: 0, texture1: 1, m: 0.3, f0: 0.99, sigma: 0.1} )
     const siloMaterial = new Material( cookTorranceTNProgram, true, true, { texture0: 0, texture1: 1, m: 0.3, f0: 0.99, sigma: 0.3} )
