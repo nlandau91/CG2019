@@ -1,11 +1,9 @@
 #version 300 es
 #define MAX_LIGHTS 10
-#define PI 3.14159265
 //Shader de fragmentos que implementa Cook Torrance con sombreado de phong
 //Hasta 10 luces de tipo puntual, spot y direccional
 //Una textura difusa, una textura especular, textura de emision y normal mapping
 //Pensado para ser usado solamente un el modelo de ufo
-#define EPSILON 0.00001
 precision highp float;
 
 uniform struct Light {
@@ -74,21 +72,23 @@ vec3 color_cook_torrance(Light light, vec3 diffuseColor, vec3 specularColor, vec
 
         float dotLN = dot(L,N); //cos theta i
         float dotVN = dot(V,N); //cos theta r
-        float dotHN = dot(H,N); //cos theta h
-        float dotVH = dot(V,H);
+        float dotHN = max(dot(H,N),0.0); //cos theta h
+        float dotVH = max(dot(V,H),0.0);
 
         if((light.spot_cutoff != -1.0 && dot(S, -L) > light.spot_cutoff) //si es spot y esta dentro del cono
                 ||  light.spot_cutoff == -1.0 //o si es puntual
                 ||  light.position.w < 0.00001){ //o si es direccional
-            if(dotLN > EPSILON && dotVN > EPSILON){
-                float attenuation = 1.0/(1.0 + dist * light.linear_attenuation + dist*dist * light.quadratic_attenuation );  
+            float diffuse = 1.0;
+            float specular = 0.0;
+            if(dotLN > 0.0 && dotVN > 0.0){
                 float F = fresnelSchlick(dotHN);
                 float D = D_beckman(dotHN);
-                float G = calcularG(dotHN,dotVN,dotVH,dotLN);       
-
-                toReturn =  light.color*dotLN*attenuation*( diffuseColor + specularColor * (F*D*G)/(PI*dotVN*dotLN));
-        
+                float G = calcularG(dotHN,dotVN,dotVH,dotLN);
+                specular = (F*D*G)/(4.0*dotVN*dotLN);
             }
+            float attenuation = 1.0/(1.0 + dist * light.linear_attenuation + dist*dist * light.quadratic_attenuation );  
+            toReturn = light.color * attenuation * dotLN * (diffuseColor * diffuse + specularColor * specular);
+
         }
     }
     return toReturn;

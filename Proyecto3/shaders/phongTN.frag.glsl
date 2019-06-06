@@ -48,19 +48,19 @@ vec3 calcPhong(Light light, vec3 diffuseColor, vec3 specularColor, vec3 N, vec3 
         vec3 H = normalize(L + V);
         vec3 S = normalize(vSD);
 
-        float dotLN = max(dot(L,N),0.0);
-        float dotVN = max(dot(V,N),0.0);
-        float dotHN = max(dot(H,N),0.0);
+        float dotLN = dot(L,N);
+        float dotVN = dot(V,N);
 
         if((light.spot_cutoff != -1.0 && dot(S, -L) > light.spot_cutoff) //si es spot y esta dentro del cono
                 ||  light.spot_cutoff == -1.0 //o si es puntual
                 ||  light.position.w < 0.00001){ //o si es direccional
-            if(dotLN > EPSILON && dotVN > EPSILON){       
-                float attenuation = 1.0/(1.0 + dist * light.linear_attenuation + dist*dist * light.quadratic_attenuation );  
-                vec3 diffuse = diffuseColor * max(dot(L, N), 0.0);
-                vec3 specular = specularColor * pow(max(dot(H,N),0.0),material.shininess);    
-                toReturn = attenuation * light.color * (diffuse + specular);   
+            float attenuation = 1.0/(1.0 + dist * light.linear_attenuation + dist*dist * light.quadratic_attenuation );  
+            vec3 diffuse = diffuseColor * max(dotLN, 0.0);
+            vec3 specular = vec3(0.0);
+            if(dotLN > 0.0 && dotVN > 0.0){                    
+                specular = specularColor * pow(max(dot(H,N),0.0),material.shininess);
             }
+            toReturn = attenuation * light.color * (diffuse + specular);
         }             
     }
     return toReturn;
@@ -74,11 +74,10 @@ void main () {
     vec3 N = TBNMatrix * (sampledNormal * 2.0 - 1.0); //la transformamos usando la matrix del espacio tangente
 
     vec3 diffuseColorFromTexture = texture(material.texture0,fTexCoor).rgb;
-    vec3 specularColorFromTexture = diffuseColorFromTexture;
 
     vec3 outputColor = vec3(0.0);
     for(int i = 0; i < numLights; i++){
-        outputColor += calcPhong(allLights[i],diffuseColorFromTexture,specularColorFromTexture,N,V);
+        outputColor += calcPhong(allLights[i],diffuseColorFromTexture,diffuseColorFromTexture,N,V);
     }
 
     vec3 ambient = diffuseColorFromTexture * 0.15;

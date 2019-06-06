@@ -74,11 +74,11 @@ async function main() {
     const lanternTextureSpecular = gl.createTexture()
     
     armarTextura(planoTexture, await loadImage('/textures/grass1.jpg'))
-    armarTextura(graneroTexture, await loadImage('/textures/granero.jpeg'))
+    armarTextura(graneroTexture, await loadImage('/textures/granero.jpg'))
     armarTextura(graneroNormalMap, await loadImage('/textures/granero_normal.jpg'))
-    armarTextura(tractorTexture, await loadImage('/textures/tractor.jpeg'))
+    armarTextura(tractorTexture, await loadImage('/textures/tractor.jpg'))
     armarTextura(tractorNormalMap, await loadImage('/textures/tractor_normal.jpg'))
-    armarTextura(siloTexture, await loadImage('/textures/silo.jpeg'))
+    armarTextura(siloTexture, await loadImage('/textures/silo.jpg'))
     armarTextura(siloNormalMap, await loadImage('/textures/silo_normal.jpg'))
     armarTextura(alienTextureColor, await loadImage('/textures/alien_monster1_color.jpg'))
     armarTextura(alienTextureAmbient, await loadImage('/textures/alien_monster1_ambient.jpg'))
@@ -117,9 +117,9 @@ async function main() {
     // #️⃣ Creamos materiales combinando programas con distintas propiedades
 
     const planoMaterial = new Material( phongTProgram, true, true, { texture0: 0, shininess: 0.0} )
-    const graneroMaterial = new Material( phongTNProgram, true, true, { texture0: 0, texture1: 1, shininess: 0.0} )
-    const tractorMaterial = new Material( phongTNProgram, true, true, { texture0: 0, texture1: 1, shininess: 27} )
-    const siloMaterial = new Material( cookTorranceTN, true, true, { texture0: 0, texture1: 1, m: 0.14, f0: 0.99, sigma: 0.2} )
+    const graneroMaterial = new Material( phongTNProgram, true, true, { texture0: 0, texture1: 1, shininess: 50.0} )
+    const tractorMaterial = new Material( cookTorranceTN, true, true, { texture0: 0, texture1: 1, m: 0.3, f0: 0.99, sigma: 0.1} )
+    const siloMaterial = new Material( cookTorranceTN, true, true, { texture0: 0, texture1: 1, m: 0.3, f0: 0.99, sigma: 0.3} )
     const ufoMaterial = new Material( ufoProgram, true, true, { texture0: 0, texture1: 1, texture2: 2, texture3 : 3, m: 0.2, f0: 0.9} )
     const alienMaterial = new Material( alienProgram, true, true, { texture0: 0, texture1: 1, texture2 : 2, shininess: 96.078431} )
     const skyMaterial = new Material( TexturaProgram, false, true, { texture0: 0} )
@@ -279,13 +279,15 @@ async function main() {
     silo.setPosition( 4.0, 0.0, 0.0 )
     silo.updateModelMatrix()
 
-    tractor.setPosition( -2.0, 0.0, 1.0 )
+    tractor.setPosition( -4.0, 0.0, 3.0 )
+    tractor.setRotation(0,90,0)
     tractor.updateModelMatrix()
 
     ufo.setPosition( 0.0, 5.0, 0.0 )
     ufo.updateModelMatrix()
 
     alien.setPosition( 0.0, 0.0, 2.0 )
+    alien.setRotation(0,180,0)
     alien.updateModelMatrix()
 
     lantern.setPosition (0.0, 1.75, 1.35)
