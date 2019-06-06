@@ -141,7 +141,7 @@ async function main() {
     const treeMaterial = new Material( cookTorranceTProgram, true, true, { texture0: 0, m: 0.8, f0: 0.1, sigma: 0.2} )
     const stumpMaterial = new Material( cookTorranceTProgram, true, true, { texture0: 0, m: 0.6, f0: 0.1, sigma: 0.2} )
     const rockMaterial = new Material( cookTorranceTProgram, true, true, { texture0: 0, m: 0.15, f0: 0.9, sigma: 0.0} )
-    const woodpileMaterial = new Material( proceduralProgram, true, false, { shininess: 1, resolution: [1.0,1.0]} )
+    const woodpileMaterial = new Material( proceduralProgram, true, false, { shininess: 1, resolution: [1.0,0.5]} )
 
 
     // #️⃣ Creamos los objetos de la escena

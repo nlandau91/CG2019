@@ -104,7 +104,7 @@ void main(void){
     // Draw lines
     pattern = lines(pos,.5);
     
-    vec3 color = vec3(pattern)*vec3(0.40,0.21,0);
+    vec3 color = vec3(pattern)*vec3(0.52156862745,0.36862745098,0.25882352941); //madera
     vec3 outputColor = vec3(0.0);
 
     vec3 N = normalize(vNE);
