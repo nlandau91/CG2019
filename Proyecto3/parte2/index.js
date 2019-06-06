@@ -135,7 +135,7 @@ async function main() {
     const tractorMaterial = new Material( cookTorranceTNProgram, true, true, { texture0: 0, texture1: 1, m: 0.3, f0: 0.99, sigma: 0.1} )
     const siloMaterial = new Material( cookTorranceTNProgram, true, true, { texture0: 0, texture1: 1, m: 0.3, f0: 0.99, sigma: 0.3} )
     const ufoMaterial = new Material( ufoProgram, true, true, { mode: 4, texture0: 0, texture1: 1, texture2: 2, texture3 : 3, m: 0.2, f0: 0.9} )
-    const alienMaterial = new Material( cookTorranceTNProgram, true, true, { texture0: 0, texture1: 1, m: 0.1, f0: 0.9, sigma: 1.0} )
+    const alienMaterial = new Material( cookTorranceTNProgram, true, true, { texture0: 0, texture1: 1, m: 0.7, f0: 0.2, sigma: 1} )
     const skyMaterial = new Material( TexturaProgram, false, true, { texture0: 0} )
     const lanternMaterial = new Material( ufoProgram, true, true, {texture0: 0, texture1: 1, texture2: 2, texture3 : 3, m: 0.2, f0: 0.9})
     const treeMaterial = new Material( cookTorranceTProgram, true, true, { texture0: 0, m: 0.8, f0: 0.1, sigma: 0.2} )
