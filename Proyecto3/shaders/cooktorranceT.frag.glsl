@@ -1,9 +1,9 @@
 #version 300 es
 #define MAX_LIGHTS 10
-//Shader de fragmentos que implementa Cook Torrance con sombreado de phong
+#define EPSILON 0.00001
+//Shader de fragmentos que implementa Cook Torrance con sombreado de phong, Oren Nayar para la componente difusa
 //Hasta 10 luces de tipo puntual, spot y direccional
-//Una textura difusa, una textura especular, textura de emision y normal mapping
-//Pensado para ser usado solamente un el modelo de ufo
+//Una textura difusa
 precision highp float;
 
 uniform struct Light {
@@ -16,13 +16,10 @@ uniform struct Light {
 } allLights[MAX_LIGHTS];
 
 struct Material {
-    float m; //rugosidad
+    float m; //rugosidad de cook torrance
     float f0; //fresnel
+    float sigma; //rugosidad de oren nayar
     sampler2D texture0; //diffuse texture
-    sampler2D texture1; //specular texture
-    sampler2D texture2; //normal map
-    sampler2D texture3; //emission (ambient)
-    int mode; //usado para activar o desactivar partes del shader, el valor selecciones que textura se desactiva
 };
 
 uniform Material material;
@@ -31,9 +28,25 @@ uniform int numLights;
 in vec3 vVE;
 in vec3 vNE;
 in vec2 fTexCoor;
-in mat3 TBNMatrix;
 
 out vec4 fragmentColor;
+
+float orenNayarDiffuse(Light luz, vec3 N, vec3 V, vec3 L, float dotLN, float dotVN){
+    
+    float thetaI = acos(dotLN);
+    float thetaR = acos(dotVN);
+    float alpha = max(thetaI,thetaR);
+    float beta = min(thetaI,thetaR);
+
+    float sigma2 = pow(material.sigma,2.0);
+
+    float A = 1.0 - 0.5*sigma2/(sigma2+0.33);
+    float B = 0.45*sigma2/(sigma2 + 0.09);
+
+    float cosPHI = dot( normalize(V-N*(dotVN)), normalize(L - N*(dotLN)) );
+    return(A+(B*max(0.0,cosPHI))*sin(alpha)*tan(beta));
+
+}
 
 float fresnelSchlick(float cosVH){//Aproximacion de schlick
     float fresnel = material.f0 + (1.0 - material.f0) * pow(1.0 - cosVH,5.0);
@@ -75,56 +88,38 @@ vec3 color_cook_torrance(Light light, vec3 diffuseColor, vec3 specularColor, vec
         float dotVN = dot(V,N); //cos theta r
         float dotHN = max(dot(H,N),0.0); //cos theta h
         float dotVH = max(dot(V,H),0.0);
-
+    
         if((light.spot_cutoff != -1.0 && dot(S, -L) > light.spot_cutoff) //si es spot y esta dentro del cono
                 ||  light.spot_cutoff == -1.0 //o si es puntual
                 ||  light.position.w < 0.00001){ //o si es direccional
-            float diffuse = 1.0;
+            float diffuse = orenNayarDiffuse(light,N,V,L,max(dotLN,0.0),max(dotVN,0.0));
             float specular = 0.0;
             if(dotLN > 0.0 && dotVN > 0.0){
                 float F = fresnelSchlick(dotHN);
                 float D = D_beckman(dotHN);
-                float G = calcularG(dotHN,dotVN,dotVH,dotLN);
+                float G = calcularG(dotHN,dotVN,dotVH,dotLN);   
                 specular = (F*D*G)/(4.0*dotVN*dotLN);
             }
             float attenuation = 1.0/(1.0 + dist * light.linear_attenuation + dist*dist * light.quadratic_attenuation );  
             toReturn = light.color * attenuation * dotLN * (diffuseColor * diffuse + specularColor * specular);
-
         }
     }
     return toReturn;
 }
 
 void main () {
-
-    
-    vec3 diffuseColor = vec3(0.0);  
-    if(material.mode != 0){ // activa o desactiva la textura difusa
-        diffuseColor = texture(material.texture0,fTexCoor).rgb;
-    }
-
-    vec3 specularColor = vec3(1.0,1.0,1.0);
-    if(material.mode != 1){ // activa o desactiva la textura especular
-        specularColor = texture(material.texture1,fTexCoor).rgb;
-    }
-
-    vec3 N = normalize(vNE); 
-    if(material.mode != 2){ // activa o desactiva el normal map
-       vec3 sampledNormal = vec3(texture(material.texture2, fTexCoor)); //obtenemos la nueva del mapa de normales
-        N = TBNMatrix * (sampledNormal * 2.0 - 1.0); //la transformamos usando la matrix del espacio tangente
-    }
-
-    vec3 ambient = diffuseColor * 0.05;
-    if(material.mode != 3){ //activa o desactiva la textura ambiental (emision de las luces)
-        ambient = texture(material.texture3,fTexCoor).rgb;
-    } 
-
+    vec3 N = normalize(vNE); //no vamos a usar esta normal, vamos a calcular una nueva a partir del normal map
     vec3 V = normalize(vVE);
 
+    vec3 diffuseColorFromTexture = texture(material.texture0,fTexCoor).rgb;
+    vec3 specularColorFromTexture = diffuseColorFromTexture;
+    
     vec3 outputColor = vec3(0.0);
     for(int i = 0; i < numLights; i++){
-        outputColor += color_cook_torrance(allLights[i],diffuseColor,specularColor,N,V);
+        outputColor += color_cook_torrance(allLights[i],diffuseColorFromTexture,specularColorFromTexture,N,V);
     }
+
+    vec3 ambient = diffuseColorFromTexture * 0.05;
 
     fragmentColor = vec4(ambient + outputColor, 1);
 }
