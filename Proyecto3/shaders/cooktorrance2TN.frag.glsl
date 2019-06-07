@@ -119,7 +119,7 @@ void main () {
     vec3 sampledNormal = vec3(texture(material.texture2, fTexCoor)); //obtenemos la nueva del mapa de normales
     vec3 N = TBNMatrix * (sampledNormal * 2.0 - 1.0); //la transformamos usando la matrix del espacio tangente
 
-    vec3 colorDif=texture(material.texture0,fTexCoor).rgb;
+    vec3 colorDif=1.3*texture(material.texture0,fTexCoor).rgb;
     vec3 colorSpec=texture(material.texture1,fTexCoor).rgb;
     vec3 outputColor= vec3(0.0);
     
