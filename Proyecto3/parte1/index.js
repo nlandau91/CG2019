@@ -13,6 +13,7 @@ async function main() {
     const planoGeometryData      = await parse("/models/plano.obj")
     const esferaGeometryData      = await parse("/models/esfera.obj")
     const esferaGolfGeometryData  = await parse("/models/esferaGolf.obj")
+    const lamparaGeometryData= await parse("/models/linterna.obj")
     
     const phongTVertexShaderSource   = await getFileContentsAsText("/shaders/phongT.vert.glsl")
     const phongTFragmentShaderSource = await getFileContentsAsText("/shaders/phongT.frag.glsl")
@@ -72,6 +73,7 @@ async function main() {
     const planoGeometry  = new Geometry(gl, planoGeometryData)
     const esferaGeometry  = new Geometry(gl, esferaGeometryData)
     const esferaGolfGeometry = new Geometry(gl, esferaGolfGeometryData)
+    const lamparaGeometry= new Geometry(gl, lamparaGeometryData)
 
     // #️⃣ Programas de shaders disponibles
 
@@ -89,7 +91,7 @@ async function main() {
     const esferaMercurioMaterial = new Material(phongTNProgram, true, true, { texture0: 0,texture1: 1, shininess: 4})
     const esferaGolfMaterial = new Material(phongTNProgram,true,true, { texture0: 0, texture1: 1, shininess: 100})
     const esferaGoldMaterial = new Material(cookTorrance2TNProgram,true,true, { texture0: 0, texture1: 1, texture2: 2,m: 0.1, f0: 0.2, sigma: 1})
-    const woodMaterial = new Material( proceduralProgram, true, false, { shininess: 1, resolution: [1.0,0.5]} )
+    const woodMaterial = new Material( proceduralProgram, true, false, { shininess: 1, resolution: [1.1,0.5]} )
 
     
 
@@ -103,16 +105,16 @@ async function main() {
     sceneObjects.push(plano)
 
 
-    const light0obj= new SceneObject(gl, esferaGeometry, esferaMercurioMaterial, [esferaMercurio,esferaMercurioNormal], false)
+    const light0obj= new SceneObject(gl, lamparaGeometry, woodMaterial, [],false)
     
-    const light1obj= new SceneObject(gl, esferaGeometry, esferaMercurioMaterial, [esferaMercurio,esferaMercurioNormal], false)
+    const light1obj= new SceneObject(gl, lamparaGeometry, woodMaterial, [],false)
     
 
     sceneObjects.push(light0obj)
     sceneObjects.push(light1obj)
     
     const light0 = new SceneLight([-5.0, 5.0, 5.0, 1.0], [0.5, 0.5, 0.5], [0.0,-1.0,0.0,0.0], 0.3,light0obj)
-    const light1 = new SceneLight([5.0, 5.0, -5.0, 1.0], [0.5, 0.5, 0.5], [0.0,-1.0,0.0,0.0], 0.3,light1obj)
+    const light1 = new SceneLight([5.0, 5.0, -5.0, 1.0], [0.5, 0.5, 0.5], [0.0,-1.0,0.0,0.0], -1.0,light1obj)
     const lightDirectional = new SceneLight( [0.5, -1.0, -1.0, 0.0], [0.5*255/255,0.5*236/255,0.5*219/255], [0.5, -1.0, 0.0, 0.0], -1.0 )
 
     const sceneLights = [light0,light1,lightDirectional]
