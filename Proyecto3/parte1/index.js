@@ -53,7 +53,7 @@ async function main() {
 
     const esferaGoldTexture=gl.createTexture()
     const esferaGoldTextureNormal=gl.createTexture()
-    const esferaGoldRust=gl.createTexture()
+    const esferaGoldSpec=gl.createTexture()
 
     armarTextura(planoTexture, await loadImage('/textures/TexturesCom_DishCloth2_1K_albedo.jpg'))
     armarTextura(esferaMercurio, await loadImage('/textures/mercury.jpg'))
@@ -61,7 +61,7 @@ async function main() {
 
     armarTextura(esferaGoldTexture, await loadImage('/textures/gold.jpg'))
     armarTextura(esferaGoldTextureNormal, await loadImage('/textures/gold_normal.jpg'))
-    armarTextura(esferaGoldRust,await loadImage('/textures/gold_rust.jpg'))
+    armarTextura(esferaGoldSpec,await loadImage('/textures/gold_spec.jpg'))
 
     armarTextura(esferaGolfTexture, await loadImage('/textures/texturaGolf.jpg'))
     armarTextura(esferaGolfNormal, await loadImage('/textures/golf_normal.jpg'))
@@ -374,7 +374,7 @@ async function main() {
                         
                 }
                 if(i==2){
-                        sceneObjects[i*6+j]=new SceneObject(gl, esferaGeometry, esferaGoldMaterial, [esferaGoldTexture,esferaGoldRust,esferaGoldTextureNormal], false)
+                        sceneObjects[i*6+j]=new SceneObject(gl, esferaGeometry, esferaGoldMaterial, [esferaGoldTexture,esferaGoldSpec,esferaGoldTextureNormal], false)
                         sceneObjects[i*6+j].setPosition(3*i-4.0,0.0,3*j-6.0)
                         sceneObjects[i*6+j].updateModelMatrix()       
                 }
