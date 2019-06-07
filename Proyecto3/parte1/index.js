@@ -30,6 +30,9 @@ async function main() {
     const cookTorrance2TNVertexShaderSource = await getFileContentsAsText( '/shaders/cooktorrance2TN.vert.glsl' )
     const cookTorrance2TNFragmentShaderSource = await getFileContentsAsText( '/shaders/cooktorrance2TN.frag.glsl' )
 
+    const cookTorranceTNVertexShaderSource = await getFileContentsAsText( '/shaders/cooktorranceTN.vert.glsl' )
+    const cookTorranceTNFragmentShaderSource = await getFileContentsAsText( '/shaders/cooktorranceTN.frag.glsl' )
+
     // #️⃣ Configuracion base de WebGL
 
     const canvas = document.getElementById("webgl-canvas")
@@ -82,13 +85,14 @@ async function main() {
     const proceduralMarbleProgram = new Program( gl, proceduralMarbleVertexShaderSource, proceduralMarbleFragmentShaderSource )
     const proceduralProgram = new Program( gl, proceduralVertexShaderSource, proceduralFragmentShaderSource )
     const cookTorrance2TNProgram = new Program( gl, cookTorrance2TNVertexShaderSource, cookTorrance2TNFragmentShaderSource )
+    const cookTorranceTNProgram = new Program( gl, cookTorranceTNVertexShaderSource, cookTorranceTNFragmentShaderSource )
 
 
     // #️⃣ Creamos materiales combinando programas con distintas propiedades
 
 
     const planoMaterial = new Material( proceduralMarbleProgram, false, false, {} )
-    const esferaMercurioMaterial = new Material(phongTNProgram, true, true, { texture0: 0,texture1: 1, shininess: 4})
+    const esferaMercurioMaterial = new Material(cookTorranceTNProgram, true, true, { texture0: 0,texture1: 1,m: 1, f0: 0, sigma: 1.0})
     const esferaGolfMaterial = new Material(phongTNProgram,true,true, { texture0: 0, texture1: 1, shininess: 100})
     const esferaGoldMaterial = new Material(cookTorrance2TNProgram,true,true, { texture0: 0, texture1: 1, texture2: 2,m: 0.04, f0: 1.0, sigma: 0.0})
     const woodMaterial = new Material( proceduralProgram, true, false, { kd: [0.30980392156,0.14117647058,0.07058823529], shininess: 110, resolution: [1.5,0.5]} )
