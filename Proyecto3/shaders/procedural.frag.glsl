@@ -13,6 +13,7 @@ uniform struct Light {
 } allLights[MAX_LIGHTS];
 
 struct Material {
+    vec3 kd;
     float shininess;
     vec2 resolution;
 };
@@ -49,8 +50,8 @@ float lines(vec2 pos, float b){
     float scale = 10.0;
     pos *= scale;
     return smoothstep(0.0,
-                    .5+b*.5,
-                    abs((sin(pos.x*3.1415)+b*2.0))*.5);
+                    0.5+b*0.5,
+                    abs((sin(pos.x*3.1415)+b*2.0))*0.5);
 }
 
 vec3 calcPhong(Light light, vec3 diffuseColor, vec3 specularColor, vec3 N, vec3 V){
@@ -88,13 +89,15 @@ vec3 calcPhong(Light light, vec3 diffuseColor, vec3 specularColor, vec3 N, vec3 
 }
 
 
+
+
 out vec4 fragmentColor;
 
 void main(void){
     vec2 st = fTexCoor/material.resolution;
     st.y *= material.resolution.y/material.resolution.x;
 
-    vec2 pos = st.yx*vec2(10.,3.);
+    vec2 pos = st.yx*vec2(10.0,3.0);
 
     float pattern = pos.x;
 
@@ -102,9 +105,9 @@ void main(void){
     pos = rotate2d( noise(pos) ) * pos;
 
     // Draw lines
-    pattern = lines(pos,.5);
+    pattern = lines(pos,0.5);
     
-    vec3 color = vec3(pattern)*vec3(0.52156862745,0.36862745098,0.25882352941); //madera
+    vec3 color = vec3(pattern)*material.kd; //madera
     vec3 outputColor = vec3(0.0);
 
     vec3 N = normalize(vNE);
@@ -114,5 +117,5 @@ void main(void){
         outputColor += calcPhong(allLights[i],color,color,N,V);
     }
 
-    fragmentColor = vec4(outputColor,1.0);
+    fragmentColor = vec4(material.kd*0.2 + outputColor,1.0);
 }
