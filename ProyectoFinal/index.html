@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title> Proyecto Final </title>
+    <link rel='stylesheet' type='text/css' href='styles.css'>
+    <link rel="icon" type="image/png" href="favicon.png">
+</head>
+
+<body>
+    <div class="info" id="info">
+        FPS:
+        <output id="fps">0.0</output>
+    </div>
+    <canvas id='webgl-canvas'>
+        Browser not supported
+    </canvas>
+
+    <div class="controls" id="controls">
+        <table id="tabla" align='right' border='1'>
+            <tr>
+                <th>
+                    ShadowMap size
+                    <select id='select0'>
+                        <option value='512'>512</option>
+                        <option value='1024' selected=true>1024</option>
+                        <option value='2048'>2048</option>
+                        <option value='4096'>4096</option>
+                        <option value='8192'>8192</option>
+                    </select>
+                </th>
+
+            </tr>
+            <tr>
+                <td>
+                    Shader
+                    <select id='select1'>
+                        <option value='DEFAULT'> Default</option>
+                        <option value='UNTEXTURED'> Sin Texturas</option>
+                    </select>
+                </td>
+
+            </tr>
+            <tr>
+                <th>
+                    Efecto
+                    <select id='selectEffect'>
+                        <option value='0'>Edge Detection</option>
+                        <option value='1' selected=true>Volumetric Light</option>
+                        <option value='2'>No Effect</option>
+                    </select>
+                </th>
+
+            </tr>
+            <tr>
+                <th>
+                    Tipo de Iluminacion
+                    <select id='select2'>
+                        <option value='0'>Fuego</option>
+                        <option value='1'>FuegoRadioactivo</option>
+                    </select>
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    Fantasma
+                    <button id="btnMovFantasma">Mover/Detener</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Movimiento de la luz
+                    <button id="btnMovLuz">Circulación luz</button>
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    Luz de la antorcha 1
+                    <input type='range' step='0.01' id='sliderA1' min='0' max='1' value='1'>
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Luz de la antorcha 2
+                    <input type='range' step='0.01' id='sliderA2' min='0' max='1' value='1'>
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Luz de la antorcha 3
+                    <input type='range' step='0.01' id='sliderA3' min='0' max='1' value='1'>
+
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    Luz de la antorcha 4
+                    <input type='range' step='0.01' id='sliderA4' min='0' max='1' value='1'>
+
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    Luz de la antorcha 5
+                    <input type='range' step='0.01' id='sliderA5' min='0' max='1' value='1'>
+
+                </td>
+
+            </tr>
+
+        </table>
+    </div>
+    <script type='module' src='index.js'></script>
+
+</body>
+
+</html>
